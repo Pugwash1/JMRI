@@ -262,8 +262,9 @@ public class DispatcherFrame extends jmri.util.JmriJFrame implements InstanceMan
                 info.getAutoRun(), dccAddressToUse, info.getPriority(),
                 info.getResetWhenDone(), info.getReverseAtEnd(), true, null, info.getAllocationMethod());
         if (at != null) {
+            RosterEntry re = null;
             if (tSource == ActiveTrain.ROSTER) {
-                RosterEntry re = Roster.getDefault().getEntryForId(trainNameToUse);
+                re = Roster.getDefault().getEntryForId(trainNameToUse);
                 if (re != null) {
                     at.setRosterEntry(re);
                     at.setDccAddress(re.getDccAddress());
@@ -309,7 +310,7 @@ public class DispatcherFrame extends jmri.util.JmriJFrame implements InstanceMan
                             JOptionPane.INFORMATION_MESSAGE);
                     return -1;
                 }
-                getAutoTrainsFrame().addAutoActiveTrain(aat);
+                getAutoTrainsFrame().addAutoActiveTrain(aat,re);
             }
             allocateNewActiveTrain(at);
             newTrainDone(at);
