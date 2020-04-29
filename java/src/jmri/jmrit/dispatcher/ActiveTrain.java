@@ -130,6 +130,7 @@ public class ActiveTrain {
     public static final int READY = 0x10;   // completed work, waiting for restart
     public static final int STOPPED = 0x20;   // stopped by the dispatcher (auto trains only)
     public static final int DONE = 0x40;   // completed its transit
+    public static final int TERMINATED = 0x80;
 
     /**
      * Constants representing Type of ActiveTrains.
@@ -277,20 +278,24 @@ public class ActiveTrain {
             return;
         }
         if ((status == RUNNING) || (status == PAUSED) || (status == WAITING) || (status == WORKING)
-                || (status == READY) || (status == STOPPED) || (status == DONE)) {
+                || (status == READY) || (status == STOPPED) || (status == DONE) || (status == TERMINATED)) {
             if (mStatus != status) {
                 int old = mStatus;
                 mStatus = status;
+                switch (mStatus) {
+                    case TERMINATED:
+                        log.info("Fire,Fire,Fire - TERMINATED");
+                }
                 firePropertyChange("status", Integer.valueOf(old), Integer.valueOf(mStatus));
             }
             if (mStatus == DONE && terminateWhenFinished) {
                 InstanceManager.getDefault(DispatcherFrame.class).terminateActiveTrain(this);
-            }
+            } 
         } else {
             log.error("Invalid ActiveTrain status - " + status);
         }
     }
-
+    
     public String getStatusText() {
         if (mStatus == RUNNING) {
             return Bundle.getMessage("RUNNING");

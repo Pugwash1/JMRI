@@ -284,10 +284,10 @@ public class NamedIcon extends ImageIcon {
         private IIOMetadata mStreamMd;
     }
 
-    /*
+    
      public Image getOriginalImage() {
-     return mDefaultImage;
-     }*/
+         return mDefaultImage;
+     }
 
     /**
      * Valid values are

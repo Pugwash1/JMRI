@@ -1355,6 +1355,7 @@ public class DispatcherFrame extends jmri.util.JmriJFrame implements InstanceMan
             log.error("Null ActiveTrain pointer when attempting to terminate an ActiveTrain");
             return;
         }
+        at.setStatus(ActiveTrain.TERMINATED);
         // terminate the train - remove any allocation requests
         for (int k = allocationRequests.size(); k > 0; k--) {
             if (at == allocationRequests.get(k - 1).getActiveTrain()) {
@@ -1388,7 +1389,6 @@ public class DispatcherFrame extends jmri.util.JmriJFrame implements InstanceMan
         }
         if (at.getAutoRun()) {
             AutoActiveTrain aat = at.getAutoActiveTrain();
-            _autoTrainsFrame.removeAutoActiveTrain(aat);
             aat.terminate();
             aat.dispose();
         }
