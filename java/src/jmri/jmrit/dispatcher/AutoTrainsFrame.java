@@ -148,34 +148,22 @@ public class AutoTrainsFrame extends jmri.util.JmriJFrame {
         }
     }
 
-             /*           _autoTrainsList.add(aat);
-
-            java.beans.PropertyChangeListener throttleListener = new java.beans.PropertyChangeListener() {
-                @Override
-                public void propertyChange(java.beans.PropertyChangeEvent e) {
-                    handleThrottleChange(e);
-                }
-            };
-            _throttleListeners.add(throttleListener);
-
-            _throttles.add(null); //adds a place holder
-            //set up the throttle prior to attaching the listener to the ActiveTrain
-            setupThrottle(aat);
-
-            ActiveTrain at = aat.getActiveTrain();
-            java.beans.PropertyChangeListener listener = null;
-            at.addPropertyChangeListener(listener = new java.beans.PropertyChangeListener() {
-                @Override
-                public void propertyChange(java.beans.PropertyChangeEvent e) {
-                    handleActiveTrainChange(e);
-                }
-            });
-            _listeners.add(listener);
-
-            displayAutoTrains();
+    public void removeAutoActiveTrain(AutoActiveTrain aat) {
+        for (int i = 0; i < _autoTrainsList.size(); i++) {
+            if (_autoTrainsList.get(i) == aat) {
+                removeThrottleListener(aat);
+                _autoTrainsList.remove(i);
+                ActiveTrain at = aat.getActiveTrain();
+                at.removePropertyChangeListener(_listeners.get(i));
+                _throttles.remove(i);
+                _listeners.remove(i);
+                _throttleListeners.remove(i);
+                displayAutoTrains();
+                return;
+            }
         }
     }
-*/
+
     protected JmriJFrame autoTrainsFrame = null;
     private Container contentPane  = null ;
     
@@ -201,10 +189,8 @@ public class AutoTrainsFrame extends jmri.util.JmriJFrame {
         });
         stopAllButton.setToolTipText(Bundle.getMessage("StopAllButtonHint"));
         contentPane.add(pB);
- //       autoTrainsFrame.pack();
- //       placeWindow();
- //       displayAutoTrains();
- //       autoTrainsFrame.setVisible(true);
+        autoTrainsFrame.pack();
+        autoTrainsFrame.setVisible(true);
     }
 
     private void newSeparator() {
@@ -448,8 +434,6 @@ public class AutoTrainsFrame extends jmri.util.JmriJFrame {
                 }
             }
         }
-        
-        
         
         JLabel  lblPageStart = null;
         JLabel  lblPageEndDCC   = null;

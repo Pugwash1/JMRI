@@ -292,7 +292,7 @@ public class ActiveTrain {
                 InstanceManager.getDefault(DispatcherFrame.class).terminateActiveTrain(this);
             } 
         } else {
-            log.error("Invalid ActiveTrain status - " + status);
+            log.error("Invalid ActiveTrain status - {}", status);
         }
     }
     
@@ -604,7 +604,7 @@ public class ActiveTrain {
             mMode = mode;
             firePropertyChange("mode", Integer.valueOf(old), Integer.valueOf(mMode));
         } else {
-            log.error("Attempt to set ActiveTrain mode to illegal value - " + mode);
+            log.error("Attempt to set ActiveTrain mode to illegal value - {}", mode);
         }
     }
 
@@ -709,7 +709,7 @@ public class ActiveTrain {
             }
         }
         if (index < 0) {
-            log.error("Attempt to remove an unallocated Section " + as.getSection().getDisplayName(USERSYS));
+            log.error("Attempt to remove an unallocated Section {}", as.getSection().getDisplayName(USERSYS));
             return;
         }
         mAllocatedSections.remove(index);
@@ -998,8 +998,7 @@ public class ActiveTrain {
                 mNextSectionToAllocate = mTransit.getSectionFromConnectedBlockAndSeq(mStartBlock,
                         mStartBlockSectionSequenceNumber);
                 if (mNextSectionToAllocate == null) {
-                    log.error("ERROR - Cannot find Section for first allocation of ActiveTrain"
-                            + getActiveTrainName());
+                    log.error("ERROR - Cannot find Section for first allocation of ActiveTrain{}", getActiveTrainName());
                     return null;
                 }
             }
@@ -1012,7 +1011,7 @@ public class ActiveTrain {
         }
         if (!InstanceManager.getDefault(DispatcherFrame.class).requestAllocation(this,
                 mNextSectionToAllocate, mNextSectionDirection, mNextSectionSeqNumber, true, null)) {
-            log.error("Allocation request failed for first allocation of " + getActiveTrainName());
+            log.error("Allocation request failed for first allocation of {}", getActiveTrainName());
         }
         if (InstanceManager.getDefault(DispatcherFrame.class).getRosterEntryInBlock() && getRosterEntry() != null) {
             mStartBlock.setValue(getRosterEntry());
