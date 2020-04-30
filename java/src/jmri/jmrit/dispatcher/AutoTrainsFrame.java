@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
@@ -38,8 +39,10 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import jmri.Throttle;
 import jmri.ThrottleListener;
+import jmri.implementation.SignalSpeedMap;
 import jmri.jmrit.catalog.NamedIcon;
 import jmri.jmrit.roster.RosterEntry;
+import jmri.jmrit.roster.RosterIconFactory;
 import jmri.util.JmriJFrame;
 
 import org.slf4j.Logger;
@@ -91,6 +94,9 @@ public class AutoTrainsFrame extends jmri.util.JmriJFrame {
             new NamedIcon("resources/icons/AutoTrainsFrame/ThrottleSix.png", "resources/icons/AutoTrainsFrame/ThrottleSix.png"),
             new NamedIcon("resources/icons/AutoTrainsFrame/ThrottleSeven.png", "resources/icons/AutoTrainsFrame/ThrottleSeven.png"));
     */
+        private static int interp = jmri.InstanceManager.getDefault(SignalSpeedMap.class).getInterpretation();
+        private static float scale = jmri.InstanceManager.getDefault(SignalSpeedMap.class).getLayoutScale();
+
     private  NamedIcon iconForward = null;
     private  NamedIcon iconReverse = null;
     private  NamedIcon iconEngineerAuto = null;
@@ -98,8 +104,14 @@ public class AutoTrainsFrame extends jmri.util.JmriJFrame {
     private  NamedIcon iconStopIcon = null;
     private  NamedIcon iconGoIcon = null;
     private  NamedIcon iconRestartIcon = null;
+    private  NamedIcon iconDDCBackground = null;
+    private  NamedIcon iconSpeedBackground = null;
+    private  NamedIcon iconSpeedPCBackground = null;
+    
     private  java.util.List<NamedIcon> iconSpeeds = null;
-     
+    
+    private char velocity = (char) 0x1D463; //Velocity
+
     // instance variables
     private DispatcherFrame _dispatcher = null;
     private ArrayList<AutoActiveTrain> _autoTrainsList = new ArrayList<AutoActiveTrain>();
@@ -116,7 +128,22 @@ public class AutoTrainsFrame extends jmri.util.JmriJFrame {
     }
 
     public void addAutoActiveTrain(AutoActiveTrain aat, RosterEntry re) {
-        
+        switch (interp) {
+            case SignalSpeedMap.SPEED_MPH:
+                iconSpeedBackground =
+                new NamedIcon("resources/icons/AutoTrainsFrame/SpeedMPHBackground.png", "resources/icons/AutoTrainsFrame/SpeedMPHBackground.png");
+                break;
+            case SignalSpeedMap.SPEED_KMPH:
+                iconSpeedBackground =
+                new NamedIcon("resources/icons/AutoTrainsFrame/SpeedKPHBackground.png", "resources/icons/AutoTrainsFrame/SpeedKPHBackground.png");
+                break;
+            default:
+                iconSpeedBackground = null;
+        }
+        iconDDCBackground =
+                new NamedIcon("resources/icons/AutoTrainsFrame/DCCBackground.png", "resources/icons/AutoTrainsFrame/DCCBackground.png");
+         iconSpeedPCBackground =
+                new NamedIcon("resources/icons/AutoTrainsFrame/SpeedPCBackground.png", "resources/icons/AutoTrainsFrame/SpeedPCBackground.png");
          iconForward =
                 new NamedIcon("resources/icons/AutoTrainsFrame/Forward.png", "resources/icons/AutoTrainsFrame/Forward.png");
          iconReverse =
@@ -131,6 +158,8 @@ public class AutoTrainsFrame extends jmri.util.JmriJFrame {
                 new NamedIcon("resources/icons/AutoTrainsFrame/Go.png", "resources/icons/AutoTrainsFrame/Go.png");
          iconRestartIcon =
                 new NamedIcon("resources/icons/AutoTrainsFrame/Restart.png", "resources/icons/AutoTrainsFrame/Restart.png");
+         iconDDCBackground =
+                 new NamedIcon("resources/icons/AutoTrainsFrame/DCCBackground.png", "resources/icons/AutoTrainsFrame/DCCBackground.png");
          iconSpeeds = 
                 Arrays.asList( new NamedIcon("resources/icons/AutoTrainsFrame/ThrottleZero.png", "resources/icons/AutoTrainsFrame/ThrottleZero.png"),
                 new NamedIcon("resources/icons/AutoTrainsFrame/ThrottleOne.png", "resources/icons/AutoTrainsFrame/ThrottleOne.png"),
@@ -313,11 +342,10 @@ public class AutoTrainsFrame extends jmri.util.JmriJFrame {
                     return;
                 }
                 currentThrottleSetting = throttle.getSpeedSetting();
-                currentStep = (int) ((throttle.getSpeedSetting() + (1/8)) * 100 / 8);
-                currentStep = currentStep > 8 ? 8 : currentStep;
+                currentStep = (int) Math.ceil(currentThrottleSetting*8);
                 log.info("throt[{}]Step[{}]",currentThrottleSetting,currentStep);
-                if (rosterEntry != null) {
-                    currentThrottlePerHour = rosterEntry.getSpeedProfile().getSpeed(currentThrottleSetting, true);
+                if (rosterEntry != null && rosterEntry.getSpeedProfile() != null) {
+                    currentThrottlePerHour = rosterEntry.getSpeedProfile().MMSToScaleSpeed(rosterEntry.getSpeedProfile().getSpeed(currentThrottleSetting,true));
                 }
                 updatePgEnd();
                 btnThrottle.setIcon(iconSpeeds.get(currentStep));
@@ -331,8 +359,8 @@ public class AutoTrainsFrame extends jmri.util.JmriJFrame {
         }
 
         private void updatePgEnd() {
-            lblPageEndSpeed.setText(Float.toString(currentThrottlePerHour));
-            lblPageEndThrottle.setText(Float.toString(currentThrottleSetting));
+            lblPageEndSpeed.setText(String.format("%3.0f", currentThrottlePerHour));
+            lblPageEndThrottle.setText(String.format("%3.0f%%",currentThrottleSetting*100));
         }
         
         private void stopResumeTrain() {
@@ -398,10 +426,18 @@ public class AutoTrainsFrame extends jmri.util.JmriJFrame {
             
             setLayout(new BorderLayout());
             setBorder(BorderFactory.createLineBorder(Color.black));
-            setMinimumSize(new Dimension(32,32)); // make sure it cant totally disappear.
-            setMaximumSize(new Dimension(128,128)); // dont want it stupid big or do we
+            setMinimumSize(new Dimension(128,128)); // make sure it cant totally disappear.
+            setMaximumSize(new Dimension(512,512)); // dont want it stupid big or do we
             
-            lblPageStart = new JLabel(activeTrain.getActiveTrainName(),SwingConstants.CENTER);
+            ImageIcon iconRosterEntry = null;
+            if (rosterEntry != null) {
+                iconRosterEntry = jmri.InstanceManager.getDefault(RosterIconFactory.class).getIcon(rosterEntry); 
+            } 
+            if (iconRosterEntry != null) {
+                lblPageStart = new JLabel(iconRosterEntry);
+            } else {
+                lblPageStart = new JLabel(activeTrain.getActiveTrainName(),SwingConstants.CENTER);
+            }
             add(lblPageStart,BorderLayout.PAGE_START);
             
             JPanel pnlPageEnd = new JPanel(new GridLayout(1,3));
@@ -411,19 +447,44 @@ public class AutoTrainsFrame extends jmri.util.JmriJFrame {
 
             constraintPageEnd.gridx = 0;
             constraintPageEnd.gridy = 0;
-            lblPageEndDCC = new JLabel(activeTrain.getDccAddress(),SwingConstants.CENTER);
+            lblPageEndDCC = new JLabel() {
+                @Override
+                public void paintComponent(Graphics g) {
+                    g.drawImage(iconDDCBackground.getOriginalImage(), 0, 0, null);
+                    super.paintComponent(g);
+                  }
+                };;
+            lblPageEndDCC.setHorizontalTextPosition(JLabel.CENTER);
+            lblPageEndDCC.setVerticalTextPosition(JLabel.CENTER);
             lblPageEndDCC.setBorder(BorderFactory.createEtchedBorder());
+            lblPageEndDCC.setText(activeTrain.getDccAddress()) ;
             pnlPageEnd.add(lblPageEndDCC,constraintPageEnd);
+            lblPageEndThrottle = new JLabel() {
+                @Override
+                public void paintComponent(Graphics g) {
+                    g.drawImage(iconSpeedPCBackground.getOriginalImage(), 0, 0, null);
+                    super.paintComponent(g);
+                  }
+                };;
             constraintPageEnd.gridx = 1;
             constraintPageEnd.gridy = 0;
-            lblPageEndThrottle = new JLabel(Integer.toString(currentStep),SwingConstants.CENTER);
+            lblPageEndThrottle.setText(Integer.toString(currentStep));
             lblPageEndThrottle.setBorder(BorderFactory.createEtchedBorder());
+            lblPageEndThrottle.setOpaque(false);
             pnlPageEnd.add(lblPageEndThrottle,constraintPageEnd);
+            
             constraintPageEnd.gridx = 2;
             constraintPageEnd.gridy = 0;
-            lblPageEndSpeed = new JLabel(Integer.toString(currentStep),SwingConstants.CENTER);
+            lblPageEndSpeed = new JLabel() {
+                @Override
+                public void paintComponent(Graphics g) {
+                    g.drawImage(iconSpeedBackground.getOriginalImage(), 0, 0, null);
+                    super.paintComponent(g);
+                  }
+                };;
             lblPageEndSpeed.setBorder(BorderFactory.createEtchedBorder());
-            pnlPageEnd.add(lblPageEndDCC,constraintPageEnd);
+            lblPageEndSpeed.setOpaque(false);
+            pnlPageEnd.add(lblPageEndSpeed,constraintPageEnd);
 
             add(pnlPageEnd,BorderLayout.PAGE_END);
 
