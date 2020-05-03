@@ -23,8 +23,7 @@ public class AutoTrainsFrameTest extends jmri.util.JmriJFrameTestBase {
         JUnitUtil.initDebugThrottleManager();
         if (!GraphicsEnvironment.isHeadless()) {
             WarrantPreferences.getDefault().setShutdown(WarrantPreferences.Shutdown.NO_MERGE);
-            d = InstanceManager.getDefault(DispatcherFrame.class);
-            frame = new AutoTrainsFrame(d);
+            frame = new AutoTrainsFrame();
         }
     }
 
