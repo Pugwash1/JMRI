@@ -602,6 +602,7 @@ public class ActiveTrain {
                 || (mode == DISPATCHED)) {
             int old = mMode;
             mMode = mode;
+            mAutoActiveTrain.setMode( mMode);
             firePropertyChange("mode", Integer.valueOf(old), Integer.valueOf(mMode));
         } else {
             log.error("Attempt to set ActiveTrain mode to illegal value - {}", mode);

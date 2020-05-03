@@ -89,6 +89,11 @@ public class AutoActiveTrain implements ThrottleListener {
     public static final int END_REVERSAL = 0x01;     // Handle reversing direction at end for back and forth running
     public static final int BEGINNING_RESET = 0x02;     // Handle reseting beginning for back and forth running
 
+    /**
+     * _mode AUTOMATIC, MANUAL, DISPATCHED Mirrors ActiveTrain.
+     */
+    private int _mode = ActiveTrain.AUTOMATIC;
+    
     // operational instance variables
     private static final jmri.NamedBean.DisplayOptions USERSYS = jmri.NamedBean.DisplayOptions.USERNAME_SYSTEMNAME;
     private ActiveTrain _activeTrain = null;
@@ -243,6 +248,15 @@ public class AutoActiveTrain implements ThrottleListener {
             return ( _controllingSignalMast == null || _controllingSignalMast.getUserName() == null) ? "" : _controllingSignalMast.getUserName();        }
     }
 
+    public void setMode(int mode) {
+        _mode = mode;
+        _autoEngineer.setMode(_mode);
+    }
+    
+    public int getMode() {
+        return _mode;
+    }
+    
     RosterEntry re = null;
     boolean useSpeedProfile = false;
 
@@ -402,13 +416,16 @@ public class AutoActiveTrain implements ThrottleListener {
 
     // keeps track of and restores previous speed
     private float _savedSpeed = 0.0f;
+    private boolean _savedIsForward = true;
 
     protected void saveSpeed() {
         _savedSpeed = _targetSpeed;
+        _savedIsForward = getForward();
     }
 
     protected void restoreSavedSpeed() {
         _targetSpeed = _savedSpeed;
+        setForward(_savedIsForward);
     }
 
     // keeps track of number of horn execution threads that are active
@@ -1708,6 +1725,9 @@ public class AutoActiveTrain implements ThrottleListener {
         AutoEngineer() {
         }
 
+        // time to check if in manual mode
+        private final long LAZYTIMERWAIT = 2000;
+        
         // operational instance variables and flags
         private volatile boolean _abort = false;
         private volatile boolean _halt = false;  // halt/resume from user's control
@@ -1716,6 +1736,7 @@ public class AutoActiveTrain implements ThrottleListener {
         private float _currentSpeed = 0.0f;
         private float _speedIncrement = 0.0f; //will be recalculated
         private boolean _speedProfileStoppingIsRunning = false; // stop by speed profile is running.
+        private volatile int _mode = ActiveTrain.AUTOMATIC;  // is the train in manual mode
 
         @Override
         public void run() {
@@ -1814,6 +1835,15 @@ public class AutoActiveTrain implements ThrottleListener {
                     }
                 }
                 // Give other threads a chance to work
+                // longer gap if manual
+                while (_mode == ActiveTrain.MANUAL && !_abort) {
+                    try {
+                        Thread.sleep(LAZYTIMERWAIT);
+                    } catch (InterruptedException ex) {
+                        log.warn("Someones shutting us down");
+                        _abort = true;
+                    }
+                }
                 try {
                     Thread.sleep(dispatcher.getMinThrottleInterval());
                 } catch (InterruptedException ex) {
@@ -1824,6 +1854,15 @@ public class AutoActiveTrain implements ThrottleListener {
               // shut down
         }
 
+        /**
+         * notifies AutoEngineer as to the mode, MANUAL means we 
+         * nolonger have control
+         * @param mode see AutoActiveTrain mode.
+         */
+        public synchronized void setMode(int mode) {
+            _mode = mode;
+        }
+        
         public synchronized void slowToStop(boolean toStop) {
             _slowToStop = toStop;
             if (!toStop) {

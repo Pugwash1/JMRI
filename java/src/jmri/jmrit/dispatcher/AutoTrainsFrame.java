@@ -78,7 +78,7 @@ public class AutoTrainsFrame extends jmri.util.JmriJFrame {
 
     public void addAutoActiveTrain(AutoActiveTrain aat, RosterEntry re) {
         if (aat != null) {
-            AutoEngineerMicro atn = new AutoEngineerMicro(aat, re);
+            AutoEngineerMicro atn = new AutoEngineerMicro(this,aat, re);
             contentPane.add(atn);
             pack();
         }
