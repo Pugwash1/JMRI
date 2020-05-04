@@ -1,5 +1,6 @@
 package jmri.jmrit.dispatcher;
 
+import java.awt.Dimension;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 
@@ -11,30 +12,22 @@ import jmri.jmrit.catalog.NamedIcon;
 public class AutoEngineerJButton extends JButton {
     private NamedIcon currentOriginalImage = null;
     public AutoEngineerJButton(NamedIcon namedIcon) {
-        super();
+        super(namedIcon);
         currentOriginalImage = namedIcon;
-        this.addComponentListener(new ComponentAdapter() {
-            @Override
-            public void componentResized(ComponentEvent e) {
-                // keeps the image in line with the button.
-                reSizeIcon();
-            }
-        });
     }
     
     /**
      * Resizes the baseimage to the button size
+    * 
+     * @param buttonDimension size of the image and therefore button
      */
-    private void reSizeIcon() {
-        ImageIcon icon = null;
-        if (getWidth() > 0 && getHeight() > 0) {
-            icon = new ImageIcon(
-                    currentOriginalImage.getOriginalImage().getScaledInstance(getWidth(), getHeight(),
+    public void reSizeIcon(Dimension buttonDimension) {
+        ImageIcon icon = new ImageIcon(
+                    currentOriginalImage.getOriginalImage().getScaledInstance((int)buttonDimension.getWidth(), (int)buttonDimension.getHeight(),
                             java.awt.Image.SCALE_FAST));
             super.setIcon(icon);
         } 
-    }
-    
+        
     /**
      * Set the Named Icon base Image
      *
@@ -42,6 +35,6 @@ public class AutoEngineerJButton extends JButton {
      */
     public void setIcon(NamedIcon namedIcon) {
         currentOriginalImage = namedIcon;
-        reSizeIcon();
+        super.setIcon(namedIcon);
     }
 }

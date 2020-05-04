@@ -11,13 +11,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.beans.PropertyChangeSupport;
 import java.util.Arrays;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JToolBar;
 import javax.swing.SwingConstants;
 
 import org.slf4j.Logger;
@@ -311,7 +312,6 @@ public class AutoEngineerMicro extends JPanel {
     public void manualAutoTrain() {
         if (activeTrain.getMode() == ActiveTrain.AUTOMATIC) {
             activeTrain.setMode(ActiveTrain.MANUAL);
-            log.info("AAAA");
             btnManualAuto.setIcon(iconEngineerManual);
             if (autoActiveTrain.getAutoEngineer() != null) {
                 autoActiveTrain.saveSpeed();
@@ -321,7 +321,6 @@ public class AutoEngineerMicro extends JPanel {
                 autoActiveTrain.getAutoEngineer().setHalt(false);
             }
         } else if (activeTrain.getMode() == ActiveTrain.MANUAL) {
-            log.info("BBBB");
             activeTrain.setMode(ActiveTrain.AUTOMATIC);
             btnManualAuto.setIcon(iconEngineerAuto);
             autoActiveTrain.restoreSavedSpeed();
@@ -344,13 +343,10 @@ public class AutoEngineerMicro extends JPanel {
 
     private void drawComponent() {
 
-        setLayout(new BorderLayout());
-        setBorder(BorderFactory.createLineBorder(Color.black));
-        setMinimumSize(new Dimension(128, 128)); // make sure it cant totally
-                                                 // disappear.
-        setMaximumSize(new Dimension(512, 512)); // dont want it stupid big or
-                                                 // do we
-
+        JPanel componentJPanel = new JPanel();
+        
+        componentJPanel.setLayout(new BorderLayout());
+        componentJPanel.setBorder(BorderFactory.createLineBorder(Color.black));
         ImageIcon iconRosterEntry = null;
         if (rosterEntry != null) {
             iconRosterEntry = jmri.InstanceManager.getDefault(RosterIconFactory.class).getIcon(rosterEntry);
@@ -360,7 +356,7 @@ public class AutoEngineerMicro extends JPanel {
         } else {
             lblPageStart = new JLabel(activeTrain.getActiveTrainName(), SwingConstants.CENTER);
         }
-        add(lblPageStart, BorderLayout.PAGE_START);
+        componentJPanel.add(lblPageStart, BorderLayout.PAGE_START);
 
         JPanel pnlPageEnd = new JPanel(new GridLayout(1, 3));
         GridBagConstraints constraintPageEnd = new GridBagConstraints();
@@ -376,7 +372,6 @@ public class AutoEngineerMicro extends JPanel {
                 super.paintComponent(g);
             }
         };
-        ;
         lblPageEndDCC.setHorizontalTextPosition(JLabel.CENTER);
         lblPageEndDCC.setVerticalTextPosition(JLabel.CENTER);
         lblPageEndDCC.setBorder(BorderFactory.createEtchedBorder());
@@ -411,21 +406,17 @@ public class AutoEngineerMicro extends JPanel {
         lblPageEndSpeed.setOpaque(false);
         pnlPageEnd.add(lblPageEndSpeed, constraintPageEnd);
 
-        add(pnlPageEnd, BorderLayout.PAGE_END);
+        componentJPanel.add(pnlPageEnd, BorderLayout.PAGE_END);
 
-        JPanel activities = new JPanel(new GridLayout(1, 5));
-        GridBagConstraints c = new GridBagConstraints();
+        //JPanel activities = new JPanel(new GridLayout(1, 5));
+        JToolBar activities = new JToolBar();
+        Dimension buttonSize = new Dimension(64,64);
         // natural height, maximum width
         btnNewBbtnStartStop =
                 new AutoEngineerJButton(iconStopIcon);
+        btnNewBbtnStartStop.reSizeIcon(buttonSize);
         btnNewBbtnStartStop.setBorder(BorderFactory.createEtchedBorder());
-        c.weightx = 1.0;
-        c.weighty = 1.0;
-        c.gridx = 0;
-        c.gridy = 0;
-        activities.add(btnNewBbtnStartStop, c);
-        // btnNewBbtnStartStop.setPreferredSize(new
-        // Dimension(iconOnOff.getIconWidth(), iconOnOff.getIconHeight()));
+        activities.add(btnNewBbtnStartStop);
         btnNewBbtnStartStop.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -434,11 +425,10 @@ public class AutoEngineerMicro extends JPanel {
         });
 
         btnReverser = new AutoEngineerJButton(iconForward);
+        btnReverser.reSizeIcon(buttonSize);
         btnReverser.setHorizontalAlignment(SwingConstants.RIGHT);
         btnReverser.setBorder(BorderFactory.createEtchedBorder());
-        c.gridx = 1;
-        c.gridy = 0;
-        activities.add(btnReverser, c);
+        activities.add(btnReverser);
         btnReverser.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -450,10 +440,9 @@ public class AutoEngineerMicro extends JPanel {
                 new NamedIcon("resources/icons/AutoTrainsFrame/ThrottleZero.png",
                         "resources/icons/AutoTrainsFrame/ThrottleZero.png");
         btnThrottle = new AutoEngineerJButton(ThrottleZeroIcon);
+        btnThrottle.reSizeIcon(buttonSize);
         btnThrottle.setBorder(BorderFactory.createEtchedBorder());
-        c.gridx = 2;
-        c.gridy = 0;
-        activities.add(btnThrottle, c);
+        activities.add(btnThrottle);
         btnThrottle.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -468,17 +457,20 @@ public class AutoEngineerMicro extends JPanel {
 
         btnManualAuto =
                 new AutoEngineerJButton(iconEngineerAuto);
+        btnManualAuto.reSizeIcon(buttonSize);
         btnManualAuto.setBorder(BorderFactory.createEtchedBorder());
-        c.gridx = 3;
-        c.gridy = 0;
-        activities.add(btnManualAuto, c);
+        activities.add(btnManualAuto);
         btnManualAuto.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 manualAutoTrain();
             }
         });
-        add(activities, BorderLayout.CENTER);
+        componentJPanel.add(activities, BorderLayout.CENTER);
+        //componentJPanel.setPreferredSize(componentJPanel.getMinimumSize());
+        log.info("dim[{}][{}]",componentJPanel.getHeight(),componentJPanel.getWidth());
+        componentJPanel.revalidate();
+        add(componentJPanel);
     }
 
     private final static Logger log = LoggerFactory.getLogger(AutoTrainsFrame.class);
