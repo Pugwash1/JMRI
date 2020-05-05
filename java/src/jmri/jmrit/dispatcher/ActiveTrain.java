@@ -283,9 +283,34 @@ public class ActiveTrain {
                 int old = mStatus;
                 mStatus = status;
                 switch (mStatus) {
+                    case RUNNING:
+                        log.info("Fire,Fire,Fire - RUNNING");
+                        break;
+                    case PAUSED:
+                        log.info("Fire,Fire,Fire - PAUSED");
+                        break;
+                    case WAITING:
+                        log.info("Fire,Fire,Fire - WAITING");
+                        break;
+                    case WORKING:
+                        log.info("Fire,Fire,Fire - WORKING");
+                        break;
+                    case READY:
+                        log.info("Fire,Fire,Fire - READY");
+                        break;
+                    case STOPPED:
+                        log.info("Fire,Fire,Fire - STOPPED");
+                        break;
+                   case DONE:
+                        log.info("Fire,Fire,Fire - DONE");
+                        break;
                     case TERMINATED:
                         log.info("Fire,Fire,Fire - TERMINATED");
+                        break;
+                    default:
+                        log.info("Fire,Fire,Fire - UNKNOWN");
                 }
+                log.info("Fire,Fire,Fire - Integer [{}]", Integer.valueOf(mStatus));
                 firePropertyChange("status", Integer.valueOf(old), Integer.valueOf(mStatus));
             }
             if (mStatus == DONE && terminateWhenFinished) {

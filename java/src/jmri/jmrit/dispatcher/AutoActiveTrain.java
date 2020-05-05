@@ -326,7 +326,7 @@ public class AutoActiveTrain implements ThrottleListener {
                     "Error28"), new Object[]{_activeTrain.getTrainName()}), Bundle.getMessage("MessageTitle"),
                     javax.swing.JOptionPane.INFORMATION_MESSAGE);
             log.warn("null throttle returned for train '{}' during automatic initialization.", _activeTrain.getTrainName());
-            _activeTrain.setMode(ActiveTrain.DISPATCHED);
+            _activeTrain.setMode(ActiveTrain.TERMINATED);
             return;
         }
         log.debug("{}: New AutoEngineer, address={}, length={}, factor={}, useSpeedProfile={}",
@@ -1283,7 +1283,7 @@ public class AutoActiveTrain implements ThrottleListener {
             case BEGINNING_RESET:
                 _activeTrain.setRestart();
                 if (_activeTrain.getResetWhenDone()) {
-                    if (_activeTrain.getDelayedRestart() == ActiveTrain.NODELAY) {
+                    if (!_activeTrain.getReverseAtEnd() && _activeTrain.getDelayedRestart() == ActiveTrain.NODELAY) {
                         log.error("[{}]: train is continueing without pause, should have been handled in handleBlockStateChange.",_activeTrain.getTrainName());
                     } else {
                         // then active train is delayed

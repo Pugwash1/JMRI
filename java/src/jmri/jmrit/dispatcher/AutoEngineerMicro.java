@@ -15,7 +15,6 @@ import java.util.Arrays;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JToolBar;
@@ -202,6 +201,11 @@ public class AutoEngineerMicro extends JPanel {
             gp.revalidate();
             gp.repaint();
         }
+        if (throttle == null) {
+            log.info("{}:prop[{}]Throttle null", activeTrain.getActiveTrainName(), e.getPropertyName());
+        } else {
+            log.info("{}:prop[{}]Throttle OK", activeTrain.getActiveTrainName(), e.getPropertyName());
+        }
     }
 
     private RosterEntry rosterEntry = null;
@@ -225,8 +229,8 @@ public class AutoEngineerMicro extends JPanel {
         if (activeTrain.getMode() == ActiveTrain.MANUAL) {
             throttle.setIsForward(!throttle.getIsForward());
             btnReverser.setIcon(throttle.getIsForward() ? iconForward : iconReverse);
-            boolean donkey = throttle.getIsForward() ? true : false;
-            log.info("Donkey[{}",donkey);
+//            boolean donkey = throttle.getIsForward() ? true : false;
+//            log.info("Donkey[{}",donkey);
         } else {
             log.debug("Ignoreing direction change click");
         }
@@ -248,7 +252,7 @@ public class AutoEngineerMicro extends JPanel {
     }
 
     private void handleThrottleListen(java.beans.PropertyChangeEvent e) {
-        log.info("prop[{}]old[{}]new[{}]", e.getPropertyName(), e.getOldValue(), e.getNewValue());
+//        log.info("prop[{}]old[{}]new[{}]", e.getPropertyName(), e.getOldValue(), e.getNewValue());
         if (e.getPropertyName().equals(Throttle.SPEEDSETTING)) {
             /* Convert throttle stop seven speed steps */
             if (throttle.getSpeedSetting() <= 0.0) {
@@ -269,12 +273,15 @@ public class AutoEngineerMicro extends JPanel {
             updatePgEnd();
             btnThrottle.setIcon(iconSpeeds.get(currentStep));
         } else if (e.getPropertyName().equals(Throttle.ISFORWARD)) {
-            log.debug("Property[{}]", e.getPropertyName());
+            if (throttle == null) {
+                log.error("{}:throttle null Property[{}]", activeTrain.getActiveTrainName(),e.getPropertyName());
+            }
+            log.debug("{}:Property[{}]", activeTrain.getActiveTrainName(),e.getPropertyName());
             btnReverser.setIcon(throttle.getIsForward() ? iconForward : iconReverse);
         } else {
             return;
         }
-        log.info("Throttle Speed [{}] index [{}]", throttle.getSpeedSetting(), currentStep);
+        // log.info("Throttle Speed [{}] index [{}]", throttle.getSpeedSetting(), currentStep);
     }
 
     private void updatePgEnd() {
