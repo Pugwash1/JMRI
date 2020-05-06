@@ -13,7 +13,7 @@ public class AutoEngineerJButton extends JButton {
     private NamedIcon currentOriginalImage = null;
     public AutoEngineerJButton(NamedIcon namedIcon) {
         super(namedIcon);
-        currentOriginalImage = namedIcon;
+        currentOriginalImage  = namedIcon;
     }
     
     /**

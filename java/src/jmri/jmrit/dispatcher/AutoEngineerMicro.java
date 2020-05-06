@@ -19,6 +19,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JToolBar;
 import javax.swing.SwingConstants;
+import javax.swing.plaf.basic.BasicToolBarUI;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,8 +46,6 @@ public class AutoEngineerMicro extends JPanel {
     private static NamedIcon iconSpeedBackground = null;
     private static NamedIcon iconSpeedPCBackground = null;
     private static java.util.List<NamedIcon> iconSpeeds = null;
-
-    private char velocity = (char) 0x1D463; // Velocity
 
     static {
         switch (interp) {
@@ -350,10 +349,19 @@ public class AutoEngineerMicro extends JPanel {
 
     private void drawComponent() {
 
-        JPanel componentJPanel = new JPanel();
+        
+       // JPanel componentJPanel = new JPanel();
+        JPanel componentBase = new JPanel();
+        componentBase.setLayout(new BorderLayout());
+        componentBase.setBorder(BorderFactory.createLineBorder(Color.black));
+        
+        JToolBar componentJPanel = new JToolBar();
         
         componentJPanel.setLayout(new BorderLayout());
         componentJPanel.setBorder(BorderFactory.createLineBorder(Color.black));
+        
+        componentJPanel.setFloatable(true);
+        
         ImageIcon iconRosterEntry = null;
         if (rosterEntry != null) {
             iconRosterEntry = jmri.InstanceManager.getDefault(RosterIconFactory.class).getIcon(rosterEntry);
@@ -415,8 +423,8 @@ public class AutoEngineerMicro extends JPanel {
 
         componentJPanel.add(pnlPageEnd, BorderLayout.PAGE_END);
 
-        //JPanel activities = new JPanel(new GridLayout(1, 5));
-        JToolBar activities = new JToolBar();
+        JPanel activities = new JPanel(new GridLayout(1, 5));
+        //JToolBar activities = new JToolBar();
         Dimension buttonSize = new Dimension(64,64);
         // natural height, maximum width
         btnNewBbtnStartStop =
@@ -477,7 +485,10 @@ public class AutoEngineerMicro extends JPanel {
         //componentJPanel.setPreferredSize(componentJPanel.getMinimumSize());
         log.info("dim[{}][{}]",componentJPanel.getHeight(),componentJPanel.getWidth());
         componentJPanel.revalidate();
-        add(componentJPanel);
+        componentBase.add(componentJPanel, BorderLayout.CENTER);
+        BasicToolBarUI ui = new BasicToolBarUI();
+        componentJPanel.setUI(ui);
+        add(componentBase);
     }
 
     private final static Logger log = LoggerFactory.getLogger(AutoTrainsFrame.class);

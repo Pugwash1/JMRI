@@ -1532,7 +1532,9 @@ public class AutoActiveTrain implements ThrottleListener {
                 try {
                     Thread.sleep(50);
                 } catch (InterruptedException e) {
-                    // ignore this exception
+                    log.warn("waitUntilStop - killed.");
+                    // we are dying, break loop
+                    doneWaiting = true;
                 }
             }
         }
