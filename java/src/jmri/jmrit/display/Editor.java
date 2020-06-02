@@ -1053,7 +1053,6 @@ abstract public class Editor extends JmriJFrame implements MouseListener, MouseM
                 switch (selectedValue) {
                     case 0:
                         _targetFrame.setVisible(false);   // doesn't remove the editor!
-                        firePropertyChange("visible", true, false);
                         break;
                     case 1:
                         if (deletePanel()) { // disposes everything
@@ -1063,7 +1062,6 @@ abstract public class Editor extends JmriJFrame implements MouseListener, MouseM
                     case 2:
                         showCloseInfoMessage = false;
                         _targetFrame.setVisible(false);   // doesn't remove the editor!
-                        firePropertyChange("visible", true, false);
                         break;
                     default:    // dialog closed - do nothing
                         _targetFrame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
@@ -1071,11 +1069,9 @@ abstract public class Editor extends JmriJFrame implements MouseListener, MouseM
                 log.debug("targetWindowClosing: selectedValue= {}", selectedValue);
             } else {
                 _targetFrame.setVisible(false);
-                firePropertyChange("visible", true, false);
             }
         } else {
             _targetFrame.setVisible(false);   // doesn't remove the editor!
-            firePropertyChange("visible", true, false);
         }
     }
 
@@ -2851,11 +2847,10 @@ abstract public class Editor extends JmriJFrame implements MouseListener, MouseM
 
     public class TextAttrDialog extends DisplayFrame {
 
-        Positionable _pos;
-        DecoratorPanel _decorator;
-        BufferedImage[] _backgrounds;
+        public Positionable _pos;
+        public DecoratorPanel _decorator;
 
-        TextAttrDialog(Positionable p, Editor ed) {
+        public TextAttrDialog(Positionable p, Editor ed) {
             super(Bundle.getMessage("TextAttributes"), ed);
             _pos = p;
             JPanel panel = new JPanel();
@@ -2879,20 +2874,20 @@ abstract public class Editor extends JmriJFrame implements MouseListener, MouseM
             JButton doneButton = new JButton(Bundle.getMessage("ButtonDone"));
             doneButton.addActionListener(a -> {
                 PositionablePopupUtil util = _decorator.getPositionablePopupUtil();
-                _decorator.setSuppressRecentColor(false);
                 _decorator.setAttributes(_pos);
-                if (_selectionGroup == null) {
-                    setAttributes(util, _pos);
-                } else {
+                if (_selectionGroup != null) {
                     setSelectionsAttributes(util, _pos);
+                } else {
+                    setAttributes(util, _pos);
                 }
+                _decorator.close();
                dispose();
             });
             panel0.add(doneButton);
 
             JButton cancelButton = new JButton(Bundle.getMessage("ButtonCancel"));
             cancelButton.addActionListener(a -> {
-                _decorator.setSuppressRecentColor(false);
+                _decorator.close();
                 dispose();
             });
             panel0.add(cancelButton);

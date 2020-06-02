@@ -56,6 +56,9 @@ public class LocoIOData extends PropertyChangeSupport
 
     /**
      * Create a new instance of LocoIOData.
+     * @param unitAddr unit address.
+     * @param unitSubAddr unit SubAddress.
+     * @param tc system connection traffic controller.
      */
     public LocoIOData(int unitAddr, int unitSubAddr, LnTrafficController tc) {
         timeoutcounter = 0;
@@ -102,6 +105,8 @@ public class LocoIOData extends PropertyChangeSupport
      * The subAddress is in the range of 0x01 .. 0x7E
      * <br>
      * (0x7F is reserved)
+     * @param unit unit address.
+     * @param unitSub unit subAddress.
      */
     public synchronized void setUnitAddress(int unit, int unitSub) {
         setUnitAddress(unit);
@@ -137,6 +142,10 @@ public class LocoIOData extends PropertyChangeSupport
      *
      * If possibe add/support the additional config options for HDL boards
      * </pre>
+     * @param portRefresh port refresh value, bit 0.
+     * @param altCodePBs alternated code PBs, bit 1.
+     * @param isServo servo port, bit 3.
+     * @param blinkRate blink rate, bits 4-7.
      */
     public void setUnitConfig(int portRefresh, int altCodePBs, int isServo, int blinkRate) {
         int newsv0 = ((portRefresh & 0x01)) |   // bit 0
@@ -219,6 +228,7 @@ public class LocoIOData extends PropertyChangeSupport
      *
      * @param channel integer value of the addresses in use for this row
      *                (0 = invalid)
+     * @param value channel value.
      */
     public void setAddr(int channel, int value) {
         addr[channel] = value & 0x7FF;
@@ -671,7 +681,8 @@ public class LocoIOData extends PropertyChangeSupport
     }
 
     /**
-     * Internal routine to handle timer starts and restarts.
+     * Internal routine to handle timer starts and restarts.    
+     * @param delay Milliseconds to wait
      */
     protected void restartTimer(int delay) {
         if (timer == null) {
@@ -690,7 +701,9 @@ public class LocoIOData extends PropertyChangeSupport
 
     /**
      * Read an SV from a given LocoIO device.
-     *
+     * @param locoIOAddress primary board address
+     * @param locoIOSubAddress subaddress within board
+     * @param cv CV number to access
      */
     void sendReadCommand(int locoIOAddress, int locoIOSubAddress, int cv) {
         // remember current op is read
@@ -704,7 +717,10 @@ public class LocoIOData extends PropertyChangeSupport
 
     /**
      * Write an SV to a given LocoIO device.
-     *
+     * @param locoIOAddress primary board address
+     * @param locoIOSubAddress subaddress within board
+     * @param cv CV number to access
+     * @param data value to be written
      */
     void sendWriteCommand(int locoIOAddress, int locoIOSubAddress, int cv, int data) {
         // remember current op is write

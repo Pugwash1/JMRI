@@ -51,9 +51,17 @@ public class VariableTableModel extends AbstractTableModel implements ActionList
     protected transient volatile DecoderFile _df = null;
 
     /**
-     * Define the columns; values understood are: "Name", "Value", "Range",
-     * "Read", "Write", "Comment", "CV", "Mask", "State". For each, a property
-     * key in SymbolicProgBundle by the same name allows i18n
+     * Define the columns.
+     * <p>
+     * Values understood are: "Name", "Value", "Range",
+     * "Read", "Write", "Comment", "CV", "Mask", "State". 
+     * <p>
+     * For each, a property
+     * key in SymbolicProgBundle by the same name allows i18n.
+     * 
+     * @param status variable status.
+     * @param h values headers array.
+     * @param cvModel cv table model to use.
      */
     public VariableTableModel(JLabel status, String h[], CvTableModel cvModel) {
         super();
@@ -385,17 +393,19 @@ public class VariableTableModel extends AbstractTableModel implements ActionList
     /**
      * If there are any modifier elements, process them by e.g. setting
      * attributes on the VariableValue.
+     * @param e Element that's source of info
+     * @param variable Variable to load
      */
-    protected void processModifierElements(final Element e, final VariableValue v) {
+    protected void processModifierElements(final Element e, final VariableValue variable) {
         QualifierAdder qa = new QualifierAdder() {
             @Override
-            protected Qualifier createQualifier(VariableValue var, String relation, String value) {
-                return new ValueQualifier(v, var, Integer.parseInt(value), relation);
+            protected Qualifier createQualifier(VariableValue variable2, String relation, String value) {
+                return new ValueQualifier(variable, variable2, Integer.parseInt(value), relation);
             }
 
             @Override
             protected void addListener(java.beans.PropertyChangeListener qc) {
-                v.addPropertyChangeListener(qc);
+                variable.addPropertyChangeListener(qc);
             }
         };
 
@@ -405,14 +415,16 @@ public class VariableTableModel extends AbstractTableModel implements ActionList
     /**
      * If there's a "default" attribute, or matching defaultItem element, set that value to start.
      *
+     * @param e Element that's source of info
+     * @param variable Variable to load
      * @return true if the value was set
      */
-    boolean setDefaultValue(Element e, VariableValue v) {
+    boolean setDefaultValue(Element e, VariableValue variable) {
         Attribute a;
         boolean set = false;
         if ((a = e.getAttribute("default")) != null) {
             String val = a.getValue();
-            v.setIntValue(Integer.parseInt(val));
+            variable.setIntValue(Integer.parseInt(val));
             set = true;
         }
         // check for matching child
@@ -420,7 +432,7 @@ public class VariableTableModel extends AbstractTableModel implements ActionList
         for (Element defaultItem : elements) {
             if (_df != null && DecoderFile.isIncluded(defaultItem, _df.getProductID(), _df.getModel(), _df.getFamily(), "", "")) {
                 log.debug("element included by productID={} model={} family={}", _df.getProductID(), _df.getModel(), _df.getFamily());
-                v.setIntValue(Integer.parseInt(defaultItem.getAttribute("default").getValue()));
+                variable.setIntValue(Integer.parseInt(defaultItem.getAttribute("default").getValue()));
                 return true;
             }
         }
@@ -454,6 +466,8 @@ public class VariableTableModel extends AbstractTableModel implements ActionList
      * compositeChoiceGroup elements as needed.
      * <p>
      * Adapted from handleEnumValChildren for use in LocoIO.
+     * @param e Element that's source of info
+     * @param var Variable to load
      */
     protected void handleCompositeValChildren(Element e, CompositeVariableValue var) {
         List<Element> local = e.getChildren();
@@ -524,6 +538,8 @@ public class VariableTableModel extends AbstractTableModel implements ActionList
     /**
      * Recursively walk the child enumChoice elements, working through the
      * enumChoiceGroup elements as needed.
+     * @param e Element that's source of info
+     * @param var Variable to load
      */
     protected void handleEnumValChildren(Element e, EnumVariableValue var) {
         List<Element> local = e.getChildren();
@@ -861,6 +877,7 @@ public class VariableTableModel extends AbstractTableModel implements ActionList
     /**
      * Configure from a constant. This is like setRow (which processes a
      * variable Element).
+     * @param e element to set.
      */
     @SuppressFBWarnings(value = "NP_LOAD_OF_KNOWN_NULL_VALUE",
             justification = "null mask parameter to ConstantValue constructor expected.")
@@ -924,6 +941,14 @@ public class VariableTableModel extends AbstractTableModel implements ActionList
 
     /**
      * Programmatically create a new DecVariableValue from parameters.
+     * @param name variable name.
+     * @param CV CV string.
+     * @param comment variable comment.
+     * @param mask CV mask.
+     * @param readOnly true if read only, else false.
+     * @param infoOnly true if information only, else false.
+     * @param writeOnly true if write only, else false.
+     * @param opsOnly true if ops only, else false.
      */
     public void newDecVariableValue(String name, String CV, String comment, String mask,
             boolean readOnly, boolean infoOnly, boolean writeOnly, boolean opsOnly) {
@@ -1019,6 +1044,7 @@ public class VariableTableModel extends AbstractTableModel implements ActionList
     /**
      * Represents any change to values, etc, hence rewriting the file is
      * desirable.
+     * @return true if dirty, else false.
      */
     public boolean fileDirty() {
         return _fileDirty;
@@ -1032,6 +1058,7 @@ public class VariableTableModel extends AbstractTableModel implements ActionList
     /**
      * Check for change to values, etc, hence rewriting the decoder is
      * desirable.
+     * @return true if dirty, else false.
      */
     public boolean decoderDirty() {
         int len = rowVector.size();
@@ -1044,9 +1071,13 @@ public class VariableTableModel extends AbstractTableModel implements ActionList
     }
 
     /**
-     * Returns the (first) variable that matches a given name string. Searches
+     * Returns the (first) variable that matches a given name string.
+     * <p>
+     * Searches
      * first for "item", the true name, but if none found will attempt to find a
      * matching "label". In that case, only the default language is checked.
+     * @param name search string.
+     * @return first matching variable found.
      */
     public VariableValue findVar(String name) {
         for (int i = 0; i < getRowCount(); i++) {

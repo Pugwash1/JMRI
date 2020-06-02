@@ -35,7 +35,8 @@ import jmri.util.MathUtil;
 public class LayoutXOverEditor extends LayoutTurnoutEditor {
 
     /**
-     * constructor method
+     * constructor method.
+     * @param layoutEditor main layout editor.
      */
     public LayoutXOverEditor(@Nonnull LayoutEditor layoutEditor) {
         super(layoutEditor);
@@ -46,7 +47,7 @@ public class LayoutXOverEditor extends LayoutTurnoutEditor {
      */
     @Override
     public void editLayoutTrack(@Nonnull LayoutTrack layoutTrack) {
-        log.trace("XOver editors are an extension of superclass LayoutTrackEditor");
+        log.trace("LayoutXOverEditor.editLayoutTrack({}) of a {}", layoutTrack, layoutTrack.getClass());
         super.editLayoutTrack(layoutTrack);
     }
     
@@ -131,6 +132,12 @@ public class LayoutXOverEditor extends LayoutTurnoutEditor {
             editLayoutTurnout2ndTurnoutComboBox.setSelectedItem(null);
         }
         editLayoutTurnoutNeedRedraw = true;
+    }
+
+    // set the continuing route Turnout State
+    @Override
+    protected void setContinuingRouteTurnoutState() {
+        // this had content in LayoutTurnoutEditor superclass, which we don't want to do here.
     }
 
     @Override

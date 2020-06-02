@@ -18,6 +18,8 @@ public class MarklinThrottle extends AbstractThrottle implements MarklinListener
 
     /**
      * Constructor.
+     * @param memo system connection.
+     * @param address loco address.
      */
     public MarklinThrottle(MarklinSystemConnectionMemo memo, LocoAddress address) {
         super(memo);
@@ -133,6 +135,8 @@ public class MarklinThrottle extends AbstractThrottle implements MarklinListener
 
     /**
      * Convert a Marklin speed integer to a float speed value
+     * @param lSpeed Marklin-format speed value
+     * @return 0.0 - 1.0 speed value
      */
     protected float floatSpeed(int lSpeed) {
         if (lSpeed == 0) {

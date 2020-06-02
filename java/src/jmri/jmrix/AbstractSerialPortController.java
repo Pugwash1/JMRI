@@ -50,6 +50,10 @@ abstract public class AbstractSerialPortController extends AbstractPortControlle
 
     /**
      * Standard error handling for port-not-found case.
+     * @param p no such port exception.
+     * @param portName port name.
+     * @param log system log.
+     * @return human readable string with error detail.
      */
     public String handlePortNotFound(NoSuchPortException p, String portName, Logger log) {
         log.error("Serial port {} not found", portName);
@@ -351,7 +355,8 @@ abstract public class AbstractSerialPortController extends AbstractPortControlle
     }
 
     /**
-     * Set event logging
+     * Set event logging.
+     * @param port Serial port to configure
      */
     protected void setPortEventLogging(SerialPort port) {
         // arrange to notify later

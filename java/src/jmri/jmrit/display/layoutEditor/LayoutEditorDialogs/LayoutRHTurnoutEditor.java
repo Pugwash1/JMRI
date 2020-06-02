@@ -21,7 +21,8 @@ import jmri.util.*;
 public class LayoutRHTurnoutEditor extends LayoutTurnoutEditor {
 
     /**
-     * constructor method
+     * constructor method.
+     * @param layoutEditor main layout editor.
      */
     public LayoutRHTurnoutEditor(@Nonnull LayoutEditor layoutEditor) {
         super(layoutEditor);
@@ -30,13 +31,9 @@ public class LayoutRHTurnoutEditor extends LayoutTurnoutEditor {
     // set the continuing route Turnout State
     @Override
     protected void setContinuingRouteTurnoutState() {
-        if ((layoutTurnout.getTurnoutType() == LayoutTurnout.TurnoutType.RH_TURNOUT)
-                || (layoutTurnout.getTurnoutType() == LayoutTurnout.TurnoutType.LH_TURNOUT)
-                || (layoutTurnout.getTurnoutType() == LayoutTurnout.TurnoutType.WYE_TURNOUT)) {
-            layoutTurnout.setContinuingSense(Turnout.CLOSED);
-            if (editLayoutTurnoutStateComboBox.getSelectedIndex() == editLayoutTurnoutThrownIndex) {
-                layoutTurnout.setContinuingSense(Turnout.THROWN);
-            }
+        layoutTurnout.setContinuingSense(Turnout.CLOSED);
+        if (editLayoutTurnoutStateComboBox.getSelectedIndex() == editLayoutTurnoutThrownIndex) {
+            layoutTurnout.setContinuingSense(Turnout.THROWN);
         }
     }
     

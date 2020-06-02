@@ -23,6 +23,7 @@ public class XNetThrottleManager extends AbstractThrottleManager implements XNet
 
     /**
      * Constructor.
+     * @param memo system connection.
      */
     public XNetThrottleManager(XNetSystemConnectionMemo memo) {
         super(memo);
@@ -106,6 +107,8 @@ public class XNetThrottleManager extends AbstractThrottleManager implements XNet
 
     /**
      * Local method for deciding short/long address
+     * @param num address to examine
+     * @return true if can be long address
      */
     static protected boolean isLongAddress(int num) {
         return (num >= 100);

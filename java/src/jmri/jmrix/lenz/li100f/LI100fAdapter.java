@@ -142,6 +142,7 @@ public class LI100fAdapter extends XNetSerialPortController {
 
     /**
      * Local method to do specific configuration.
+     * @throws UnsupportedCommOperationException if port can't do as asked
      */
     protected void setSerialPort() throws UnsupportedCommOperationException {
         // find the baud rate value, configure comm options
@@ -177,6 +178,7 @@ public class LI100fAdapter extends XNetSerialPortController {
 
     /**
      * option1 controls flow control option.
+     * @return human readable string, uses IFTypeLI100F .
      */
     public String option1Name() {
         return Bundle.getMessage("XconnectionUsesLabel", Bundle.getMessage("IFTypeLI100F"));

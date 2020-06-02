@@ -1514,7 +1514,7 @@ public class LayoutBlock extends AbstractNamedBean implements PropertyChangeList
 
             if ((editor != null) && (connection == null)) {
                 // We should be able to determine block metric now as the tracksegment should be valid
-                connection = new ConnectivityUtil(editor);
+                connection = editor.getConnectivityUtil();
             }
 
             // Need to inform our neighbours of our new addition
@@ -2273,7 +2273,7 @@ public class LayoutBlock extends AbstractNamedBean implements PropertyChangeList
                                 }
                                 layoutBlock.removeRouteFromNeighbour(this, newUpdate);
                                 getAdjacency(nextblk).removeRouteAdvertisedToNeighbour(routesToRemove.get(j));
-                                
+
                             } else {
                                 if (enableDeleteRouteLogging) {
                                     log.info("{} a valid path through exists {} so we will not remove route.", msgPrefix, nextblk.getDisplayName());
@@ -2434,7 +2434,7 @@ public class LayoutBlock extends AbstractNamedBean implements PropertyChangeList
             log.info("Block {}, src: {}, dst: {}",
                     block.getDisplayName(), srcBlock.getDisplayName(), dstBlock.getDisplayName());
         }
-        connection = new ConnectivityUtil(panel);
+        connection = panel.getConnectivityUtil();
         List<LayoutTrackExpectedState<LayoutTurnout>> stod;
 
         try {
@@ -4528,6 +4528,8 @@ public class LayoutBlock extends AbstractNamedBean implements PropertyChangeList
     /**
      * When a route is created, check to see if the through path that this route
      * relates to is active.
+     * @param r The route to check
+     * @return true if that route is active
      */
     boolean checkIsRouteOnValidThroughPath(Routes r) {
         for (ThroughPaths t : throughPaths) {
@@ -4608,6 +4610,8 @@ public class LayoutBlock extends AbstractNamedBean implements PropertyChangeList
 
     /**
      * Set the valid flag for routes that are on a valid through path.
+     * @param nxtHopActive the start of the route
+     * @param state the state to set into the valid flag
      */
     void setRoutesValid(Block nxtHopActive, boolean state) {
         List<Routes> rtr = getRouteByNeighbour(nxtHopActive);
