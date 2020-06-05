@@ -170,13 +170,12 @@ public class AutoEngineerMicro extends JPanel {
         if (e.getPropertyName().equals("mode")) {
             log.info("Modeold[{}]new[{}]", e.getNewValue(), e.getOldValue());
             int newValue = ((Integer) e.getNewValue()).intValue();
-            int oldValue = ((Integer) e.getOldValue()).intValue();
             if (newValue == ActiveTrain.DISPATCHED) {
                 jmri.InstanceManager.throttleManagerInstance().removeListener(throttle.getLocoAddress(),
                         throttleListener);
             } else if (newValue == ActiveTrain.DONE) {
                 btnNewBbtnStartStop.setIcon(iconRestartIcon);
-            } else if (oldValue == ActiveTrain.DISPATCHED) {
+            } else if (newValue == ActiveTrain.AUTOMATIC || newValue == ActiveTrain.MANUAL) {
                 if (autoActiveTrain.getThrottle() != null) {
                     throttle = autoActiveTrain.getThrottle();
                     throttleListener = new java.beans.PropertyChangeListener() {
