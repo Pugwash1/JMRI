@@ -274,9 +274,9 @@ public class ActiveTrain {
     }
 
     public void setStatus(int status) {
-        if (restartPoint) {
-            return;
-        }
+        //if (restartPoint) {
+        //    return;
+        //}
         if ((status == RUNNING) || (status == PAUSED) || (status == WAITING) || (status == WORKING)
                 || (status == READY) || (status == STOPPED) || (status == DONE) || (status == TERMINATED)) {
             if (mStatus != status) {
