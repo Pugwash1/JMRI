@@ -150,7 +150,7 @@ public class ActiveTrain {
      * a run.
      */
     public static final int AUTOMATIC = 0x02;   // requires mAutoRun to be "true" (auto trains only)
-    public static final int MANUAL = 0x04;    // requires mAutoRun to be "true" (auto trains only)
+    public static final int MANUAL = 0x04;      // requires mAutoRun to be "true" (auto trains only)
     public static final int DISPATCHED = 0x08;
 
     /**

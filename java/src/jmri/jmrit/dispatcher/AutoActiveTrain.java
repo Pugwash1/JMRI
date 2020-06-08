@@ -1625,13 +1625,22 @@ public class AutoActiveTrain implements ThrottleListener {
         @Override
         public void run() {
             boolean waitingOnTrain = true;
+            //int waitCounter = 0; 
             try {
                 while (waitingOnTrain) {
                     if ((getAutoEngineer() != null) && (getAutoEngineer().isStopped())) {
                         waitingOnTrain = false;
+                    //} else if (getAutoEngineer() == null) {
+                    //    log.error("Enineer went null");
+                        waitingOnTrain = false;
                     } else {
                         Thread.sleep(_delay);
                     }
+                    //waitCounter++;
+                    //if (waitCounter > 100) {
+                    //    log.error("Wait, still not zero [{}]",_throttle.getSpeedSetting());
+                    //    waitCounter = 0;
+                    //}
                 }
                 log.trace("executing task[{}]",_task);
                 executeStopTasks(_task);

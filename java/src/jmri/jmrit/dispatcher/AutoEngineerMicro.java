@@ -24,6 +24,8 @@ import javax.swing.plaf.basic.BasicToolBarUI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.jogamp.openal.sound3d.Listener;
+
 import jmri.Throttle;
 import jmri.implementation.SignalSpeedMap;
 import jmri.jmrit.catalog.NamedIcon;
@@ -146,17 +148,21 @@ public class AutoEngineerMicro extends JPanel {
 
         }
 
-        if (this.autoActiveTrain.getThrottle() != null) {
-            throttle = autoActiveTrain.getThrottle();
-            throttleListener = new java.beans.PropertyChangeListener() {
-                @Override
-                public void propertyChange(java.beans.PropertyChangeEvent e) {
-                    handleThrottleListen(e);
-                }
-            };
-            throttle.addPropertyChangeListener(throttleListener);
-            btnNewBbtnStartStop.setIcon(iconGoIcon);
-        }
+        btnNewBbtnStartStop.setIcon(iconStopIcon);
+        
+        // Dont set throttle up until it goes automatic.
+        throttle = null;
+        //if (this.autoActiveTrain.getThrottle() != null) {
+        //    throttle = autoActiveTrain.getThrottle();
+        //    throttleListener = new java.beans.PropertyChangeListener() {
+        //        @Override
+        //        public void propertyChange(java.beans.PropertyChangeEvent e) {
+        //            handleThrottleListen(e);
+        //        }
+        //    };
+        //     throttle.addPropertyChangeListener(throttleListener);
+        //    btnNewBbtnStartStop.setIcon(iconGoIcon);
+        //}
     }
 
     private AutoActiveTrain autoActiveTrain = null;
@@ -175,8 +181,10 @@ public class AutoEngineerMicro extends JPanel {
                         throttleListener);
             } else if (newValue == ActiveTrain.DONE) {
                 btnNewBbtnStartStop.setIcon(iconRestartIcon);
-            } else if (newValue == ActiveTrain.AUTOMATIC || newValue == ActiveTrain.MANUAL) {
-                if (autoActiveTrain.getThrottle() != null) {
+            } else if (newValue == ActiveTrain.AUTOMATIC ) {
+                log.info("[{}]:Set auto",autoActiveTrain.getActiveTrain().getActiveTrainName());
+                if (throttle == null && autoActiveTrain.getThrottle() != null) {
+                    log.info("[{}]:Set new throttle",autoActiveTrain.getActiveTrain().getActiveTrainName());
                     throttle = autoActiveTrain.getThrottle();
                     throttleListener = new java.beans.PropertyChangeListener() {
                         @Override
@@ -263,7 +271,7 @@ public class AutoEngineerMicro extends JPanel {
             }
             currentThrottleSetting = throttle.getSpeedSetting();
             currentStep = (int) Math.ceil(currentThrottleSetting * 8);
-            log.info("throt[{}]Step[{}]", currentThrottleSetting, currentStep);
+            // log.info("throt[{}]Step[{}]", currentThrottleSetting, currentStep);
             if (rosterEntry != null && rosterEntry.getSpeedProfile() != null) {
                 currentThrottlePerHour = rosterEntry.getSpeedProfile()
                         .MMSToScaleSpeed(rosterEntry.getSpeedProfile().getSpeed(currentThrottleSetting, true));
@@ -275,7 +283,11 @@ public class AutoEngineerMicro extends JPanel {
                 log.error("{}:throttle null Property[{}]", activeTrain.getActiveTrainName(),e.getPropertyName());
             }
             log.debug("{}:Property[{}]", activeTrain.getActiveTrainName(),e.getPropertyName());
+            try {
             btnReverser.setIcon(throttle.getIsForward() ? iconForward : iconReverse);
+            } catch (Exception ex) {
+                log.error("[{}]:No throttle in throttle Listener", activeTrain.getActiveTrainName() );
+            }
         } else {
             return;
         }
