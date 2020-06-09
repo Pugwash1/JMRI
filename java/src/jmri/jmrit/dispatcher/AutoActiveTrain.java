@@ -1272,7 +1272,7 @@ public class AutoActiveTrain implements ThrottleListener {
                 if (_activeTrain.getDelayedRestart() == ActiveTrain.NODELAY) {
                     if ((_nextSection != null) && !isSectionInAllocatedList(_nextSection)) {
                         InstanceManager.getDefault(DispatcherFrame.class).forceScanOfAllocation();
-                        break;
+//                        break;
                     }
                     // a reversal can happen in mid section
                     setupNewCurrentSignal(_currentAllocatedSection, true);

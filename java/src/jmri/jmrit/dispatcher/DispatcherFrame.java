@@ -1285,6 +1285,7 @@ public class DispatcherFrame extends jmri.util.JmriJFrame implements InstanceMan
                 }
                 return null;
             }
+            /*
             // check/set direction sensors in signal logic for all Sections in this Transit.
             if (getSignalType() == SIGNALHEAD) {
                 numErrors = checkSignals(t, _LE);
@@ -1300,6 +1301,7 @@ public class DispatcherFrame extends jmri.util.JmriJFrame implements InstanceMan
                     return null;
                 }
             }
+            */
             // TODO: Need to check signalMasts as well
             // this train is OK, activate the AutoTrains window, if needed
             if (_autoTrainsFrame == null) {

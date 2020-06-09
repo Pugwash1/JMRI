@@ -227,6 +227,7 @@ public class ActiveTrain {
     public void setStarted() {
         mStarted = true;
         mStatus = RUNNING;
+        holdAllocation(false);
         setStatus(WAITING);
         if (mAutoActiveTrain != null && InstanceManager.getDefault(DispatcherFrame.class).getSignalType() == DispatcherFrame.SIGNALMAST) {
             mAutoActiveTrain.setupNewCurrentSignal(null,false);
