@@ -1247,7 +1247,7 @@ public class AutoActiveTrain implements ThrottleListener {
         // even if no task is required it must be run
         // as cleanup happens after train stops.
         Runnable waitForStop = new WaitForTrainToStop(task);
-        Thread tWait =  new Thread (waitForStop, "Wait for stop " + getActiveTrain().getActiveTrainName());
+        Thread tWait = jmri.util.ThreadingUtil.newThread(waitForStop, "Wait for stop " + getActiveTrain().getActiveTrainName());
         tWait.start();
     }
 
@@ -1643,9 +1643,6 @@ public class AutoActiveTrain implements ThrottleListener {
                     //}
                 }
                 log.trace("executing task[{}]",_task);
-                Runnable waitForStop = new ExecuteStopTask(_task);
-                Thread tWait = jmri.util.ThreadingUtil.newThread(waitForStop, "Wait for stop " + getActiveTrain().getActiveTrainName());
-                tWait.start();
                 executeStopTasks(_task);
             } catch (InterruptedException e) {
                 log.warn("Waiting for train to stop interrupted - stop tasks not executing");
@@ -1653,23 +1650,8 @@ public class AutoActiveTrain implements ThrottleListener {
                 log.error("Waiting for train to stop crashed - stop tasks not executing.", e);
             }
         }
+
         private final int _delay = 91;
-        private int _task = 0;
-    }
-
-    class ExecuteStopTask implements Runnable {
-        public ExecuteStopTask(int task) {
-            _task = task;
-        }
-
-        @Override
-        public void run() {
-            try {
-                executeStopTasks(_task);
-            } catch (Exception ex) {
-                log.error("Waiting for train to stop crashed - stop tasks not executing.", ex);
-            }
-        }
         private int _task = 0;
     }
 
