@@ -343,6 +343,10 @@ public class AutoActiveTrain implements ThrottleListener {
                 _resumingAutomatic = false;
                 _activeTrain.setStatus(ActiveTrain.RUNNING);
                 setupNewCurrentSignal(null, true);
+                // if no current signal use saved.
+                if (!isCurrentSignal()) {
+                    restoreSavedSpeedAndDirection();
+                }
                 setEngineDirection();
                 setSpeedBySignal();
             } else if (InstanceManager.getDefault(DispatcherFrame.class).getAutoAllocate()) {
@@ -406,16 +410,16 @@ public class AutoActiveTrain implements ThrottleListener {
 
     // keeps track of and restores previous speed
     private float _savedSpeed = 0.0f;
-    private boolean _savedIsForward = true;
+    private boolean _savedForward = true;
 
-    protected void saveSpeed() {
+    protected void saveSpeedAndDirection() {
         _savedSpeed = _targetSpeed;
-        _savedIsForward = getForward();
+        _savedForward = _forward;
     }
 
-    protected void restoreSavedSpeed() {
+    protected void restoreSavedSpeedAndDirection() {
         _targetSpeed = _savedSpeed;
-        setForward(_savedIsForward);
+        _forward = _savedForward;
     }
 
     // keeps track of number of horn execution threads that are active
@@ -685,6 +689,28 @@ public class AutoActiveTrain implements ThrottleListener {
             _conSignalMastListener = null;
         }
         _controllingSignalMast = null;
+        _needSetSpeed = false;
+    }
+
+    /**
+     * Checks for a controlling signal
+     * @return true if there is one
+     */
+    protected boolean isCurrentSignal() {
+        if (InstanceManager.getDefault(DispatcherFrame.class).getSignalType() == DispatcherFrame.SIGNALHEAD) {
+            if (_controllingSignal != null) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            // SignalMast
+            if (_controllingSignalMast != null) {
+                return true;
+            } else {
+                return false;
+            }
+        }
     }
 
     /**
@@ -1077,8 +1103,7 @@ public class AutoActiveTrain implements ThrottleListener {
         if (isStopping()) {
             if (_stoppingBySensor) {
                 // cancel stopping by stop sensor
-                _needSetSpeed = true;
-                handleStopSensorChange();
+                cancelStoppingBySensor();
             } else if (_stoppingByBlockOccupancy) {
                 // cancel stopping by block occupancy
                 _stoppingByBlockOccupancy = false;
@@ -1115,15 +1140,9 @@ public class AutoActiveTrain implements ThrottleListener {
                 // stop sensor is already active, stop now
                 setStopNow();
             } else {
-                if (useSpeedProfile && _currentAllocatedSection.getSection().getActualLength() > 0) {
-                    _stoppingUsingSpeedProfile = true;
-                } else {
-                    setDecreasedSpeedBeforeStop();
-                }
+                setDecreasedSpeedBeforeStop();
                 _stopSensor.addPropertyChangeListener(_stopSensorListener = (java.beans.PropertyChangeEvent e) -> {
-                    if (e.getPropertyName().equals("KnownState")) {
-                        handleStopSensorChange();
-                    }
+                    handleStopSensorChange(e);
                 });
                 _stoppingBySensor = true;
             }
@@ -1304,8 +1323,25 @@ public class AutoActiveTrain implements ThrottleListener {
         }
     }
 
-    private synchronized void handleStopSensorChange() {
-        if (_stopSensor.getState() == Sensor.ACTIVE) {
+    /**
+     * Remove the stopping sensor
+     */
+    private void cancelStoppingBySensor() {
+        if (_stopSensor != null) {
+            _stopSensor.removePropertyChangeListener(_stopSensorListener);
+            _stoppingBySensor = false;
+            _stopSensorListener = null;
+            _stopSensor = null;
+        }
+    }
+
+    /**
+     * When the stopping sensor we are waiting on goes active
+     * stop the train or set a new speed and destroy itself
+     * @param e  - the property change event
+     */
+    private synchronized void handleStopSensorChange(java.beans.PropertyChangeEvent e) {
+        if (e.getPropertyName().equals("KnownState") && (int) e.getNewValue() == Sensor.ACTIVE) {
             _stopSensor.removePropertyChangeListener(_stopSensorListener);
             _stoppingBySensor = false;
             _stopSensorListener = null;
@@ -1391,7 +1427,7 @@ public class AutoActiveTrain implements ThrottleListener {
             float throttleSetting = (speed / mls);
             return applyMaxThrottleAndFactor(throttleSetting);
         } else {
-            return applyMaxThrottleAndFactor(speed);
+            return applyMaxThrottleAndFactor(speed/100.0f);
         }
     }
 
@@ -1501,6 +1537,9 @@ public class AutoActiveTrain implements ThrottleListener {
      */
     protected void initiateWorking() {
         if (_activeTrain.getStatus() != ActiveTrain.WORKING) {
+            _activeTrain.setMode(ActiveTrain.DISPATCHED);
+            _activeTrain.setStatus(ActiveTrain.WORKING);
+            saveSpeedAndDirection();
             if (_autoEngineer != null) {
                 _autoEngineer.setHalt(true);
                 waitUntilStopped();
@@ -1509,8 +1548,6 @@ public class AutoActiveTrain implements ThrottleListener {
                 _autoEngineer = null;
                 _throttle = null;
             }
-            _activeTrain.setMode(ActiveTrain.MANUAL);
-            _activeTrain.setStatus(ActiveTrain.WORKING);
         }
     }
 
