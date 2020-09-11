@@ -24,12 +24,9 @@ import javax.swing.plaf.basic.BasicToolBarUI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.jogamp.openal.sound3d.Listener;
-
 import jmri.Throttle;
 import jmri.implementation.SignalSpeedMap;
 import jmri.jmrit.catalog.NamedIcon;
-import jmri.jmrit.dispatcher.AutoEngineerJButton;
 import jmri.jmrit.roster.RosterEntry;
 import jmri.jmrit.roster.RosterIconFactory;
 
@@ -223,7 +220,7 @@ public class AutoEngineerMicro extends JPanel {
         if ((boolean) e.getNewValue() == true) {
             if (activeTrain.getStatus() != ActiveTrain.STOPPED && activeTrain.getStatus() != ActiveTrain.DONE) {
                 autoActiveTrain.getAutoEngineer().setHalt(true);
-                autoActiveTrain.saveSpeed();
+                autoActiveTrain.saveSpeedAndDirection();
                 autoActiveTrain.setSavedStatus(activeTrain.getStatus());
                 activeTrain.setStatus(ActiveTrain.STOPPED);
                 btnNewBbtnStartStop.setIcon(iconStopIcon);
@@ -248,7 +245,7 @@ public class AutoEngineerMicro extends JPanel {
                 return;
             }
             currentStep += value;
-            currentThrottleSetting = ((float) currentStep * 1.0f / 8.0f);
+            currentThrottleSetting = currentStep * 1.0f / 8.0f;
             btnThrottle.setIcon(iconSpeeds.get(currentStep));
 //            autoActiveTrain.getAutoEngineer().setSpeedImmediate(currentThrottleSetting);
             throttle.setSpeedSetting(currentThrottleSetting);
@@ -304,7 +301,7 @@ public class AutoEngineerMicro extends JPanel {
             // resume
             autoActiveTrain.setEngineDirection();
             autoActiveTrain.getAutoEngineer().setHalt(false);
-            autoActiveTrain.restoreSavedSpeed();
+            autoActiveTrain.restoreSavedSpeedAndDirection();
             activeTrain.setStatus(autoActiveTrain.getSavedStatus());
             if ((activeTrain.getStatus() == ActiveTrain.RUNNING) ||
                     (activeTrain.getStatus() == ActiveTrain.WAITING)) {
@@ -319,7 +316,7 @@ public class AutoEngineerMicro extends JPanel {
         } else {
             // stop
             autoActiveTrain.getAutoEngineer().setHalt(true);
-            autoActiveTrain.saveSpeed();
+            autoActiveTrain.saveSpeedAndDirection();
             autoActiveTrain.setSavedStatus(activeTrain.getStatus());
             activeTrain.setStatus(ActiveTrain.STOPPED);
             btnNewBbtnStartStop.setIcon(iconStopIcon);
@@ -331,7 +328,7 @@ public class AutoEngineerMicro extends JPanel {
             activeTrain.setMode(ActiveTrain.MANUAL);
             btnManualAuto.setIcon(iconEngineerManual);
             if (autoActiveTrain.getAutoEngineer() != null) {
-                autoActiveTrain.saveSpeed();
+                autoActiveTrain.saveSpeedAndDirection();
                 autoActiveTrain.getAutoEngineer().setHalt(true);
                 autoActiveTrain.setTargetSpeed(0.0f);
                 autoActiveTrain.waitUntilStopped();
@@ -340,7 +337,7 @@ public class AutoEngineerMicro extends JPanel {
         } else if (activeTrain.getMode() == ActiveTrain.MANUAL) {
             activeTrain.setMode(ActiveTrain.AUTOMATIC);
             btnManualAuto.setIcon(iconEngineerAuto);
-            autoActiveTrain.restoreSavedSpeed();
+            autoActiveTrain.saveSpeedAndDirection();
             //autoActiveTrain.setForward(!autoActiveTrain.getRunInReverse());
             if ((activeTrain.getStatus() == ActiveTrain.RUNNING) ||
                     (activeTrain.getStatus() == ActiveTrain.WAITING)) {
