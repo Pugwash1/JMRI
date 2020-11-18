@@ -833,7 +833,7 @@ public class AutoActiveTrain implements ThrottleListener {
         } else if (InstanceManager.getDefault(DispatcherFrame.class).getSignalType() == DispatcherFrame.SIGNALMAST) {
             setSpeedBySignalMast();
         } else {
-            log.error("Unknown SetSpeed method found in setSpeedBySignal()");;
+            log.error("Unknown SetSpeed method found in setSpeedBySignal()");
         }
     }
 
