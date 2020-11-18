@@ -183,6 +183,8 @@ public class LoadAtStartUpTest {
         // cancel (terminate) the train.
         JButtonOperator bo = new JButtonOperator(dw, Bundle.getMessage("TerminateTrain"));
         bo.push();
+        // wait for cleanup to finish
+        JUnitUtil.waitFor(200);
 
         assertThat((d.getActiveTrainsList().isEmpty())).withFailMessage("All trains terminated").isTrue();
 
