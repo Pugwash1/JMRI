@@ -2318,7 +2318,7 @@ public class DispatcherFrame extends jmri.util.JmriJFrame implements InstanceMan
      */
     public void sectionOccupancyChanged() {
         queueReleaseOfCompletedAllocations();
-        //checkAutoRelease();
+        checkAutoRelease();
         if (allocatedSectionTableModel != null) {
             allocatedSectionTableModel.fireTableDataChanged();
         }
