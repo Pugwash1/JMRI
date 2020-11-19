@@ -102,7 +102,7 @@ public class DispatcherFrame extends jmri.util.JmriJFrame implements InstanceMan
             fastClock.addMinuteChangeListener(minuteChangeListener);
         }
     }
-
+    
     /***
      *  reads thru all the traininfo files found in the dispatcher directory
      *  and loads the ones flagged as "loadAtStartup"
@@ -600,6 +600,7 @@ public class DispatcherFrame extends jmri.util.JmriJFrame implements InstanceMan
                 }
             });
             autoReleaseBox.setSelected(_AutoAllocate); // initialize autoRelease to match autoAllocate
+            _AutoRelease = _AutoAllocate;
             contentPane.add(p30);
             JPanel p31 = new JPanel();
             p31.setLayout(new BorderLayout());
@@ -747,7 +748,7 @@ public class DispatcherFrame extends jmri.util.JmriJFrame implements InstanceMan
      * Queue a general release of completed sections
      */
     protected void queueReleaseOfCompletedAllocations() {
-        if (_AutoAllocate) {
+        if (_AutoRelease) {
             autoAllocate.scanAllocationRequests(new TaskAllocateRelease(TaskAction.AUTO_RELEASE));
         }
     }
@@ -2318,7 +2319,6 @@ public class DispatcherFrame extends jmri.util.JmriJFrame implements InstanceMan
      */
     public void sectionOccupancyChanged() {
         queueReleaseOfCompletedAllocations();
-        checkAutoRelease();
         if (allocatedSectionTableModel != null) {
             allocatedSectionTableModel.fireTableDataChanged();
         }
