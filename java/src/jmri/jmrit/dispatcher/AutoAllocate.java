@@ -115,6 +115,13 @@ public class AutoAllocate implements Runnable {
         scanAllocationRequests(new TaskAllocateRelease(TaskAction.ABORT)); //force queue flush
     }
 
+    /*
+     * return true when the taskList queue is Empty
+     */
+    protected boolean allRequestsDone() {
+        return taskList.isEmpty();
+    }
+
     protected void scanAllocationRequests(TaskAllocateRelease task) {
         taskList.add(task);
     }

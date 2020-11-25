@@ -745,6 +745,23 @@ public class DispatcherFrame extends jmri.util.JmriJFrame implements InstanceMan
     }
 
     /*
+     * Wait for the queue to empty
+     */
+    protected void queueWaitForEmpty() {
+        if (_AutoAllocate) {
+            while (!autoAllocate.allRequestsDone()) {
+                try {
+                    Thread.sleep(10);
+                } catch (InterruptedException iex) {
+                    // we closing do done
+                    return;
+                }
+            }
+        }
+        return;
+    }
+
+    /*
      * Queue a general release of completed sections
      */
     protected void queueReleaseOfCompletedAllocations() {
@@ -2221,6 +2238,19 @@ public class DispatcherFrame extends jmri.util.JmriJFrame implements InstanceMan
                                             && (asx.getAllocationNumber() < as.getAllocationNumber())) {
                                         foundOne = false;
                                     }
+                                }
+                            }
+                            if (foundOne) {
+                                // check its not the last allocated section
+                                int allocatedCount = 0;
+                                for (int j = 0; (j < allocatedSections.size()); j++) {
+                                    AllocatedSection asx = allocatedSections.get(j);
+                                    if (asx.getActiveTrain() == as.getActiveTrain()) {
+                                            allocatedCount++ ;
+                                    }
+                                }
+                                if (allocatedCount == 1) {
+                                    foundOne = false;
                                 }
                             }
                             if (foundOne) {

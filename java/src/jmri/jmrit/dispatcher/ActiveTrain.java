@@ -747,6 +747,8 @@ public class ActiveTrain {
         }
         resetAllAllocatedSections();
         clearAllocations();
+        // wait for autoallocate to do its stuffbefore continuing
+        InstanceManager.getDefault(DispatcherFrame.class).queueWaitForEmpty();
         if (mAutoRun) {
             mAutoActiveTrain.allocateAFresh();
         }
