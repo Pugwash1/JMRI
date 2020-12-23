@@ -42,13 +42,14 @@ public class LnThrottleManager extends AbstractThrottleManager implements SlotLi
 
     /**
      * LocoNet allows multiple throttles for the same device.
+     * Except for Junior edition.
      * <p>
      * {@inheritDoc}
-     * @return false always
+     * @return true always
      */
     @Override
     protected boolean singleUse() {
-        return false;
+        return true;
     }
     
     /**
@@ -213,16 +214,8 @@ public class LnThrottleManager extends AbstractThrottleManager implements SlotLi
             // loco is already in-use
             log.warn("slot {} address {} is already in-use.",
                     s.getSlot(), s.locoAddr());
-            // is the throttle ID the same as for this JMRI instance?  If not, do not accept the slot.
-            if ((s.id() != 0) && s.id() != throttleID) {
-                // notify the LnThrottleManager about failure of acquisition.
-                // NEED TO TRIGGER THE NEW "STEAL REQUIRED" FUNCITONALITY HERE
-                //note: throttle listener expects to have "callback" method notifyDecisionRequired
-                //invoked if a "steal" is required.  Make that happen as part of the "acquisition" process
-                slotForAddress.put(s.locoAddr(),s);
-                notifyStealRequest(s.locoAddr());
-                return;
-            }
+            // never accept an in-use slot.
+            notifyRefused(s.locoAddr(), "In Use");
         }
         commitToAcquireThrottle(s);
     }

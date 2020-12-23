@@ -301,7 +301,10 @@ abstract public class AbstractThrottleManager implements ThrottleManager {
         // get the corresponding list to check length
         ArrayList<WaitingThrottle> a = throttleListeners.get(la);
 
-        if (addressThrottles.containsKey(la)) {
+        if (addressThrottles.containsKey(la) && singleUse()) {
+            throttleFree = false;
+            return throttleFree;
+        } else if (addressThrottles.containsKey(la)) {
             log.debug("A throttle to address {} already exists, so will return that throttle",la.getNumber());
             a.add(new WaitingThrottle(l, re, canHandleDecisions));
             notifyThrottleKnown(addressThrottles.get(la).getThrottle(), la);
