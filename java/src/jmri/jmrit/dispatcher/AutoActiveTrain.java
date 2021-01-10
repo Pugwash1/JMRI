@@ -89,6 +89,11 @@ public class AutoActiveTrain implements ThrottleListener {
     public static final int END_REVERSAL = 0x01;     // Handle reversing direction at end for back and forth running
     public static final int BEGINNING_RESET = 0x02;     // Handle reseting beginning for back and forth running
 
+    /**
+     * _mode AUTOMATIC, MANUAL, DISPATCHED Mirrors ActiveTrain.
+     */
+    private int _mode = ActiveTrain.AUTOMATIC;
+    
     // operational instance variables
     private static final jmri.NamedBean.DisplayOptions USERSYS = jmri.NamedBean.DisplayOptions.USERNAME_SYSTEMNAME;
     private ActiveTrain _activeTrain = null;
@@ -243,6 +248,15 @@ public class AutoActiveTrain implements ThrottleListener {
             return ( _controllingSignalMast == null || _controllingSignalMast.getUserName() == null) ? "" : _controllingSignalMast.getUserName();        }
     }
 
+    public void setMode(int mode) {
+        _mode = mode;
+        _autoEngineer.setMode(_mode);
+    }
+    
+    public int getMode() {
+        return _mode;
+    }
+    
     RosterEntry re = null;
     boolean useSpeedProfile = false;
 
@@ -312,7 +326,7 @@ public class AutoActiveTrain implements ThrottleListener {
                     "Error28"), new Object[]{_activeTrain.getTrainName()}), Bundle.getMessage("MessageTitle"),
                     javax.swing.JOptionPane.INFORMATION_MESSAGE);
             log.warn("null throttle returned for train '{}' during automatic initialization.", _activeTrain.getTrainName());
-            _activeTrain.setMode(ActiveTrain.DISPATCHED);
+            _activeTrain.setMode(ActiveTrain.TERMINATED);
             return;
         }
         log.debug("{}: New AutoEngineer, address={}, length={}, factor={}, useSpeedProfile={}",
@@ -1218,7 +1232,7 @@ public class AutoActiveTrain implements ThrottleListener {
         // even if no task is required it must be run
         // as cleanup happens after train stops.
         Runnable waitForStop = new WaitForTrainToStop(task);
-        Thread tWait = jmri.util.ThreadingUtil.newThread(waitForStop, "Wait for stop " + getActiveTrain().getActiveTrainName());
+        Thread tWait =  new Thread (waitForStop, "Wait for stop " + getActiveTrain().getActiveTrainName());
         tWait.start();
     }
 
@@ -1529,7 +1543,9 @@ public class AutoActiveTrain implements ThrottleListener {
                 try {
                     Thread.sleep(50);
                 } catch (InterruptedException e) {
-                    // ignore this exception
+                    log.warn("waitUntilStop - killed.");
+                    // we are dying, break loop
+                    doneWaiting = true;
                 }
             }
         }
@@ -1612,15 +1628,27 @@ public class AutoActiveTrain implements ThrottleListener {
         @Override
         public void run() {
             boolean waitingOnTrain = true;
+            //int waitCounter = 0; 
             try {
                 while (waitingOnTrain) {
                     if ((getAutoEngineer() != null) && (getAutoEngineer().isStopped())) {
                         waitingOnTrain = false;
+                    //} else if (getAutoEngineer() == null) {
+                    //    log.error("Enineer went null");
+                        waitingOnTrain = false;
                     } else {
                         Thread.sleep(_delay);
                     }
+                    //waitCounter++;
+                    //if (waitCounter > 100) {
+                    //    log.error("Wait, still not zero [{}]",_throttle.getSpeedSetting());
+                    //    waitCounter = 0;
+                    //}
                 }
                 log.trace("executing task[{}]",_task);
+                Runnable waitForStop = new ExecuteStopTask(_task);
+                Thread tWait = jmri.util.ThreadingUtil.newThread(waitForStop, "Wait for stop " + getActiveTrain().getActiveTrainName());
+                tWait.start();
                 executeStopTasks(_task);
             } catch (InterruptedException e) {
                 log.warn("Waiting for train to stop interrupted - stop tasks not executing");
@@ -1628,8 +1656,23 @@ public class AutoActiveTrain implements ThrottleListener {
                 log.error("Waiting for train to stop crashed - stop tasks not executing.", e);
             }
         }
-
         private final int _delay = 91;
+        private int _task = 0;
+    }
+
+    class ExecuteStopTask implements Runnable {
+        public ExecuteStopTask(int task) {
+            _task = task;
+        }
+
+        @Override
+        public void run() {
+            try {
+                executeStopTasks(_task);
+            } catch (Exception ex) {
+                log.error("Waiting for train to stop crashed - stop tasks not executing.", ex);
+            }
+        }
         private int _task = 0;
     }
 
@@ -1722,6 +1765,9 @@ public class AutoActiveTrain implements ThrottleListener {
         AutoEngineer() {
         }
 
+        // time to check if in manual mode
+        private final long LAZYTIMERWAIT = 2000;
+        
         // operational instance variables and flags
         private volatile boolean _abort = false;
         private volatile boolean _halt = false;  // halt/resume from user's control
@@ -1730,6 +1776,7 @@ public class AutoActiveTrain implements ThrottleListener {
         private float _currentSpeed = 0.0f;
         private float _speedIncrement = 0.0f; //will be recalculated
         private boolean _speedProfileStoppingIsRunning = false; // stop by speed profile is running.
+        private volatile int _mode = ActiveTrain.AUTOMATIC;  // is the train in manual mode
 
         @Override
         public void run() {
@@ -1828,6 +1875,15 @@ public class AutoActiveTrain implements ThrottleListener {
                     }
                 }
                 // Give other threads a chance to work
+                // longer gap if manual
+                while (_mode == ActiveTrain.MANUAL && !_abort) {
+                    try {
+                        Thread.sleep(LAZYTIMERWAIT);
+                    } catch (InterruptedException ex) {
+                        log.warn("Someones shutting us down");
+                        _abort = true;
+                    }
+                }
                 try {
                     Thread.sleep(dispatcher.getMinThrottleInterval());
                 } catch (InterruptedException ex) {
@@ -1838,6 +1894,15 @@ public class AutoActiveTrain implements ThrottleListener {
               // shut down
         }
 
+        /**
+         * notifies AutoEngineer as to the mode, MANUAL means we 
+         * nolonger have control
+         * @param mode see AutoActiveTrain mode.
+         */
+        public synchronized void setMode(int mode) {
+            _mode = mode;
+        }
+        
         public synchronized void slowToStop(boolean toStop) {
             _slowToStop = toStop;
             if (!toStop) {

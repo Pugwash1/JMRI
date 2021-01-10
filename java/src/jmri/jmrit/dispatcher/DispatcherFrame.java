@@ -260,8 +260,9 @@ public class DispatcherFrame extends jmri.util.JmriJFrame implements InstanceMan
                 info.getAutoRun(), dccAddressToUse, info.getPriority(),
                 info.getResetWhenDone(), info.getReverseAtEnd(), true, null, info.getAllocationMethod());
         if (at != null) {
+            RosterEntry re = null;
             if (tSource == ActiveTrain.ROSTER) {
-                RosterEntry re = Roster.getDefault().getEntryForId(trainNameToUse);
+                re = Roster.getDefault().getEntryForId(trainNameToUse);
                 if (re != null) {
                     at.setRosterEntry(re);
                     at.setDccAddress(re.getDccAddress());
@@ -300,6 +301,7 @@ public class DispatcherFrame extends jmri.util.JmriJFrame implements InstanceMan
                 aat.setStopBySpeedProfile(info.getStopBySpeedProfile());
                 aat.setStopBySpeedProfileAdjust(info.getStopBySpeedProfileAdjust());
                 aat.setUseSpeedProfile(info.getUseSpeedProfile());
+                getAutoTrainsFrame().addAutoActiveTrain(aat,re);
                 if (!aat.initialize()) {
                     log.error("ERROR initializing autorunning for train {}", at.getTrainName());
                     JOptionPane.showMessageDialog(dispatcherFrame, Bundle.getMessage(
@@ -307,7 +309,6 @@ public class DispatcherFrame extends jmri.util.JmriJFrame implements InstanceMan
                             JOptionPane.INFORMATION_MESSAGE);
                     return -1;
                 }
-                getAutoTrainsFrame().addAutoActiveTrain(aat);
             }
             allocateNewActiveTrain(at);
             newTrainDone(at);
@@ -1342,6 +1343,7 @@ public class DispatcherFrame extends jmri.util.JmriJFrame implements InstanceMan
                 }
                 return null;
             }
+            /*
             // check/set direction sensors in signal logic for all Sections in this Transit.
             if (getSignalType() == SIGNALHEAD && getSetSSLDirectionalSensors()) {
                 numErrors = checkSignals(t, _LE);
@@ -1357,10 +1359,11 @@ public class DispatcherFrame extends jmri.util.JmriJFrame implements InstanceMan
                     return null;
                 }
             }
+            */
             // TODO: Need to check signalMasts as well
             // this train is OK, activate the AutoTrains window, if needed
             if (_autoTrainsFrame == null) {
-                _autoTrainsFrame = new AutoTrainsFrame(this);
+                _autoTrainsFrame = new AutoTrainsFrame();
             } else {
                 _autoTrainsFrame.setVisible(true);
             }
@@ -1467,6 +1470,7 @@ public class DispatcherFrame extends jmri.util.JmriJFrame implements InstanceMan
             log.error("Null ActiveTrain pointer when attempting to terminate an ActiveTrain");
             return;
         }
+        at.setStatus(ActiveTrain.TERMINATED);
         // terminate the train - remove any allocation requests
         for (int k = allocationRequests.size(); k > 0; k--) {
             if (at == allocationRequests.get(k - 1).getActiveTrain()) {
@@ -1500,7 +1504,6 @@ public class DispatcherFrame extends jmri.util.JmriJFrame implements InstanceMan
         }
         if (at.getAutoRun()) {
             AutoActiveTrain aat = at.getAutoActiveTrain();
-            _autoTrainsFrame.removeAutoActiveTrain(aat);
             aat.terminate();
             aat.dispose();
         }

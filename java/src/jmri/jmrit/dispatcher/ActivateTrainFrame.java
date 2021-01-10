@@ -681,6 +681,7 @@ public class ActivateTrainFrame {
         }
         int tSource = 0;
         String dccAddress = "unknown";
+        RosterEntry r = null;
         if (_TrainsFromRoster) {
             index = trainSelectBox.getSelectedIndex();
             if (index < 0) {
@@ -691,7 +692,7 @@ public class ActivateTrainFrame {
                 return;
             }
             trainName = (String) trainSelectBox.getSelectedItem();
-            RosterEntry r = trainBoxList.get(index);
+            r = trainBoxList.get(index);
             dccAddress = r.getDccAddress();
             if (!isAddressFree(r.getDccLocoAddress().getNumber())) {
                 // DCC address is already in use by an Active Train
@@ -796,7 +797,7 @@ public class ActivateTrainFrame {
                         "Error27", at.getTrainName()), Bundle.getMessage("MessageTitle"),
                         JOptionPane.INFORMATION_MESSAGE);
             }
-            _dispatcher.getAutoTrainsFrame().addAutoActiveTrain(aat);
+            _dispatcher.getAutoTrainsFrame().addAutoActiveTrain(aat,r);
         }
         _dispatcher.allocateNewActiveTrain(at);
         initiateFrame.setVisible(false);

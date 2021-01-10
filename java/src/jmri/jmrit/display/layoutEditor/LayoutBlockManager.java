@@ -507,8 +507,13 @@ public class LayoutBlockManager extends AbstractManager<LayoutBlock> implements 
                             if (!(lt.getBlockName().equals(protectedBlock.getUserName()))) {
                                 log.error("neither signal at A protects block {}, and turnout is not in block either",
                                         protectedBlock.getDisplayName());
+                                return null;
                             }
-                            return null;
+                            if (lt.getContinuingSense() == Turnout.CLOSED) {
+                                return lt.getSignalHead(LayoutTurnout.Geometry.POINTA2);
+                            } else {
+                                return lt.getSignalHead(LayoutTurnout.Geometry.POINTA1);
+                            }
                         }
                     }
                 } else {

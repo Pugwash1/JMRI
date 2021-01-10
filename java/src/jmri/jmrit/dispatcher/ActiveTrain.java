@@ -132,6 +132,7 @@ public class ActiveTrain {
     public static final int READY = 0x10;   // completed work, waiting for restart
     public static final int STOPPED = 0x20;   // stopped by the dispatcher (auto trains only)
     public static final int DONE = 0x40;   // completed its transit
+    public static final int TERMINATED = 0x80;
 
     /**
      * Constants representing Type of ActiveTrains.
@@ -151,7 +152,7 @@ public class ActiveTrain {
      * a run.
      */
     public static final int AUTOMATIC = 0x02;   // requires mAutoRun to be "true" (auto trains only)
-    public static final int MANUAL = 0x04;    // requires mAutoRun to be "true" (auto trains only)
+    public static final int MANUAL = 0x04;      // requires mAutoRun to be "true" (auto trains only)
     public static final int DISPATCHED = 0x08;
 
     /**
@@ -228,6 +229,7 @@ public class ActiveTrain {
     public void setStarted() {
         mStarted = true;
         mStatus = RUNNING;
+        holdAllocation(false);
         setStatus(WAITING);
         if (mAutoActiveTrain != null && InstanceManager.getDefault(DispatcherFrame.class).getSignalType() == DispatcherFrame.SIGNALMAST) {
             mAutoActiveTrain.setupNewCurrentSignal(null,false);
@@ -275,24 +277,53 @@ public class ActiveTrain {
     }
 
     public void setStatus(int status) {
-        if (restartPoint) {
-            return;
-        }
+        //if (restartPoint) {
+        //    return;
+        //}
         if ((status == RUNNING) || (status == PAUSED) || (status == WAITING) || (status == WORKING)
-                || (status == READY) || (status == STOPPED) || (status == DONE)) {
+                || (status == READY) || (status == STOPPED) || (status == DONE) || (status == TERMINATED)) {
             if (mStatus != status) {
                 int old = mStatus;
                 mStatus = status;
+                switch (mStatus) {
+                    case RUNNING:
+                        log.info("Fire,Fire,Fire - RUNNING");
+                        break;
+                    case PAUSED:
+                        log.info("Fire,Fire,Fire - PAUSED");
+                        break;
+                    case WAITING:
+                        log.info("Fire,Fire,Fire - WAITING");
+                        break;
+                    case WORKING:
+                        log.info("Fire,Fire,Fire - WORKING");
+                        break;
+                    case READY:
+                        log.info("Fire,Fire,Fire - READY");
+                        break;
+                    case STOPPED:
+                        log.info("Fire,Fire,Fire - STOPPED");
+                        break;
+                   case DONE:
+                        log.info("Fire,Fire,Fire - DONE");
+                        break;
+                    case TERMINATED:
+                        log.info("Fire,Fire,Fire - TERMINATED");
+                        break;
+                    default:
+                        log.info("Fire,Fire,Fire - UNKNOWN");
+                }
+                log.info("Fire,Fire,Fire - Integer [{}]", Integer.valueOf(mStatus));
                 firePropertyChange("status", Integer.valueOf(old), Integer.valueOf(mStatus));
             }
             if (mStatus == DONE && terminateWhenFinished) {
                 InstanceManager.getDefault(DispatcherFrame.class).terminateActiveTrain(this);
-            }
+            } 
         } else {
             log.error("Invalid ActiveTrain status - {}", status);
         }
     }
-
+    
     public String getStatusText() {
         if (mStatus == RUNNING) {
             return Bundle.getMessage("RUNNING");
@@ -599,6 +630,7 @@ public class ActiveTrain {
                 || (mode == DISPATCHED)) {
             int old = mMode;
             mMode = mode;
+            mAutoActiveTrain.setMode( mMode);
             firePropertyChange("mode", Integer.valueOf(old), Integer.valueOf(mMode));
         } else {
             log.error("Attempt to set ActiveTrain mode to illegal value - {}", mode);
