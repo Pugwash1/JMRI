@@ -337,7 +337,11 @@ public class AutoActiveTrain implements ThrottleListener {
                 setSpeedBySignal();
             } else if (InstanceManager.getDefault(DispatcherFrame.class).getAutoAllocate()) {
                 // starting for the first time with automatic allocation of Sections
-                setSpeedBySignal();
+                // the last of 2 threads must call setSpeedBySignal
+                // if the other thread is incomplete _currentAllocated Section will be null
+                if (_currentAllocatedSection != null ) {
+                    setSpeedBySignal();
+                }
             }
         }
     }
@@ -536,7 +540,12 @@ public class AutoActiveTrain implements ThrottleListener {
                     }
                 }
             } else if (b != _currentBlock) {
-                log.trace("{}: block going occupied {} is not _nextBlock or _currentBlock - ignored.", _activeTrain.getTrainName(), b.getDisplayName(USERSYS));
+                String x = "UNKWON";
+                String y = "UNKNOWN";
+                try { x=_currentBlock.getDisplayName(); } catch (Exception ex) {}
+                try { y=_nextBlock.getDisplayName(); } catch (Exception ex) {}
+                log.trace("{}: block going occupied {} is not _nextBlock[{}] or _currentBlock[{}] - ignored.",
+                        _activeTrain.getTrainName(), b.getDisplayName(USERSYS), _currentBlock, _nextBlock);
                 return;
             }
         } else if (b.getState() == Block.UNOCCUPIED) {
@@ -610,6 +619,10 @@ public class AutoActiveTrain implements ThrottleListener {
                 && isStopping() && (_activeTrain.getStatus() == ActiveTrain.RUNNING)) {
             _needSetSpeed = true;
         }
+        if (InstanceManager.getDefault(DispatcherFrame.class).getSignalType() == DispatcherFrame.SECTIONSALLOCATED) {
+            setSpeedBySignal();
+        }
+        
         // request next allocation if appropriate--Dispatcher must decide whether to allocate it and when
         if ((!InstanceManager.getDefault(DispatcherFrame.class).getAutoAllocate()) && ((_lastAllocatedSection == null)
                 || (_lastAllocatedSection.getNextSection() == as.getSection()))) {
@@ -833,7 +846,49 @@ public class AutoActiveTrain implements ThrottleListener {
         } else if (InstanceManager.getDefault(DispatcherFrame.class).getSignalType() == DispatcherFrame.SIGNALMAST) {
             setSpeedBySignalMast();
         } else {
-            log.error("Unknown SetSpeed method found in setSpeedBySignal()");
+            log.trace("Set Speed by BlocksAllocated");
+            setSpeedBySectionsAllocated();
+        }
+    }
+
+    private void setSpeedBySectionsAllocated() {
+        int sectionsAhead = 0;
+        for (AllocatedSection allocatedSection : _activeTrain.getAllocatedSectionList()) {
+            if (!allocatedSection.getEntered()) {
+                sectionsAhead++;
+            }
+        }
+        float newSpeed = 0.0f;
+        log.info("[{}:SectionsAhead[{}]",_activeTrain.getActiveTrainName() ,sectionsAhead);
+        switch (sectionsAhead) {
+            case 0:
+                newSpeed = 0.0f;
+                break;
+            case 1:
+                newSpeed = jmri.InstanceManager.getDefault(SignalSpeedMap.class)
+                        .getSpeed("Medium");
+                        // .getSpeed(InstanceManager.getDefault(DispatcherFrame.class).getStoppingSpeedName());
+                _activeTrain.setStatus(ActiveTrain.RUNNING);
+                break;
+            default:
+                newSpeed = jmri.InstanceManager.getDefault(SignalSpeedMap.class)
+                        .getSpeed("Normal");
+                // .getSpeed(InstanceManager.getDefault(DispatcherFrame.class).getStoppingSpeedName());
+                _activeTrain.setStatus(ActiveTrain.RUNNING);
+        }
+        for (Block block:_currentAllocatedSection.getSection().getBlockList()) {
+            float speed = -1.0f;
+            speed = getSpeedFromBlock(block);
+          if (speed > 0 && speed < newSpeed) {
+              newSpeed = speed;
+          }
+        }
+        if (newSpeed > 0 ) {
+            log.trace("setSpeedBySectionsAllocated isStopping[{}]",isStopping());
+            cancelStopInCurrentSection();
+            setTargetSpeed(getThrottleSettingFromSpeed(newSpeed));
+        } else {
+            stopInCurrentSection(NO_TASK);
         }
     }
 
