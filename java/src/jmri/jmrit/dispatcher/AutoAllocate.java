@@ -367,6 +367,7 @@ public class AutoAllocate implements Runnable {
                     if ((ar.getSection().getState() == Section.FREE) &&
                             (ar.getSection().getOccupancy() != Section.OCCUPIED) &&
                             (_dispatcher.getSignalType() == DispatcherFrame.SIGNALHEAD ||
+                                    _dispatcher.getSignalType() == DispatcherFrame.SECTIONSALLOCATED ||
                                     (_dispatcher.getSignalType() == DispatcherFrame.SIGNALMAST &&
                                             _dispatcher.checkBlocksNotInAllocatedSection(ar.getSection(),
                                                     ar) == null))) {
@@ -566,6 +567,7 @@ public class AutoAllocate implements Runnable {
             if ((sList.get(i).getOccupancy() == Section.UNOCCUPIED) &&
                     (sList.get(i).getState() == Section.FREE) &&
                     (_dispatcher.getSignalType() == DispatcherFrame.SIGNALHEAD ||
+                            _dispatcher.getSignalType() == DispatcherFrame.SECTIONSALLOCATED ||
                             (_dispatcher.getSignalType() == DispatcherFrame.SIGNALMAST &&
                                     _dispatcher.checkBlocksNotInAllocatedSection(sList.get(i), ar) == null))) {
                 return sList.get(i);

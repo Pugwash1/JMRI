@@ -102,7 +102,7 @@ public class DispatcherFrame extends jmri.util.JmriJFrame implements InstanceMan
             fastClock.addMinuteChangeListener(minuteChangeListener);
         }
     }
-    
+
     /***
      *  reads thru all the traininfo files found in the dispatcher directory
      *  and loads the ones flagged as "loadAtStartup"
@@ -323,6 +323,7 @@ public class DispatcherFrame extends jmri.util.JmriJFrame implements InstanceMan
     private LayoutEditor _LE = null;
     public static final int SIGNALHEAD = 0x00;
     public static final int SIGNALMAST = 0x01;
+    public static final int SECTIONSALLOCATED = 2;
     private int _SignalType = SIGNALHEAD;
     private String _StoppingSpeedName = "RestrictedSlow";
     private boolean _UseConnectivity = false;
@@ -740,7 +741,7 @@ public class DispatcherFrame extends jmri.util.JmriJFrame implements InstanceMan
      * Queue a release all reserved sections for a train.
      */
     protected void queueReleaseOfReservedSections(String trainName) {
-        if (_AutoAllocate) {
+        if (_AutoRelease || _AutoAllocate) {
             autoAllocate.scanAllocationRequests(new TaskAllocateRelease(TaskAction.RELEASE_RESERVED, trainName));
         }
     }
@@ -2424,6 +2425,19 @@ public class DispatcherFrame extends jmri.util.JmriJFrame implements InstanceMan
         return _SignalType;
     }
 
+    protected String getSignalTypeString() {
+        switch (_SignalType) {
+            case SIGNALHEAD:
+                return Bundle.getMessage("SignalType1");
+            case SIGNALMAST:
+                return Bundle.getMessage("SignalType2");
+            case SECTIONSALLOCATED:
+                return Bundle.getMessage("SignalType3");
+            default:
+                return "Unknown";
+        }
+    }
+
     protected void setStoppingSpeedName(String speedName) {
         _StoppingSpeedName = speedName;
     }
@@ -2500,6 +2514,15 @@ public class DispatcherFrame extends jmri.util.JmriJFrame implements InstanceMan
             autoAllocateBox.setSelected(_AutoAllocate);
         }
     }
+
+    protected void setAutoRelease(boolean set) {
+        _AutoRelease = set;
+        stopStartAutoAllocateRelease();
+        if (autoReleaseBox != null) {
+            autoReleaseBox.setSelected(_AutoAllocate);
+        }
+    }
+
 
     protected boolean getAutoTurnouts() {
         return _AutoTurnouts;
