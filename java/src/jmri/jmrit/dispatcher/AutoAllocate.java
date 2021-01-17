@@ -460,8 +460,7 @@ public class AutoAllocate implements Runnable {
                 }
             } catch (RuntimeException e) {
                 log.warn(
-                        "scanAllocationRequestList - maybe the allocationrequest was removed due to a terminating train??{}",
-                        e.toString());
+                        "scanAllocationRequestList - maybe the allocationrequest was removed due to a terminating train??",e);
                 continue;
             }
         }
@@ -1627,7 +1626,7 @@ public class AutoAllocate implements Runnable {
             return false;
         }
 
-        if (sec.equals(mActiveTrain.getNextSectionToAllocate())) {
+        if (!sec.equals(mActiveTrain.getNextSectionToAllocate())) {
             log.error("[{}]Allocation request section does not match active train next section to allocate",mActiveTrain.getActiveTrainName());
             log.error("[{}]Section requested {}",mActiveTrain.getActiveTrainName(), sec.getDisplayName(USERSYS));
             if (mActiveTrain.getNextSectionToAllocate() != null) {
