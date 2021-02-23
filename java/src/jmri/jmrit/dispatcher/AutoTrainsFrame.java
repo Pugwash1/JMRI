@@ -4,12 +4,17 @@ import java.awt.Container;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JMenuBar;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import jmri.jmrit.roster.RosterEntry;
+import javax.swing.JSlider;
+
+import jmri.DccThrottle;
+import jmri.Throttle;
 import jmri.util.JmriJFrame;
 
 import org.slf4j.Logger;
@@ -70,12 +75,7 @@ public class AutoTrainsFrame extends jmri.util.JmriJFrame {
         pB.setLayout(new FlowLayout());
         JButton stopAllButton = new JButton(Bundle.getMessage("StopAll"));
         pB.add(stopAllButton);
-        stopAllButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                stopAllPressed(e);
-            }
-        });
+        stopAllButton.addActionListener(this::stopAllPressed);
         stopAllButton.setToolTipText(Bundle.getMessage("StopAllButtonHint"));
         contentPane.add(pB);
         autoTrainsFrame.pack();

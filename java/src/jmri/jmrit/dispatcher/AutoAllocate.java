@@ -149,6 +149,9 @@ public class AutoAllocate implements Runnable {
                         case SCAN_REQUESTS:
                             scanAllocationRequestList(allocationRequests);
                             break;
+                        case ALLOCATE_IMMEDIATE:
+                            _dispatcher.allocateSection(task.getAllocationRequest(), null);
+                            break;
                         case ABORT:
                             abort = true; //belt an braces
                             break;
@@ -367,6 +370,7 @@ public class AutoAllocate implements Runnable {
                     if ((ar.getSection().getState() == Section.FREE) &&
                             (ar.getSection().getOccupancy() != Section.OCCUPIED) &&
                             (_dispatcher.getSignalType() == DispatcherFrame.SIGNALHEAD ||
+                                    _dispatcher.getSignalType() == DispatcherFrame.SECTIONSALLOCATED ||
                                     (_dispatcher.getSignalType() == DispatcherFrame.SIGNALMAST &&
                                             _dispatcher.checkBlocksNotInAllocatedSection(ar.getSection(),
                                                     ar) == null))) {
@@ -459,8 +463,7 @@ public class AutoAllocate implements Runnable {
                 }
             } catch (RuntimeException e) {
                 log.warn(
-                        "scanAllocationRequestList - maybe the allocationrequest was removed due to a terminating train??{}",
-                        e.toString());
+                        "scanAllocationRequestList - maybe the allocationrequest was removed due to a terminating train??",e);
                 continue;
             }
         }
@@ -516,9 +519,10 @@ public class AutoAllocate implements Runnable {
      *
      * @param sList the possible next Sections
      * @param ar    the section being allocated when a choice is needed
+     * @param sectionSeqNo transit sequence number attempting to be allocated
      * @return the allocated section
      */
-    protected Section autoNextSectionChoice(List<Section> sList, AllocationRequest ar) {
+    protected Section autoNextSectionChoice(List<Section> sList, AllocationRequest ar, int sectionSeqNo) {
         // check if AutoAllocate has prepared for this question
         if ((savedAR != null) && (savedAR == ar)) {
             for (int j = 0; j < sList.size(); j++) {
@@ -556,7 +560,8 @@ public class AutoAllocate implements Runnable {
         // primary is unoccupied, the search will select the primary and
         // we wind up skipping right over our end section.
         for (int i = 0; i < sList.size(); i++) {
-            if (at.getEndBlockSection().getSystemName().equals(sList.get(i).getSystemName())) {
+            if (at.getEndBlockSectionSequenceNumber() == sectionSeqNo
+                     && at.getEndBlockSection().getSystemName().equals(sList.get(i).getSystemName())) {
                 return sList.get(i);
             }
         }
@@ -566,6 +571,7 @@ public class AutoAllocate implements Runnable {
             if ((sList.get(i).getOccupancy() == Section.UNOCCUPIED) &&
                     (sList.get(i).getState() == Section.FREE) &&
                     (_dispatcher.getSignalType() == DispatcherFrame.SIGNALHEAD ||
+                            _dispatcher.getSignalType() == DispatcherFrame.SECTIONSALLOCATED ||
                             (_dispatcher.getSignalType() == DispatcherFrame.SIGNALMAST &&
                                     _dispatcher.checkBlocksNotInAllocatedSection(sList.get(i), ar) == null))) {
                 return sList.get(i);
@@ -1626,10 +1632,15 @@ public class AutoAllocate implements Runnable {
         }
 
         if (!sec.equals(mActiveTrain.getNextSectionToAllocate())) {
-            log.error("Allocation request section does not match active train next section to allocate");
-            log.error("Section to allocate {}", sec.getDisplayName(USERSYS));
+            log.error("[{}]Allocation request section does not match active train next section to allocate",mActiveTrain.getActiveTrainName());
+            log.error("[{}]Section requested {}",mActiveTrain.getActiveTrainName(), sec.getDisplayName(USERSYS));
             if (mActiveTrain.getNextSectionToAllocate() != null) {
-                log.error("Active Train expected {}", mActiveTrain.getNextSectionToAllocate().getDisplayName(USERSYS), Thread.currentThread().getStackTrace());
+                log.error("[{}]Section expected {}",
+                        mActiveTrain.getActiveTrainName(), mActiveTrain.getNextSectionToAllocate().getDisplayName(USERSYS));
+            }
+            if (mActiveTrain.getLastAllocatedSection() != null) {
+                log.error("[{}]Last Section Allocated {}",
+                        mActiveTrain.getActiveTrainName(), mActiveTrain.getLastAllocatedSection().getDisplayName(USERSYS));
             }
             return false;
         }

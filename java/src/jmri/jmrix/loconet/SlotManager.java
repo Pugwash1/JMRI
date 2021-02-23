@@ -94,7 +94,7 @@ public class SlotManager extends AbstractProgrammer implements LocoNetListener, 
 
     /**
      * Initialize the slots array.
-     * @param initilize if true a new slot is created else it is just updated with type
+     * @param initialize if true a new slot is created else it is just updated with type
      *                  and protocol
      */
     protected void loadSlots(boolean initialize) {
@@ -199,7 +199,6 @@ public class SlotManager extends AbstractProgrammer implements LocoNetListener, 
     /*
      * command station switches
      */
-    private final int SLOTS_OTHER = 128;
     private final int SLOTS_DCS240 = 433;
     private int numSlots = SLOTS_DCS240;         // This is the largest number so far it will reset after the commandstation is known value.
     /**
@@ -613,6 +612,8 @@ public class SlotManager extends AbstractProgrammer implements LocoNetListener, 
             case LnConstants.OPC_LOCO_SND:
             case LnConstants.OPC_LOCO_SPD:
             case LnConstants.OPC_SLOT_STAT1:
+            case LnConstants.OPC_LINK_SLOTS:
+            case LnConstants.OPC_UNLINK_SLOTS:
                 i = m.getElement(1);
                 break;
 
@@ -855,13 +856,42 @@ public class SlotManager extends AbstractProgrammer implements LocoNetListener, 
             // Changing a slot to common. Depending on a CS and its OpSw, and throttle speed
             // it could have its status changed a number of ways.
             sendReadSlotDelayed(i,100);
+        } else if (m.getOpCode() == LnConstants.OPC_EXP_SLOT_MOVE) {
+            boolean isSettingStatus = ((m.getElement(3) & 0b01110000) == 0b01100000);
+            if (isSettingStatus) {
+                int stat = m.getElement(4);
+                if ((stat & LnConstants.LOCOSTAT_MASK) == LnConstants.LOCO_COMMON) {
+                    sendReadSlotDelayed(i,100);
+                }
+            }
+            boolean isUnconsisting = ((m.getElement(3) & 0b01110000) == 0b01010000);
+            if (isUnconsisting) {
+                // read lead slot
+                sendReadSlotDelayed(slot(i).getLeadSlot(),100);
+            }
+            boolean isConsisting = ((m.getElement(3) & 0b01110000) == 0b01000000);
+            if (isConsisting) {
+                // read 2nd slot 
+                int slotTwo = ((m.getElement(3) & 0b00000011) * 128 )+ m.getElement(4);
+                sendReadSlotDelayed(slotTwo,100);
+            }
         } else if (m.getOpCode() == LnConstants.OPC_MOVE_SLOTS) {
             // if a true move get the new from slot status
+            // the to slot status is sent in the reply, but not if dispatch or null
+            // as those return slot info.
+            int slotTwo;
+            slotTwo = m.getElement(2);
+            if (i != 0 && slotTwo != 0 && i != slotTwo) {
+                sendReadSlotDelayed(i,100);
+            }
+        } else if (m.getOpCode() == LnConstants.OPC_LINK_SLOTS ||
+                m.getOpCode() == LnConstants.OPC_UNLINK_SLOTS ) {
+            // unlink and link return first slot by not second (to or from)
             // the to slot status is sent in the reply
             int slotTwo;
             slotTwo = m.getElement(2);
             if (i != 0 && slotTwo != 0) {
-                sendReadSlotDelayed(i,100);
+                sendReadSlotDelayed(slotTwo,100);
             }
        }
     }

@@ -10,7 +10,6 @@ import jmri.Path;
 import jmri.Section;
 import jmri.Transit;
 
-import org.python.modules._marshal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -772,6 +771,7 @@ public class ActiveTrain {
         }
         for (AllocatedSection as : sectionsToRelease) {
             InstanceManager.getDefault(DispatcherFrame.class).releaseAllocatedSection(as, true); // need to find Allocated Section
+            InstanceManager.getDefault(DispatcherFrame.class).queueWaitForEmpty(); //ensure release processed before proceding.
             as.getSection().setState(jmri.Section.FREE);
         }
         if (mLastAllocatedSection != null) {
@@ -1038,7 +1038,7 @@ public class ActiveTrain {
             return null;
         }
         if (!InstanceManager.getDefault(DispatcherFrame.class).requestAllocation(this,
-                mNextSectionToAllocate, mNextSectionDirection, mNextSectionSeqNumber, true, null)) {
+                mNextSectionToAllocate, mNextSectionDirection, mNextSectionSeqNumber, true, null, true)) {
             log.error("Allocation request failed for first allocation of {}", getActiveTrainName());
         }
         if (InstanceManager.getDefault(DispatcherFrame.class).getRosterEntryInBlock() && getRosterEntry() != null) {
