@@ -771,13 +771,13 @@ public class LnDplxGrpInfoImpl extends javax.swing.JComponent implements jmri.jm
      * attached IPL-capable equipment, check to see if it reports a UR92 device
      * as attached. If so, increment count of UR92 devices. Else ignore.
      *
-     * @return true if message is an IPL device report indicating a UR92
+     * @return true if message is an IPL device report indicating a UR92 and/or 93
      *         present, else return false.
      */
     @edu.umd.cs.findbugs.annotations.SuppressFBWarnings(value = "DLS_DEAD_LOCAL_STORE",
                 justification = "False positive on the implied local variable in numUr92++")
     private boolean handleMessageIplResult(LocoNetMessage m) {
-        if (LnIPLImplementation.isIplUr92IdentityReportMessage(m)) {
+        if (LnIPLImplementation.isIplUr92IdentityReportMessage(m) || LnIPLImplementation.isIplUr93IdentityReportMessage(m)) {
             numUr92++;
             thisone.firePropertyChange(DPLX_PC_STAT_LN_UPDATE, "", " ");
             waitingForIplReply = false;
