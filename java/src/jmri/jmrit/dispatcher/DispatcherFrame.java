@@ -1603,7 +1603,7 @@ public class DispatcherFrame extends jmri.util.JmriJFrame implements InstanceMan
             } else if (_AutoAllocate) {  // It is auto allocate and First section
                 queueAllocate(ar);
             } else {
-                // manual
+                allocationRequests.add(ar);
             }
         }
         activeTrainsTableModel.fireTableDataChanged();
