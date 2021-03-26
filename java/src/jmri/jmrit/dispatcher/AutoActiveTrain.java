@@ -753,7 +753,7 @@ public class AutoActiveTrain implements ThrottleListener {
             } // Note: null signal head will result when exiting throat-to-throat blocks.
             else {
                 log.debug("{}: new current signalmast is null for section {} - sometimes OK", _activeTrain.getTrainName(),
-                        as.getSection().getDisplayName(USERSYS));
+                        as == null ? "Null" : as.getSection().getDisplayName(USERSYS));
             }
         } else {
             setSpeedBySignal();
