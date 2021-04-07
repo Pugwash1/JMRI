@@ -4,7 +4,18 @@
 # Create a Jynstrument with video view from connected webcam
 #
 # Build using https://github.com/sarxos/webcam-capture
+# You'll need webcam-capture-XXX.jar and bridj-XXX.jar copied from webcam-capture release to your JMRI lib folder
 #
+depErr="""Required dependency must be installed!
+
+ You need to install libraries from sarxos webcam library.
+ 
+       https://github.com/sarxos/webcam-capture
+
+ Copy to your JMRI lib folder :
+     webcam-capture-driver-ipcam-XXX.jar
+     bridj-XXX.jar (from zip file libs subfolder)
+    """
 
 import java
 import java.awt
@@ -15,10 +26,16 @@ import jmri.jmrit.jython.Jynstrument as Jynstrument
 import java.awt.BorderLayout as BorderLayout
 import java.awt.event.ItemListener as ItemListener
 import javax.swing.JCheckBoxMenuItem as JCheckBoxMenuItem
-import com.github.sarxos.webcam.Webcam as Webcam
-import com.github.sarxos.webcam.WebcamPanel as WebcamPanel
-import com.github.sarxos.webcam.WebcamPicker as WebcamPicker
-import com.github.sarxos.webcam.WebcamResolution as WebcamResolution
+import javax.swing.JOptionPane as JOptionPane
+import javax.swing.JTextArea as JTextArea
+import javax.swing.JFrame as JFrame
+try:
+    import com.github.sarxos.webcam.Webcam as Webcam
+    import com.github.sarxos.webcam.WebcamPanel as WebcamPanel
+    import com.github.sarxos.webcam.WebcamPicker as WebcamPicker
+    import com.github.sarxos.webcam.WebcamResolution as WebcamResolution
+except:
+    JOptionPane.showMessageDialog(JFrame(), JTextArea(depErr), "Missing dependency", JOptionPane.ERROR_MESSAGE);
 
 class VideoView(Jynstrument, ItemListener):
 
@@ -32,8 +49,11 @@ class VideoView(Jynstrument, ItemListener):
         self.miSelector.addItemListener(self)
         self.miFill =  JCheckBoxMenuItem ( "Fill window" )
         self.miFill.addItemListener(self)
+        self.miMirror =  JCheckBoxMenuItem ( "Mirror", True )
+        self.miMirror.addItemListener(self)
         self.getPopUpMenu().add( self.miFill )
         self.getPopUpMenu().add( self.miSelector )
+        self.getPopUpMenu().add( self.miMirror )
         self.webcam = Webcam.getDefault()
         self.addCamPanel()
 
@@ -46,7 +66,7 @@ class VideoView(Jynstrument, ItemListener):
         self.webcam.close()
         self.webcam.setViewSize(WebcamResolution.VGA.getSize());
         self.webcamPanel = WebcamPanel(self.webcam)
-        self.webcamPanel.setMirrored(True)
+        self.webcamPanel.setMirrored(self.miMirror.isSelected())
         if ( self.miFill.isSelected() ) :
             self.webcamPanel.setFillArea( True  )
         else :
@@ -73,6 +93,8 @@ class VideoView(Jynstrument, ItemListener):
                 self.webcamPanel.setFillArea( True  )
             else :
                 self.webcamPanel.setFitArea( True )
+        if (evt.getSource() == self.miMirror ):
+            self.webcamPanel.setMirrored(self.miMirror.isSelected())
         if (evt.getSource() == self.picker ):
             self.webcamPanel.stop()
             self.remove(self.webcamPanel)
