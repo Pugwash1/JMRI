@@ -1525,7 +1525,7 @@ public class AutoActiveTrain implements ThrottleListener {
                 log.debug("{}: setTargetSpeedByProfile: SpeedState[{}]",_activeTrain.getTrainName(),throttleSetting,speedState);
                 if (throttleSetting > 0.009) {
                     cancelStopInCurrentSection();
-                    _targetSpeed = throttleSetting * _speedFactor;  // only apply speed factor not max
+                    _targetSpeed = applyMaxThrottleAndFactor(throttleSetting); // throttleSetting * _speedFactor;  // only apply speed factor not max
                  } else if (useSpeedProfile && _stopBySpeedProfile) {
                     _targetSpeed = 0.0f;
                     _stoppingUsingSpeedProfile = true;
