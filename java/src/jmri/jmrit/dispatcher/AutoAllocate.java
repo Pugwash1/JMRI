@@ -298,6 +298,12 @@ public class AutoAllocate implements Runnable {
                                                 trainName, sS.getUserName(),
                                                 _dispatcher.checkBlocksNotInAllocatedSection(sS, ar));
                                         areForwardsFree = false;
+                                    } else if (checkBlocksNotInReservedSection(activeTrain, ar) != null) {
+                                        log.debug("{}: Forward section [{}] is in conflict with [{}]",
+                                                trainName, sS.getDisplayName(),
+                                                checkBlocksNotInReservedSection(activeTrain, ar).getDisplayName());
+                                        areForwardsFree = false;
+
                                     } else if (reservedSections.get(sS.getSystemName()) != null &&
                                             !reservedSections.get(sS.getSystemName()).equals(trainName)) {
                                         log.debug("{}: Forward section [{}] is reserved for [{}]",
@@ -497,6 +503,27 @@ public class AutoAllocate implements Runnable {
         if (reservedTrainName.equals(trainName)) {
             reservedSections.remove(sectionSystemName);
         }
+    }
+
+    /*
+     * Check conflicting blocks acros reserved sections.
+     */
+    protected Section checkBlocksNotInReservedSection(ActiveTrain at, AllocationRequest ar) {
+        String trainName = at.getTrainName();
+        List<Block> lb = ar.getSection().getBlockList();
+        Iterator<Entry<String, String>> iterRS = reservedSections.entrySet().iterator();
+        while (iterRS.hasNext()) {
+            Map.Entry<String, String> pair = iterRS.next();
+            if (!pair.getValue().equals(trainName)) {
+                Section s = InstanceManager.getDefault(jmri.SectionManager.class).getSection(pair.getKey());
+                for (Block rb : s.getBlockList()) {
+                    if (lb.contains(rb)) {
+                        return s;
+                    }
+                }
+            }
+        }
+        return null;
     }
 
     /*
