@@ -302,7 +302,7 @@ abstract public class AbstractThrottleManager implements ThrottleManager {
             throttleListeners.put(la, new ArrayList<>());
         }
         // get the corresponding list to check length
-        ArrayList<WaitingThrottle> a = throttleListeners.get(la);
+        a = throttleListeners.get(la);
 
         if (addressThrottles.containsKey(la) && singleUse()) {
             throttleFree = false;
