@@ -125,6 +125,7 @@ abstract public class AbstractSerialPortController extends AbstractPortControlle
             if (flow != purejavacomm.SerialPort.FLOWCONTROL_NONE) {
                 serialPort.setFlowControlMode(flow);
             }
+            serialPort.enableReceiveTimeout(10);
         } catch (purejavacomm.UnsupportedCommOperationException e) {
             log.warn("Could not set flow control, ignoring");
         }
