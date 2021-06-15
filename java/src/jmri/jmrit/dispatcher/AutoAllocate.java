@@ -568,7 +568,7 @@ public class AutoAllocate implements Runnable {
         for (Section sectionOption : sList) {
             String reservedTrainName = reservedSections.get(sectionOption.getSystemName());
             if (reservedTrainName != null) {
-                if (reservedTrainName.equals(at.getActiveTrainName())) {
+                if (reservedTrainName.equals(at.getTrainName())) {
                     return sectionOption;
                 }
             }
