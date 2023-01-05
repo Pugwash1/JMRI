@@ -38,7 +38,6 @@ import jmri.profile.ProfileManager;
 import jmri.profile.ProfileUtils;
 import jmri.util.jdom.JDOMUtil;
 import jmri.util.swing.BeanSelectCreatePanel;
-import jmri.util.swing.JmriJOptionPane;
 
 import org.jdom2.Element;
 import org.jdom2.JDOMException;
@@ -513,7 +512,7 @@ class SpeedProfilePanel extends jmri.util.swing.JmriPanel implements ThrottleLis
 
     boolean speedStepNumOK(int num, String step) {
         if (num < -126 || num > 126 || num == 0) {
-            JmriJOptionPane.showMessageDialog(this, Bundle.getMessage("ErrorSpeedStep", Bundle.getMessage(step)));
+            JOptionPane.showMessageDialog(null, Bundle.getMessage("ErrorSpeedStep", Bundle.getMessage(step)));
             setButtonStates(true);
             return false;
         }
