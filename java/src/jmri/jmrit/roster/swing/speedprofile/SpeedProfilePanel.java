@@ -781,9 +781,9 @@ class SpeedProfilePanel extends jmri.util.swing.JmriPanel implements ThrottleLis
             }
         }
 
-        if (( !useCurrentSpeedSteps && profileIncrement > 0 && profileStep > finishSpeedStep)
-                || (useCurrentSpeedSteps && useCurrentSpeedSteps_index >= speedSettingsToUse.size())
-                || (!useCurrentSpeedSteps && profileIncrement < 0 && profileStep < finishSpeedStep)) {
+        if (( !useCurrentSpeedSteps && stepIncr > 0  && profileStep > finishSpeedStep)
+                || ( !useCurrentSpeedSteps && stepIncr < 0  && profileStep < finishSpeedStep)
+                || (useCurrentSpeedSteps && useCurrentSpeedSteps_index >= speedSettingsToUse.size())) {
             t.setSpeedSetting(0.0f);
             if (!profile) {
                 // there are only the 2 fields on screen to be updated after a test
