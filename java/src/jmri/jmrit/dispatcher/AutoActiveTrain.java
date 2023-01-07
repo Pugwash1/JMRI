@@ -772,6 +772,9 @@ public class AutoActiveTrain implements ThrottleListener {
                         sm.getAspect(), as.getSection().getDisplayName(USERSYS));
                 if ( weAreAtSpeedChangingMast ) {
                     setSpeedBySignal();
+                } else {
+                    log.info("{}: new current signalmast {}({}) for section {}", _activeTrain.getTrainName(), sm.getDisplayName(USERSYS),
+                            sm.getAspect(), as.getSection().getDisplayName(USERSYS));
                 }
             } // Note: null signal head will result when exiting throat-to-throat blocks.
             else {

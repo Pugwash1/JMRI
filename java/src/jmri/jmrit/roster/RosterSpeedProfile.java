@@ -1,6 +1,7 @@
 package jmri.jmrit.roster;
 
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 import jmri.Block;
@@ -331,6 +332,31 @@ public class RosterSpeedProfile {
         ss.setReverseSpeed(reverse);
     }
 
+    // returns lowest speed step for non zero value.
+    public float getLowestSpeedStep(boolean forward) {
+        float min = 1000;
+        for (Map.Entry<Integer, SpeedStep> entry : speeds.entrySet()) {
+            int key = entry.getKey();
+            if (forward) {
+                if (entry.getValue().getForwardSpeed() == 0.0f) {
+                    continue;
+                }
+            } else {
+                if (entry.getValue().getReverseSpeed() == 0.0f) {
+                    continue;
+                }
+            }
+            if (key < min) {
+                min = key;
+            }
+        }
+        // special case only one step - max.
+        if (min == 1000) {
+            return 0.0f;
+        }
+        return min / 1000;
+    }
+
     /**
      * return the forward speed in milli-meters per second for a given
      * percentage throttle
@@ -658,23 +684,23 @@ public class RosterSpeedProfile {
      *
      * @param t        the throttle to set
      * @param distance the distance in meters
-     * @param speed    the speed to set
+     * @param requestedThrottleValue    the speed to set
      */
-    public void changeLocoSpeed(DccThrottle t, float distance, float speed) {
-        log.debug("Call to change speed over specific distance float {} distance {}", speed, distance);
-        if (Float.compare(speed, t.getSpeedSetting()) == 0) {
-            log.debug("Throttle and request speed setting are the same {} {} so will quit", speed, t.getSpeedSetting());
+    public void changeLocoSpeed(DccThrottle t, float distance, float requestedThrottleValue) {
+        log.debug("Call to change speed over specific distance float {} distance {}", requestedThrottleValue, distance);
+        if (Float.compare(requestedThrottleValue, t.getSpeedSetting()) == 0) {
+            log.debug("Throttle and request speed setting are the same {} {} so will quit", requestedThrottleValue, t.getSpeedSetting());
             //Already at correct speed setting
             finishChange();
             return;
         }
 
-        if (Float.compare(speed, desiredSpeedStep) == 0) {
+        if (Float.compare(requestedThrottleValue, desiredSpeedStep) == 0) {
             log.debug("Already setting to desired speed step");
             return;
         }
-        log.debug("public change speed step by float {}", speed);
-        log.debug("Desired Speed Step {} asked for {}", desiredSpeedStep, speed);
+        log.debug("public change speed step by float {}", requestedThrottleValue);
+        log.debug("Desired Speed Step {} asked for {}", desiredSpeedStep, requestedThrottleValue);
 
         if (stopTimer != null) {
             log.debug("stop timer valid so will cancel");
@@ -682,20 +708,105 @@ public class RosterSpeedProfile {
         }
         _throttle = t;
 
-        log.debug("Desired Speed Step {} asked for {}", desiredSpeedStep, speed);
-        desiredSpeedStep = speed;
+        log.debug("Desired Speed Step {} asked for {}", desiredSpeedStep, requestedThrottleValue);
+        desiredSpeedStep = requestedThrottleValue;
 
-        log.debug("calculated current step {} required {} current {}", _throttle.getSpeedSetting(), speed, _throttle.getSpeedSetting());
-        if (_throttle.getSpeedSetting() < speed) {
+        log.debug("calculated current step {} required {} current {}", _throttle.getSpeedSetting(), requestedThrottleValue, _throttle.getSpeedSetting());
+        if (_throttle.getSpeedSetting() < requestedThrottleValue) {
             log.debug("Going for acceleration");
         } else {
             log.debug("Going for deceleration");
         }
-
-        calculateStepDetails(speed, distance);
+        float lowestUseableThrottleValue = getLowestSpeedStep(_throttle.getIsForward());
+        float adjustedThrottleValue = lowestUseableThrottleValue;
+        log.info("A[{}]B[{}",requestedThrottleValue,lowestUseableThrottleValue );
+        if (requestedThrottleValue >  lowestUseableThrottleValue ) {
+            adjustedThrottleValue = requestedThrottleValue;
+                 }
+        calculateStepDetailsNew(adjustedThrottleValue, requestedThrottleValue, distance, 5);
     }
 
     int extraTime = 0;
+
+    /**
+     * Calculates decrease in speed based on maximum number of steps
+     * @param speedStep
+     * @param distMM
+     * @param maxSteps , must be greater than zero
+     */
+    private void calculateStepDetailsNew(float minThrottleValue, float requestedThrottleValue, float distMM, int maxSteps) {
+        int noSteps = 14; // maxSteps;
+        int minTime = 0;
+        // int distancePerStep = 0;
+        float speedPerStep = 0.0f;
+        float minMmsStepSpeed;
+        //minThrottleValue=requestedThrottleValue;
+        float distance = calculateInitialOverRun(distMM);
+        log.info("Before:[{}][{}][{}][{}]",
+                distance,
+                _throttle.getSpeedSetting(),
+                getForwardSpeed(_throttle.getSpeedSetting()),
+                (0.0448f * _throttle.getSpeedSetting()) );
+        // distance = distance - ( (4.48f * _throttle.getSpeedSetting()) * getForwardSpeed(_throttle.getSpeedSetting()));
+        log.info("After:[{}]",distance);
+        log.info("distMM[{}]after overrun[{}]currentSpeed[{}]adjustedThrottleValue[{}]", distMM, distance,_throttle.getSpeedSetting(),minThrottleValue);
+        //do a rush through to make min step times.
+        if ( distance / getForwardSpeed(_throttle.getSpeedSetting())/2 > maxSteps) {
+            // time per step greater than 1000ms
+            noSteps = maxSteps;
+        } else {
+            //rough and ready
+            noSteps = (int) (distance / getForwardSpeed(_throttle.getSpeedSetting())/2.0f);
+            if ( noSteps < 2 ) {
+               noSteps = 2;
+            }
+        }
+        log.info("minTime[{}]noSteps[{}]",minTime,noSteps);
+        if (stopTimer != null) {
+            stopTimer.stop();
+        }
+        float totPC= (0.5f*(1+(noSteps)))-1.0f;
+        log.info("totPC[{}]",totPC);                              // if there are 2 steps they are 1/2 current speed and 0
+        float calcDist = distance / totPC;
+        log.info("calcDist[{}]",calcDist);                              // if there are 2 steps they are 1/2 current speed and 0
+        if (_throttle.getIsForward()) {
+            speedPerStep = (getForwardSpeed(_throttle.getSpeedSetting()))  / noSteps;
+        } else {
+            speedPerStep = (getReverseSpeed(_throttle.getSpeedSetting()))  / noSteps;
+        }
+        if (_throttle.getIsForward()) {
+            minMmsStepSpeed = getForwardSpeed(minThrottleValue);
+        } else {
+            minMmsStepSpeed = getReverseSpeed(minThrottleValue);
+        }
+        for (int currentStep = 1; currentStep < noSteps; currentStep++) {
+            float stepDist = (1.0f-((1.0f/noSteps) * currentStep)) * calcDist;
+            log.info("StepDist[{}]",stepDist);
+            float mmsStepSpeed = speedPerStep * (noSteps - currentStep);
+            if (mmsStepSpeed <= minMmsStepSpeed) {
+                log.info("MinStep");
+                mmsStepSpeed = minMmsStepSpeed;
+            }
+            float speedForStep = getThrottleSetting(mmsStepSpeed, true);
+            log.info("mmsStepSpeed[{}]minMmsStepSpeed[{}]SpeedForStep[{}]",mmsStepSpeed,minMmsStepSpeed,speedForStep);
+            int stepTime = (int) ((stepDist / mmsStepSpeed) * 1000.0f);
+            log.info("stepTime[{}]",stepTime);
+            log.info("Throtsetting[{}]sps[{}]cs[{}]st[{}]dist[{}]",
+                    speedForStep,
+                    speedPerStep, currentStep, stepTime / 1000, (speedPerStep * currentStep - 1) * (stepTime / 1000.0f));
+            SpeedSetting ss = new SpeedSetting(speedForStep, stepTime);
+            synchronized (this) {
+                stepQueue.addLast(ss);
+            }
+            if (stopTimer == null) { // If this is the first time round then kick off the speed change
+                setNextStep();
+            }
+        }
+        SpeedSetting ss = new SpeedSetting(-0.0f,0);
+        synchronized (this) {
+            stepQueue.addLast(ss);
+        }
+     }
 
     void calculateStepDetails(float speedStep, float distance) {
 
@@ -891,7 +1002,8 @@ public class RosterSpeedProfile {
         }
         SpeedSetting ss = stepQueue.getFirst();
         if (ss.getDuration() == 0) {
-            _throttle.setSpeedSetting(0);
+            log.info("SetSpeed Final in setNextStep[{}]",ss.getSpeedStep());
+            _throttle.setSpeedSetting(-1.0f);
             finishChange();
             return;
         }
@@ -902,6 +1014,7 @@ public class RosterSpeedProfile {
             distanceRemaining = distanceRemaining - distanceTravelledThisStep;
         }
         stepQueue.removeFirst();
+        log.info("SetSpeed in setNextStep[{}]",ss.getSpeedStep());
         _throttle.setSpeedSetting(ss.getSpeedStep());
         stopTimer = new javax.swing.Timer(ss.getDuration(), (java.awt.event.ActionEvent e) -> {
             setNextStep();
