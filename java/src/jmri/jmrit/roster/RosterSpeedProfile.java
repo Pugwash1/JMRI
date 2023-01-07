@@ -735,7 +735,7 @@ public class RosterSpeedProfile {
      * @param maxSteps , must be greater than zero
      */
     private void calculateStepDetailsNew(float minThrottleValue, float requestedThrottleValue, float distMM, int maxSteps) {
-        int noSteps = maxSteps;
+        int noSteps = 14; // maxSteps;
         int minTime = 0;
         // int distancePerStep = 0;
         float speedPerStep = 0.0f;
