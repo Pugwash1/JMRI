@@ -1779,6 +1779,7 @@ public class AutoActiveTrain implements ThrottleListener {
                 log.error("Waiting for train to stop crashed - stop tasks not executing.", e);
             }
         }
+
         private final int _delay = 91;
         private int _task = 0;
     }
