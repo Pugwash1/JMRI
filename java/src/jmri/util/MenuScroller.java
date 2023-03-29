@@ -518,12 +518,12 @@ public class MenuScroller
      * @exception Throwable if an error occurs.
      * @see MenuScroller#dispose()
      */
-    @Override
+    /* @Override
     @SuppressWarnings("deprecation") // Object.finalize
     protected void finalize() throws Throwable {
         dispose();
     }
-
+    */
     private void refreshMenu() {
         if (menuItems != null && menuItems.length > 0) {
             firstIndex = Math.max(topFixedCount, firstIndex);

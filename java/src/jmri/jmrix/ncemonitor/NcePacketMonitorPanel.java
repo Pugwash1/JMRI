@@ -484,7 +484,6 @@ public class NcePacketMonitorPanel extends jmri.jmrix.AbstractMonPane implements
 
     // use deprecated stop method to stop thread,
     // which will be sitting waiting for input
-    @SuppressWarnings("deprecation") // Thread.stop
     void stopThread(Thread t) {
         t.stop();
     }

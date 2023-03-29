@@ -454,7 +454,7 @@ public class ThreadingUtil {
             try {
                 java.lang.management.ThreadInfo threadInfo = java.lang.management.ManagementFactory
                                                     .getThreadMXBean()
-                                                        .getThreadInfo(new long[]{Thread.currentThread().getId()}, true, true)[0];
+                                                        .getThreadInfo(new long[]{Thread.currentThread().threadId()}, true, true)[0];
 
                 java.lang.management.MonitorInfo[] monitors = threadInfo.getLockedMonitors();
                 for (java.lang.management.MonitorInfo mon : monitors) {

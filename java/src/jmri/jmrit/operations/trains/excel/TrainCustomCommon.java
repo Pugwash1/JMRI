@@ -144,7 +144,7 @@ public abstract class TrainCustomCommon {
         if (SystemType.isWindows()) {
             String cmd = "cmd /c start " + getFileName() + " " + mcAppArg; // NOI18N
             try {
-                process = Runtime.getRuntime().exec(cmd, null,
+                process = Runtime.getRuntime().exec(new String[] {cmd}, new String[]{null},
                         InstanceManager.getDefault(OperationsManager.class).getFile(getDirectoryName()));
             } catch (IOException e) {
                 log.error("Unable to execute {}", getFileName(), e);
@@ -152,7 +152,7 @@ public abstract class TrainCustomCommon {
         } else {
             String cmd = "open " + getFileName() + " " + mcAppArg; // NOI18N
             try {
-                process = Runtime.getRuntime().exec(cmd, null,
+                process = Runtime.getRuntime().exec(new String[] {cmd}, new String[] {null},
                         InstanceManager.getDefault(OperationsManager.class).getFile(getDirectoryName()));
             } catch (IOException e) {
                 log.error("Unable to execute {}", getFileName(), e);

@@ -422,7 +422,7 @@
           <condition>
             <not>
               <or>
-                <matches pattern="^1[1-9]" string="${ant.java.version}"/>
+                <matches pattern="^20" string="${ant.java.version}"/>
               </or>
             </not>
           </condition>
@@ -770,6 +770,8 @@
             <classpath refid="compile.class.path"/>
             <compilerarg line="-encoding utf-8"/>
             <compilerarg value="-Xlint:unchecked"/>
+            <compilerarg value="-Xlint:deprecation" />
+            <compilerarg value="-Xlint:removal" />
             <compilerarg value="-Xpkginfo:always"/>  <!-- compile all package-info.java to avoid empty-file warnings -->
             <compilerarg value="-Xmaxwarns"/><compilerarg value="2000"/><!-- default is 100, here to make it easy to change -->
         </javac>
@@ -1969,7 +1971,7 @@
                  use="true"
                  failonerror="true"
                  failonwarning="true"
-                 source="11"
+                 source="19"
                  windowtitle="JMRI API"
                  useexternalfile="yes"
             >
@@ -2067,7 +2069,7 @@
                  use="true"
                  failonerror="true"
                  failonwarning="false"
-                 source="11"
+                 source="19"
                  windowtitle="JMRI API"
             > <!-- failonwarning="false"  because always warns on cyclic redundancy with JDK11 -->
 

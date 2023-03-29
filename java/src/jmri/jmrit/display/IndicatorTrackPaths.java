@@ -152,7 +152,7 @@ public class IndicatorTrackPaths {
         } catch (Exception e) {
             jmri.jmrit.logix.Warrant w = block.getWarrant();
             log.error("Exception in setLocoIcon() in thread {} {} for block \"{}\", train \"{}\" \"{}\". state= {} at pt({}, {})",
-                    Thread.currentThread().getName(), Thread.currentThread().getId(), block.getDisplayName(), trainName,
+                    Thread.currentThread().getName(), Thread.currentThread().threadId(), block.getDisplayName(), trainName,
                     (w!=null? w.getDisplayName(): "no warrant"), block.getState(), pt.x, pt.y);
             return;
         }

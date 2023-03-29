@@ -152,7 +152,7 @@ public class Sound {
     }
 
     /** {@inheritDoc} */
-    @Override
+    /*@Override
     @SuppressWarnings("deprecation") // Object.finalize
     protected void finalize() throws Throwable {
         try {
@@ -168,7 +168,7 @@ public class Sound {
             super.finalize();
         }
     }
-
+    */
     /**
      * Play the sound once.
      */
