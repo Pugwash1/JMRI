@@ -567,6 +567,10 @@ public class AutoActiveTrain implements ThrottleListener {
                     // if we are not in first and not in last get the next block
                     //_previousBlock = oldPreviousBlock;
                     _nextBlock = getNextBlock(b, as);
+                    if (_nextBlock.getSensor()==null) {
+                        b = _nextBlock;
+                        _nextBlock = getNextBlock(b, as);
+                    }
                     if (_nextBlock != null) {
                         // this is a normal block/block change
                         // set the blocks as normal
@@ -641,6 +645,10 @@ public class AutoActiveTrain implements ThrottleListener {
                 // starting Block is in this allocated section - find next Block
                 setNewCurrentSection(as);
                 _nextBlock = getNextBlock(_currentBlock, as);
+                if (_nextBlock!=null &&_nextBlock.getSensor()==null) {
+                    Block b = _nextBlock;
+                    _nextBlock = getNextBlock(b, as);
+                }
             } else if (as.getSection().connectsToBlock(_currentBlock)) {
                 // starting Block is connected to a Block in this allocated section
                 EntryPoint ep = as.getSection().getEntryPointFromBlock(_currentBlock, as.getDirection());
