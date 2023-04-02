@@ -4,6 +4,9 @@ import java.awt.event.ActionEvent;
 import java.io.File;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileSystemView;
+import javax.swing.filechooser.FileView;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,11 +34,26 @@ public class LoadXmlUserAction extends LoadXmlConfigAction {
         super(s);
     }
 
+    class JavaFileView extends FileView {
+        @Override
+         public String getName(File file) {
+          String filename = file.getName();
+            String name = filename + " : " + file.length();
+            return name;
+        }
+    }
     @Override
     public void actionPerformed(ActionEvent e) {
         JFileChooser userFileChooser = getUserFileChooser();
+        userFileChooser.setFileSystemView(FileSystemView.getFileSystemView());
+        userFileChooser.setFileView(new JavaFileView());
         userFileChooser.setDialogType(javax.swing.JFileChooser.OPEN_DIALOG);
         userFileChooser.setApproveButtonText(Bundle.getMessage("ButtonOpen"));
+
+        //javax.swing.Action details = userFileChooser.getActionMap().get("viewTypeDetails");
+        //if (details!=null) {
+        //    details.actionPerformed(null);
+        //}
         // Cancel button can't be localized like userFileChooser.setCancelButtonText() TODO
         userFileChooser.setDialogTitle(Bundle.getMessage("LoadTitle"));
 
