@@ -208,6 +208,7 @@ public class DefaultSection extends AbstractNamedBean implements Section {
      * @return {@link #OCCUPIED}, {@link #UNOCCUPIED}, or the state of the first
      *         block that is neither occupied or unoccupied
      */
+    @Override
     public int getOccupancy() {
         if (mOccupancyInitialized) {
             return mOccupancy;
@@ -215,12 +216,14 @@ public class DefaultSection extends AbstractNamedBean implements Section {
         // initialize occupancy
         mOccupancy = UNOCCUPIED;
         for (Block block : mBlockEntries) {
+            if (block.getSensor() != null) {
             if (block.getState() == OCCUPIED) {
                 mOccupancy = OCCUPIED;
             } else if (block.getState() != UNOCCUPIED) {
                 log.warn("Occupancy of block {} is not OCCUPIED or UNOCCUPIED in Section - {}",
                         block.getDisplayName(USERSYS), getDisplayName(USERSYS));
                 return (block.getState());
+            }
             }
         }
         mOccupancyInitialized = true;
@@ -233,6 +236,7 @@ public class DefaultSection extends AbstractNamedBean implements Section {
         firePropertyChange("occupancy", old, mOccupancy);
     }
 
+    @Override
     public String getForwardBlockingSensorName() {
         if (mForwardBlockingNamedSensor != null) {
             return mForwardBlockingNamedSensor.getName();
@@ -240,6 +244,7 @@ public class DefaultSection extends AbstractNamedBean implements Section {
         return mForwardBlockingSensorName;
     }
 
+    @Override
     public Sensor getForwardBlockingSensor() {
         if (mForwardBlockingNamedSensor != null) {
             return mForwardBlockingNamedSensor.getBean();
@@ -259,6 +264,7 @@ public class DefaultSection extends AbstractNamedBean implements Section {
         return null;
     }
 
+    @Override
     public Sensor setForwardBlockingSensorName(String forwardSensor) {
         if ((forwardSensor == null) || (forwardSensor.length() <= 0)) {
             mForwardBlockingSensorName = "";
@@ -278,10 +284,12 @@ public class DefaultSection extends AbstractNamedBean implements Section {
         return s;
     }
 
+    @Override
     public void delayedSetForwardBlockingSensorName(String forwardSensor) {
         mForwardBlockingSensorName = forwardSensor;
     }
 
+    @Override
     public String getReverseBlockingSensorName() {
         if (mReverseBlockingNamedSensor != null) {
             return mReverseBlockingNamedSensor.getName();
@@ -289,6 +297,7 @@ public class DefaultSection extends AbstractNamedBean implements Section {
         return mReverseBlockingSensorName;
     }
 
+    @Override
     public Sensor setReverseBlockingSensorName(String reverseSensor) {
         if ((reverseSensor == null) || (reverseSensor.length() <= 0)) {
             mReverseBlockingNamedSensor = null;
@@ -308,10 +317,12 @@ public class DefaultSection extends AbstractNamedBean implements Section {
         return s;
     }
 
+    @Override
     public void delayedSetReverseBlockingSensorName(String reverseSensor) {
         mReverseBlockingSensorName = reverseSensor;
     }
 
+    @Override
     public Sensor getReverseBlockingSensor() {
         if (mReverseBlockingNamedSensor != null) {
             return mReverseBlockingNamedSensor.getBean();
@@ -331,6 +342,7 @@ public class DefaultSection extends AbstractNamedBean implements Section {
         return null;
     }
 
+    @Override
     public Block getLastBlock() {
         return mLastBlock;
     }
@@ -355,6 +367,7 @@ public class DefaultSection extends AbstractNamedBean implements Section {
         return s;
     }
 
+    @Override
     public String getForwardStoppingSensorName() {
         if (mForwardStoppingNamedSensor != null) {
             return mForwardStoppingNamedSensor.getName();
@@ -363,6 +376,7 @@ public class DefaultSection extends AbstractNamedBean implements Section {
     }
 
     @CheckForNull
+    @Override
     public Sensor getForwardStoppingSensor() {
         if (mForwardStoppingNamedSensor != null) {
             return mForwardStoppingNamedSensor.getBean();
@@ -382,6 +396,7 @@ public class DefaultSection extends AbstractNamedBean implements Section {
         return null;
     }
 
+    @Override
     public Sensor setForwardStoppingSensorName(String forwardSensor) {
         if ((forwardSensor == null) || (forwardSensor.length() <= 0)) {
             mForwardStoppingNamedSensor = null;

@@ -412,7 +412,7 @@ public class AutoActiveTrain implements ThrottleListener {
     private PropertyChangeListener _conSignalMastListener = null;
     private Block _conSignalProtectedBlock = null;
     private volatile Block _currentBlock = null;
-    private Block _nextBlock = null;
+    public Block _nextBlock = null;
     private volatile Block _previousBlock = null;
     private boolean _stoppingBySensor = false;
     private Sensor _stopSensor = null;
@@ -567,7 +567,7 @@ public class AutoActiveTrain implements ThrottleListener {
                     // if we are not in first and not in last get the next block
                     //_previousBlock = oldPreviousBlock;
                     _nextBlock = getNextBlock(b, as);
-                    if (_nextBlock.getSensor()==null) {
+                    if (_nextBlock != null &&_nextBlock.getSensor()==null) {
                         b = _nextBlock;
                         _nextBlock = getNextBlock(b, as);
                     }
