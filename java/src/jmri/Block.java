@@ -483,7 +483,7 @@ public class Block extends AbstractNamedBean implements PhysicalLocationReporter
             firePropertyChange("state", old, _current);
         } catch (Exception e) {
             log.error("{} got exception during firePropertyChange({},{}) in thread {} {}", getDisplayName(), old, _current,
-                    Thread.currentThread().getName(), Thread.currentThread().threadId(), e);
+                    Thread.currentThread().getName(), Thread.currentThread().getId(), e);
         }
     }
 

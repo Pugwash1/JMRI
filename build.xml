@@ -1971,7 +1971,7 @@
                  use="true"
                  failonerror="true"
                  failonwarning="true"
-                 source="19"
+                 source="20"
                  windowtitle="JMRI API"
                  useexternalfile="yes"
             >
@@ -2069,7 +2069,7 @@
                  use="true"
                  failonerror="true"
                  failonwarning="false"
-                 source="19"
+                 source="20"
                  windowtitle="JMRI API"
             > <!-- failonwarning="false"  because always warns on cyclic redundancy with JDK11 -->
 

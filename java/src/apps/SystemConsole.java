@@ -526,7 +526,7 @@ public final class SystemConsole extends JTextArea {
         System.out.println("-----------------------------------------"); //NO18N
         traces = new HashMap<>(Thread.getAllStackTraces());
         for (Thread thread : traces.keySet()) {
-            System.out.println("[" + thread.threadId() + "] " + thread.getName());
+            System.out.println("[" + thread.getId() + "] " + thread.getName());
             for (StackTraceElement el : thread.getStackTrace()) {
                 System.out.println("  " + el);
             }

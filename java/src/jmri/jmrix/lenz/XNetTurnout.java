@@ -538,7 +538,7 @@ public class XNetTurnout extends AbstractTurnout implements XNetListener {
         // We need to tell the turnout to shut off the output.
         if (log.isDebugEnabled()) {
             log.debug("Sending off message for turnout {} commanded state={}", mNumber, getCommandedState());
-            log.debug("Current Thread ID: {} Thread Name {}", java.lang.Thread.currentThread().threadId(), java.lang.Thread.currentThread().getName());
+            log.debug("Current Thread ID: {} Thread Name {}", java.lang.Thread.currentThread().getId(), java.lang.Thread.currentThread().getName());
         }
         XNetMessage msg = getOffMessage();
         lastMsg = new RequestMessage(msg,OFFSENT,this);
