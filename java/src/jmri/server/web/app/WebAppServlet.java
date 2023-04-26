@@ -174,7 +174,7 @@ public class WebAppServlet extends HttpServlet {
         response.setContentType(UTF8_APPLICATION_JSON);
         Profile profile = ProfileManager.getDefault().getActiveProfile();
         // the locale is the file name portion between "locale-" and ".json"
-        Locale locale =  new Locale(request.getPathInfo().substring(8, request.getPathInfo().length() - 5));
+        Locale locale =  Locale.forLanguageTag(request.getPathInfo().substring(8, request.getPathInfo().length() - 5));
         File cache = new File(ProfileUtils.getCacheDirectory(profile, this.getClass()), locale.toString());
         FileUtil.createDirectory(cache);
         File file = new File(cache, "locale.json"); // NOI18N
