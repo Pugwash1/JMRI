@@ -48,6 +48,7 @@
 	<classpathentry excluding="**" kind="src" output="target/classes" path="java/template">
 		<attributes>
 			<attribute name="maven.pomderived" value="true"/>
+			<attribute name="optional" value="true"/>
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="src" output="target/test-classes" path="java/acceptancetest/step_definitions">
