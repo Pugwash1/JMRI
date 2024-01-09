@@ -1,6 +1,6 @@
 package jmri.web;
 
-import cucumber.api.java8.En;
+import io.cucumber.java8.En;
 import jmri.util.JUnitAppender;
 import jmri.util.JUnitOperationsUtil;
 import jmri.util.JUnitUtil;
@@ -21,7 +21,7 @@ import static org.assertj.core.api.Assertions.fail;
 public class WebServerScaffold implements En {
 
     private WebServer server = null;
-    String[] tags = {"@webtest"};
+    String tags = "@webtest";
 
     private final static Logger log = LoggerFactory.getLogger(WebServerScaffold.class);
 

@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 
 import apps.util.AppsUtil;
-import cucumber.api.java8.En;
+import io.cucumber.java8.En;
 import java.io.File;
 import org.apache.commons.io.FileUtils;
 import java.nio.file.Files;
@@ -24,7 +24,7 @@ import org.netbeans.jemmy.operators.JDialogOperator;
  */
 public class ApplicationTestAcceptanceSteps implements En {
 
-    String[] tags = {"@apptest"};
+    String tags = "@apptest";
     File tempFolder;
 
     public ApplicationTestAcceptanceSteps() {

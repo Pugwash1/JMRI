@@ -1,6 +1,6 @@
 package jmri.web;
 
-import cucumber.api.java8.En;
+import io.cucumber.java8.En;
 
 import java.io.File;
 import java.util.List;
@@ -37,10 +37,10 @@ public class WebServerAcceptanceSteps implements En {
 
     private EventFiringWebDriver webDriver;
 
-    String[] firefoxtags = {"@webtest", "@firefox"};
-    String[] chrometags = {"@webtest", "@chrome"};
-    String[] tags = {"@webtest"};
-    String[] paneltags = {"@webpanel"};
+    String firefoxtags = "@webtest and @firefox";
+    String chrometags = "@webtest and @chrome";
+    String tags = "@webtest";
+    String paneltags = "@webpanel";
 
     public WebServerAcceptanceSteps(jmri.InstanceManager instance) {
 
@@ -109,7 +109,7 @@ public class WebServerAcceptanceSteps implements En {
 
         // the order of After operations is controlled by the 3rd parameter
         // lower numbers happen earlier (0 first).
-        After(chrometags, NO_TIMEOUT, 0, () -> {
+        After(chrometags, 0, () -> {
             LogEntries logEntries = webDriver.manage().logs().get(LogType.BROWSER);
 
             Condition<LogEntry> error = new Condition<>( o -> o.getMessage().contains("ERROR:"),"error");
@@ -125,7 +125,7 @@ public class WebServerAcceptanceSteps implements En {
             softly.assertAll();
         });
 
-        After(paneltags, NO_TIMEOUT, 2, () -> {
+        After(paneltags, 2, () -> {
             // navigate back home to prevent the webpage from reloading.
             try {
                 webDriver.get("http://localhost:12080/");
@@ -134,7 +134,7 @@ public class WebServerAcceptanceSteps implements En {
             }
         });
 
-        After(tags, NO_TIMEOUT, 6, () -> {
+        After(tags, 6, () -> {
             // Clear out all local storage
             if (webDriver instanceof WebStorage) {
                 WebStorage storage = (WebStorage) webDriver;
@@ -144,7 +144,7 @@ public class WebServerAcceptanceSteps implements En {
         });
 
 
-        After(paneltags, NO_TIMEOUT, 4, () -> {
+        After(paneltags, 4, () -> {
             jmri.util.JUnitUtil.closeAllPanels();
         });
 

@@ -1,7 +1,7 @@
 package jmri;
 
-import cucumber.api.CucumberOptions;
-import cucumber.api.junit.Cucumber;
+import io.cucumber.junit.CucumberOptions;
+import io.cucumber.junit.Cucumber;
 import jmri.util.JUnitUtil;
 import jmri.util.web.BrowserFactory;
 
@@ -30,7 +30,7 @@ import org.junit.BeforeClass;
 @RunWith(Cucumber.class)
 @CucumberOptions(plugin = {"junit:cucumber-results.xml", "progress", "json:cucumber-results.json"},
         features = "java/acceptancetest/features/web",
-        tags = {"not @webtest", "not @Disabled", "not @Ignore", "not @ignore"},
+        tags = "not @webtest and not @Disabled and not @Ignore and not @ignore",
         glue = {"apps"})
 public class RunCucumberIT {
 
