@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import jakarta.servlet.ServletConfig;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
@@ -64,19 +66,19 @@ public class JsonServletTest {
     public void testDoGetResult() throws IOException, ServletException {
         MockHttpServletResponse response = new MockHttpServletResponse();
         JsonServlet instance = new MockJsonServlet();
-        instance.init(config);
+        instance.init((javax.servlet.ServletConfig)config);
         ObjectNode result = new ObjectMapper().createObjectNode();
         // test a schema valid message with validation on
         result.put("type", "pong");
         request.setAttribute("result", result);
-        instance.doGet(request, response);
+        instance.doGet((javax.servlet.http.HttpServletRequest) request, (HttpServletResponse)response);
         assertEquals("HTTP OK", HttpServletResponse.SC_OK, response.getStatus());
         assertEquals("Contains result", result.toString(), response.getContentAsString());
         // test a schema invalid message with validation on
         response = new MockHttpServletResponse();
         result.put("type", "invalid-type");
         request.setAttribute("result", result);
-        instance.doGet(request, response);
+        instance.doGet((javax.servlet.http.HttpServletRequest) request, (HttpServletResponse)response);
         assertEquals("HTTP Internal Error", HttpServletResponse.SC_INTERNAL_SERVER_ERROR, response.getStatus());
         assertNotEquals("Does not contain result", result.toString(), response.getContentAsString());
         JUnitAppender.assertWarnMessage("Errors validating {\"type\":\"invalid-type\"}");
@@ -88,7 +90,7 @@ public class JsonServletTest {
         response = new MockHttpServletResponse();
         result.put("type", "invalid-type");
         request.setAttribute("result", result);
-        instance.doGet(request, response);
+        instance.doGet((javax.servlet.http.HttpServletRequest) request, (HttpServletResponse)response);
         assertEquals("HTTP OK", HttpServletResponse.SC_OK, response.getStatus());
         assertEquals("Contains result", result.toString(), response.getContentAsString());
     }
@@ -105,10 +107,10 @@ public class JsonServletTest {
         request.setRequestURI("/json/power");
         MockHttpServletResponse response = new MockHttpServletResponse();
         JsonServlet instance = new MockJsonServlet();
-        instance.init(config);
+        instance.init((javax.servlet.ServletConfig)config);
         // test a schema valid message with validation on
         request.addParameter("id", "42");
-        instance.doGet(request, response);
+        instance.doGet((javax.servlet.http.HttpServletRequest) request, (HttpServletResponse)response);
         assertEquals("HTTP OK", HttpServletResponse.SC_OK, response.getStatus());
         JsonNode node = new ObjectMapper().readTree(response.getContentAsString());
         assertTrue("Node is object", node.isObject());
@@ -130,10 +132,10 @@ public class JsonServletTest {
         request.setRequestURI("/json/power");
         MockHttpServletResponse response = new MockHttpServletResponse();
         JsonServlet instance = new MockJsonServlet();
-        instance.init(config);
+        instance.init((javax.servlet.ServletConfig)config);
         // test a schema valid message with validation on
         request.addParameter("id", "bad-parameter");
-        instance.doGet(request, response);
+        instance.doGet((javax.servlet.http.HttpServletRequest) request, (HttpServletResponse)response);
         assertEquals("HTTP OK", HttpServletResponse.SC_OK, response.getStatus());
         JsonNode node = new ObjectMapper().readTree(response.getContentAsString());
         assertTrue("Node is array", node.isArray());
@@ -153,9 +155,9 @@ public class JsonServletTest {
         request.setRequestURI("/json/power");
         MockHttpServletResponse response = new MockHttpServletResponse();
         JsonServlet instance = new MockJsonServlet();
-        instance.init(config);
+        instance.init((javax.servlet.ServletConfig)config);
         // test a schema valid message with validation on
-        instance.doGet(request, response);
+        instance.doGet((javax.servlet.http.HttpServletRequest) request, (HttpServletResponse)response);
         assertEquals("HTTP OK", HttpServletResponse.SC_OK, response.getStatus());
         JsonNode node = new ObjectMapper().readTree(response.getContentAsString());
         assertTrue("Node is array", node.isArray());
@@ -174,9 +176,9 @@ public class JsonServletTest {
         request.setRequestURI("/json/v5/power");
         MockHttpServletResponse response = new MockHttpServletResponse();
         JsonServlet instance = new MockJsonServlet();
-        instance.init(config);
+        instance.init((javax.servlet.ServletConfig)config);
         // test a schema valid message with validation on
-        instance.doGet(request, response);
+        instance.doGet((javax.servlet.http.HttpServletRequest) request, (HttpServletResponse)response);
         assertEquals("HTTP OK", HttpServletResponse.SC_OK, response.getStatus());
         JsonNode node = new ObjectMapper().readTree(response.getContentAsString());
         assertTrue("Node is array", node.isArray());
@@ -195,9 +197,9 @@ public class JsonServletTest {
         request.setRequestURI("/json/v4/power");
         MockHttpServletResponse response = new MockHttpServletResponse();
         JsonServlet instance = new MockJsonServlet();
-        instance.init(config);
+        instance.init((javax.servlet.ServletConfig)config);
         // test a schema valid message with validation on
-        instance.doGet(request, response);
+        instance.doGet((javax.servlet.http.HttpServletRequest) request, (HttpServletResponse)response);
         assertEquals("HTTP Not Found", HttpServletResponse.SC_NOT_FOUND, response.getStatus());
         JsonNode node = new ObjectMapper().readTree(response.getContentAsString());
         assertTrue("Node is object", node.isObject());
@@ -219,10 +221,10 @@ public class JsonServletTest {
         request.setRequestURI("/json/v5/power");
         MockHttpServletResponse response = new MockHttpServletResponse();
         JsonServlet instance = new MockJsonServlet();
-        instance.init(config);
+        instance.init((javax.servlet.ServletConfig)config);
         request.setContent("{\"state\":4}".getBytes(ServletUtil.UTF8));
         // test a schema valid message with validation on
-        instance.doPost(request, response);
+        instance.doPost((javax.servlet.http.HttpServletRequest) request, (HttpServletResponse)response);
         assertEquals("HTTP OK", HttpServletResponse.SC_OK, response.getStatus());
         JsonNode node = new ObjectMapper().readTree(response.getContentAsString());
         assertTrue("Node is object", node.isObject());
@@ -247,9 +249,9 @@ public class JsonServletTest {
         request.setParameter(JSON.STATE, "4");
         MockHttpServletResponse response = new MockHttpServletResponse();
         JsonServlet instance = new MockJsonServlet();
-        instance.init(config);
+        instance.init((javax.servlet.ServletConfig)config);
         // test a schema valid message with validation on
-        instance.doPost(request, response);
+        instance.doPost((javax.servlet.http.HttpServletRequest) request, (HttpServletResponse)response);
         assertEquals("HTTP OK", HttpServletResponse.SC_OK, response.getStatus());
         JsonNode node = new ObjectMapper().readTree(response.getContentAsString());
         assertTrue("Node is object", node.isObject());
@@ -268,9 +270,9 @@ public class JsonServletTest {
         request.setRequestURI("/json/v5");
         MockHttpServletResponse response = new MockHttpServletResponse();
         JsonServlet instance = new MockJsonServlet();
-        instance.init(config);
+        instance.init((javax.servlet.ServletConfig)config);
         // test a schema valid message with validation on
-        instance.doGet(request, response);
+        instance.doGet((javax.servlet.http.HttpServletRequest) request, (HttpServletResponse)response);
         assertEquals("HTTP OK", HttpServletResponse.SC_OK, response.getStatus());
         assertEquals("Content type is HTML", "text/html; charset=utf-8", response.getContentType());
     }
@@ -290,8 +292,8 @@ public class JsonServletTest {
         request.setRequestURI("/json/v5/sensor");
         MockHttpServletResponse response = new MockHttpServletResponse();
         JsonServlet instance = new MockJsonServlet();
-        instance.init(config);
-        instance.doGet(request, response);
+        instance.init((javax.servlet.ServletConfig)config);
+        instance.doGet((javax.servlet.http.HttpServletRequest) request, (HttpServletResponse)response);
         assertEquals("HTTP OK", HttpServletResponse.SC_OK, response.getStatus());
         JsonNode node = new ObjectMapper().readTree(response.getContentAsString());
         assertTrue("Node is array", node.isArray());
@@ -301,7 +303,7 @@ public class JsonServletTest {
         // request sensor IS1
         request.setRequestURI("/json/v5/sensor/IS1");
         response = new MockHttpServletResponse();
-        instance.doGet(request, response);
+        instance.doGet((javax.servlet.http.HttpServletRequest) request, (HttpServletResponse)response);
         assertEquals("HTTP OK", HttpServletResponse.SC_OK, response.getStatus());
         node = new ObjectMapper().readTree(response.getContentAsString());
         assertTrue("Node is object", node.isObject());
@@ -310,7 +312,7 @@ public class JsonServletTest {
         // request sensor IS3 (does not exist)
         request.setRequestURI("/json/v5/sensor/IS3");
         response = new MockHttpServletResponse();
-        instance.doGet(request, response);
+        instance.doGet((javax.servlet.http.HttpServletRequest) request, (HttpServletResponse)response);
         assertEquals("HTTP Not Found", HttpServletResponse.SC_NOT_FOUND, response.getStatus());
         node = new ObjectMapper().readTree(response.getContentAsString());
         assertTrue("Node is object", node.isObject());
@@ -333,8 +335,8 @@ public class JsonServletTest {
         request.setContent("{\"name\":\"IS3\"}".getBytes(ServletUtil.UTF8));
         MockHttpServletResponse response = new MockHttpServletResponse();
         JsonServlet instance = new MockJsonServlet();
-        instance.init(config);
-        instance.doPut(request, response);
+        instance.init((javax.servlet.ServletConfig)config);
+        instance.doPut((javax.servlet.http.HttpServletRequest) request, (HttpServletResponse)response);
         assertEquals("HTTP OK", HttpServletResponse.SC_OK, response.getStatus());
         JsonNode node = new ObjectMapper().readTree(response.getContentAsString());
         assertTrue("Node is object", node.isObject());
@@ -345,7 +347,7 @@ public class JsonServletTest {
         request.setRequestURI("/json/v5/sensor/IS3");
         request.setContent("{\"state\":4}".getBytes(ServletUtil.UTF8));
         response = new MockHttpServletResponse();
-        instance.doPost(request, response);
+        instance.doPost((javax.servlet.http.HttpServletRequest) request, (HttpServletResponse)response);
         assertEquals("HTTP OK", HttpServletResponse.SC_OK, response.getStatus());
         node = new ObjectMapper().readTree(response.getContentAsString());
         assertTrue("Node is object", node.isObject());
@@ -356,7 +358,7 @@ public class JsonServletTest {
         request.setRequestURI("/json/v5/sensor/IS3");
         request.setContentType("");
         response = new MockHttpServletResponse();
-        instance.doDelete(request, response);
+        instance.doDelete((javax.servlet.http.HttpServletRequest) request, (HttpServletResponse)response);
         assertEquals("HTTP Not Found", HttpServletResponse.SC_OK, response.getStatus());
         assertEquals("HTTP content is empty", 0, response.getContentLength());
         assertNull("No sensor", manager.getBySystemName("IS3"));
@@ -374,20 +376,20 @@ public class JsonServletTest {
         request.setContentType("");
         MockHttpServletResponse response = new MockHttpServletResponse();
         JsonServlet instance = new MockJsonServlet();
-        instance.init(config);
-        instance.doGet(request, response);
+        instance.init((javax.servlet.ServletConfig)config);
+        instance.doGet((javax.servlet.http.HttpServletRequest) request, (HttpServletResponse)response);
         assertEquals("HTTP Not Found", HttpServletResponse.SC_NOT_FOUND, response.getStatus());
         JsonNode node = new ObjectMapper().readTree(response.getContentAsString());
         assertTrue("Node is object", node.isObject());
         assertEquals("Node is error", JsonException.ERROR, node.path(JSON.TYPE).asText());
         JUnitAppender.assertWarnMessage("Requested type 'invalid-type' unknown.");
-        instance.doPost(request, response);
+        instance.doPost((javax.servlet.http.HttpServletRequest) request, (HttpServletResponse)response);
         assertEquals("HTTP Not Found", HttpServletResponse.SC_NOT_FOUND, response.getStatus());
         node = new ObjectMapper().readTree(response.getContentAsString());
         assertTrue("Node is object", node.isObject());
         assertEquals("Node is error", JsonException.ERROR, node.path(JSON.TYPE).asText());
         JUnitAppender.assertWarnMessage("Requested type 'invalid-type' unknown.");
-        instance.doDelete(request, response);
+        instance.doDelete((javax.servlet.http.HttpServletRequest) request, (HttpServletResponse)response);
         assertEquals("HTTP Not Found", HttpServletResponse.SC_NOT_FOUND, response.getStatus());
         node = new ObjectMapper().readTree(response.getContentAsString());
         assertTrue("Node is object", node.isObject());

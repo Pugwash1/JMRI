@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import jmri.InstanceManager;
@@ -65,51 +66,51 @@ public class WebAppServletTest {
 
     @Test
     public void testProcessRequestAbout() throws ServletException, IOException {
-        HttpSession session = new MockHttpSession();
+        HttpSession session = (HttpSession) new MockHttpSession();
         MockHttpServletRequest request = new MockHttpServletRequest();
         MockHttpServletResponse response = new MockHttpServletResponse();
-        request.setSession(session);
+        request.setSession((jakarta.servlet.http.HttpSession) session);
         request.setContextPath("/app/about");
         WebAppServlet instance = new WebAppServlet();
-        instance.processRequest(request, response);
+        instance.processRequest((javax.servlet.http.HttpServletRequest) request, (HttpServletResponse)response);
         validateAbout(response);
     }
 
     @Test
     public void testDoGetAbout() throws ServletException, IOException {
-        HttpSession session = new MockHttpSession();
+        HttpSession session = (HttpSession) new MockHttpSession();
         MockHttpServletRequest request = new MockHttpServletRequest();
         MockHttpServletResponse response = new MockHttpServletResponse();
-        request.setSession(session);
+        request.setSession((jakarta.servlet.http.HttpSession) session);
         request.setContextPath("/app/about");
         WebAppServlet instance = new WebAppServlet();
-        instance.doGet(request, response);
+        instance.doGet((javax.servlet.http.HttpServletRequest) request, (HttpServletResponse)response);
         validateAbout(response);
     }
 
     @Test
     public void testDoPostAbout() throws ServletException, IOException {
-        HttpSession session = new MockHttpSession();
+        HttpSession session = (HttpSession) new MockHttpSession();
         MockHttpServletRequest request = new MockHttpServletRequest();
         MockHttpServletResponse response = new MockHttpServletResponse();
-        request.setSession(session);
+        request.setSession((jakarta.servlet.http.HttpSession) session);
         request.setContextPath("/app/about");
         WebAppServlet instance = new WebAppServlet();
-        instance.doPost(request, response);
+        instance.doPost((javax.servlet.http.HttpServletRequest) request, (HttpServletResponse)response);
         validateAbout(response);
     }
 
     @Test
     public void testProcessRequestApp() throws ServletException, IOException {
-        HttpSession session = new MockHttpSession();
+        HttpSession session = (HttpSession) new MockHttpSession();
         WebAppServlet instance = new WebAppServlet();
         // test English locale
         MockHttpServletRequest request = new MockHttpServletRequest();
         MockHttpServletResponse response = new MockHttpServletResponse();
-        request.setSession(session);
+        request.setSession((jakarta.servlet.http.HttpSession) session);
         request.setContextPath("/app");
         request.setPathInfo("");
-        instance.processRequest(request, response);
+        instance.processRequest((javax.servlet.http.HttpServletRequest) request, (HttpServletResponse)response);
         Assert.assertEquals("Response connection header", "Keep-Alive", response.getHeader("Connection"));
         Assert.assertEquals("Response type", UTF8_TEXT_HTML, response.getContentType());
         String body = response.getContentAsString();
@@ -122,15 +123,15 @@ public class WebAppServletTest {
 
     @Test
     public void testProcessRequestLocale() throws ServletException, IOException {
-        HttpSession session = new MockHttpSession();
+        HttpSession session = (HttpSession) new MockHttpSession();
         WebAppServlet instance = new WebAppServlet();
         // test English locale
         MockHttpServletRequest request = new MockHttpServletRequest();
         MockHttpServletResponse response = new MockHttpServletResponse();
-        request.setSession(session);
+        request.setSession((jakarta.servlet.http.HttpSession) session);
         request.setContextPath("/app");
         request.setPathInfo("/locale-en.json");
-        instance.processRequest(request, response);
+        instance.processRequest((javax.servlet.http.HttpServletRequest) request, (HttpServletResponse)response);
         Assert.assertEquals("Response connection header", "Keep-Alive", response.getHeader("Connection"));
         Assert.assertEquals("Response type", UTF8_APPLICATION_JSON, response.getContentType());
         JsonNode json = (new ObjectMapper()).readTree(response.getContentAsString());
@@ -144,10 +145,10 @@ public class WebAppServletTest {
         // test German locale - can't reuse request and response objects 
         request = new MockHttpServletRequest();
         response = new MockHttpServletResponse();
-        request.setSession(session);
+        request.setSession((jakarta.servlet.http.HttpSession) session);
         request.setContextPath("/app");
         request.setPathInfo("/locale-de.json");
-        instance.processRequest(request, response);
+        instance.processRequest((javax.servlet.http.HttpServletRequest) request, (HttpServletResponse)response);
         Assert.assertEquals("Response connection header", "Keep-Alive", response.getHeader("Connection"));
         Assert.assertEquals("Response type", UTF8_APPLICATION_JSON, response.getContentType());
         json = (new ObjectMapper()).readTree(response.getContentAsString());
@@ -159,13 +160,13 @@ public class WebAppServletTest {
 
     @Test
     public void testProcessRequestScript() throws ServletException, IOException {
-        HttpSession session = new MockHttpSession();
+        HttpSession session = (HttpSession) new MockHttpSession();
         MockHttpServletRequest request = new MockHttpServletRequest();
         MockHttpServletResponse response = new MockHttpServletResponse();
-        request.setSession(session);
+        request.setSession((jakarta.servlet.http.HttpSession) session);
         request.setContextPath("/app/script");
         WebAppServlet instance = new WebAppServlet();
-        instance.processRequest(request, response);
+        instance.processRequest((javax.servlet.http.HttpServletRequest) request, (HttpServletResponse)response);
         Assert.assertEquals("Response connection header", "Keep-Alive", response.getHeader("Connection"));
         Assert.assertEquals("Response type", UTF8_APPLICATION_JAVASCRIPT, response.getContentType());
         String body = response.getContentAsString();

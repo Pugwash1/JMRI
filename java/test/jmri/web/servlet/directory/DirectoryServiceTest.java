@@ -31,7 +31,7 @@ public class DirectoryServiceTest {
         instance.setDirAllowed(false);
         MockHttpServletRequest request = new MockHttpServletRequest();
         MockHttpServletResponse response = new MockHttpServletResponse();
-        instance.sendDirectory(request, response, EmptyResource.INSTANCE, "");
+        instance.sendDirectory((javax.servlet.http.HttpServletRequest) request, (HttpServletResponse)response, EmptyResource.INSTANCE, "");
         assertThat(response.getStatus()).isEqualTo(HttpServletResponse.SC_FORBIDDEN);
     }
 
@@ -41,7 +41,7 @@ public class DirectoryServiceTest {
         request.setPathInfo("/dist");
         MockHttpServletResponse response = new MockHttpServletResponse();
         Resource resource = new DirectoryResource(request.getLocale(), new PathResource(FileUtil.getFile(FileUtil.getProgramPath())));
-        instance.sendDirectory(request, response, resource, "");
+        instance.sendDirectory((javax.servlet.http.HttpServletRequest) request, (HttpServletResponse)response, resource, "");
         assertThat(response.getStatus()).isEqualTo(HttpServletResponse.SC_OK);
     }
 
@@ -51,7 +51,7 @@ public class DirectoryServiceTest {
         request.setPathInfo("/dist/help");
         MockHttpServletResponse response = new MockHttpServletResponse();
         Resource resource = new DirectoryResource(request.getLocale(), new PathResource(FileUtil.getFile(FileUtil.getProgramPath())));
-        instance.sendDirectory(request, response, resource, "");
+        instance.sendDirectory((javax.servlet.http.HttpServletRequest) request, (HttpServletResponse)response, resource, "");
         assertThat(response.getStatus()).isEqualTo(HttpServletResponse.SC_OK);
     }
 
@@ -62,7 +62,7 @@ public class DirectoryServiceTest {
         MockHttpServletResponse response = new MockHttpServletResponse();
         response.setStatus(0); // not a valid HTTP status
         // testing that status is not changed
-        instance.notFound(request, response);
+        instance.notFound((javax.servlet.http.HttpServletRequest) request, (HttpServletResponse)response);
         assertThat(response.getStatus()).isEqualTo(0);
     }
 

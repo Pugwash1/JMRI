@@ -34,10 +34,10 @@ import org.apache.logging.log4j.core.config.Property;
  *
  * @author Bob Jacobsen - Copyright 2007
  */
-@Plugin(name="JUnitAppender", category="Core", elementType="appender", printObject=true)
+//@Plugin(name="JUnitAppender", category="Core", elementType="appender", printObject=true)
 public class JUnitAppender extends AbstractAppender {
 
-    protected JUnitAppender(final String name, final Filter filter, final Layout<? extends Serializable> layout, 
+    protected JUnitAppender(final String name, final Filter filter, final Layout layout, 
             final boolean ignoreExceptions, final Property[] properties) {
         super(name, filter, layout, ignoreExceptions, properties );
         activateInstance();
@@ -57,7 +57,7 @@ public class JUnitAppender extends AbstractAppender {
     @PluginFactory
     public static JUnitAppender createAppender(
             @PluginAttribute("name") String name,
-            @PluginElement("Layout") Layout<? extends Serializable> layout,
+            @PluginElement("Layout") Layout layout,
             @PluginElement("Filter") final Filter filter) {
         if (name == null) {
             LOGGER.error("No name provided for MyCustomAppenderImpl");

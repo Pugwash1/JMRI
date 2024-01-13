@@ -2,6 +2,7 @@ package jmri.web.servlet.roster;
 
 import java.io.IOException;
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
 
 import jmri.util.JUnitUtil;
 
@@ -22,7 +23,7 @@ public class MultipartRequestHandlerTest {
 
         MockHttpServletRequest request = new MockHttpServletRequest();
         request.addParameter("fileReplace", "false");
-        Assertions.assertNotNull(MultipartRequestHandler.uploadByJavaServletAPI(request));
+        Assertions.assertNotNull(MultipartRequestHandler.uploadByJavaServletAPI((HttpServletRequest) request));
 
     }
 

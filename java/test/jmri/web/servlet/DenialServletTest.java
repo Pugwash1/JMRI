@@ -14,6 +14,8 @@ import org.junit.jupiter.api.*;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
+import jakarta.servlet.http.HttpServletRequest;
+
 /**
  * Tests for the jmri.web.servlet.DenialServlet class
  *
@@ -31,7 +33,7 @@ public class DenialServletTest {
     public void testGet() throws ServletException, IOException {
         MockHttpServletRequest request = new MockHttpServletRequest();
         MockHttpServletResponse response = new MockHttpServletResponse();
-        new DenialServlet().doGet(request, response);
+        new DenialServlet().doGet((javax.servlet.http.HttpServletRequest) request, (HttpServletResponse)response);
         Assert.assertEquals("Response is HTML", UTF8_TEXT_HTML, response.getContentType());
         Assert.assertEquals("Status is 403", HttpServletResponse.SC_FORBIDDEN, response.getStatus());
     }
@@ -40,7 +42,7 @@ public class DenialServletTest {
     public void testPost() throws ServletException, IOException {
         MockHttpServletRequest request = new MockHttpServletRequest();
         MockHttpServletResponse response = new MockHttpServletResponse();
-        new DenialServlet().doPost(request, response);
+        new DenialServlet().doPost((javax.servlet.http.HttpServletRequest) request, (HttpServletResponse)response);
         Assert.assertEquals("Response is HTML", UTF8_TEXT_HTML, response.getContentType());
         Assert.assertEquals("Status is 403", HttpServletResponse.SC_FORBIDDEN, response.getStatus());
     }

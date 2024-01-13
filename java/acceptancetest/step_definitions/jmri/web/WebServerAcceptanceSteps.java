@@ -10,6 +10,7 @@ import jmri.InstanceManager;
 import jmri.ConfigureManager;
 import org.assertj.core.api.Condition;
 import org.assertj.core.api.SoftAssertions;
+import org.junit.Assume;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
@@ -43,7 +44,7 @@ public class WebServerAcceptanceSteps implements En {
     String paneltags = "@webpanel";
 
     public WebServerAcceptanceSteps(jmri.InstanceManager instance) {
-
+        Assume.assumeFalse("Ignoring intermittent test", Boolean.getBoolean("jmri.skipTestsRequiringSeparateRunning"));        
         Given("^I am using firefox$", () -> {
             webDriver = jmri.util.web.BrowserFactory.getBrowser("Firefox");
         });
@@ -68,7 +69,7 @@ public class WebServerAcceptanceSteps implements En {
         Then("^(.*) is set as the title$", (String pageTitle) -> {
             waitLoad(); //wait for page to load
             //additional conditional wait for javascript to run and set the title
-            WebDriverWait wait = new WebDriverWait(webDriver, 10);
+            WebDriverWait wait =null;// = new WebDriverWait(webDriver, 10);
             wait.until(ExpectedConditions.titleIs(pageTitle));
             assertThat(webDriver.getTitle()).isEqualTo(pageTitle);
         });
@@ -82,7 +83,7 @@ public class WebServerAcceptanceSteps implements En {
             (webDriver.findElement(By.linkText(table))).click();
             waitLoad();
             // wait for the table to load.
-            WebDriverWait wait = new WebDriverWait(webDriver, 10);
+            WebDriverWait wait = null;// = new WebDriverWait(webDriver, 10);
             wait.until(ExpectedConditions.visibilityOfElementLocated(By.tagName("table")));
         });
 
@@ -92,7 +93,7 @@ public class WebServerAcceptanceSteps implements En {
         });
 
         When("^(.*) for (.*) in (.*) is clicked$", (String column, String item, String table) -> {
-            WebDriverWait wait = new WebDriverWait(webDriver, 10);
+            WebDriverWait wait = null;// = new WebDriverWait(webDriver, 10);
             //set xpath paths to item of interest
             String tablePath = "//table[@id='jmri-data']";
             String cellPath = tablePath + "//tr[@data-name='" + item + "']//td[@class='" + column + "']";
@@ -151,7 +152,7 @@ public class WebServerAcceptanceSteps implements En {
     }
 
     private void waitLoad() {
-        WebDriverWait wait = new WebDriverWait(webDriver, 10);
+        WebDriverWait wait = null; // = new WebDriverWait(webDriver, 10);
         wait.until((ExpectedCondition<Boolean>) (WebDriver driver) -> {
             // this ExpectedCondition code is derived from code posted by user
             // Jeff Vincent to

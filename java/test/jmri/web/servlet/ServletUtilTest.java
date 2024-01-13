@@ -42,13 +42,13 @@ public class ServletUtilTest {
     @Test
     public void testSetNonCachingHeaders() {
         // create a ServletUtil instance
-        HttpServletResponse response = new MockHttpServletResponse();
+        HttpServletResponse response = (HttpServletResponse) new MockHttpServletResponse();
         ServletUtil instance = new ServletUtil();
         // set the headers for a response
         Date now = instance.setNonCachingHeaders(response);
         // get a date string matching the date in the response
         // Java has no standard method to get an RFC 7232 formatted date
-        HttpServletResponse template = new MockHttpServletResponse();
+        HttpServletResponse template = (HttpServletResponse) new MockHttpServletResponse();
         template.setDateHeader("Date", now.getTime());
         String date = template.getHeader("Date");
         // verify instance has expected header values
