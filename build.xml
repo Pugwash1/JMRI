@@ -1611,8 +1611,6 @@
             <sysproperty key="file.encoding" value="UTF-8"/>
             <sysproperty key="java.library.path"
                          path=".:${arch.lib.path}:${libdir}"/>
-            <sysproperty key="jinput.plugins"
-                         path="net.bobis.jinput.hidraw.HidRawEnvironmentPlugin"/><!-- not in tests, left here for historical reasons -->
             <sysproperty key="purejavacomm.loglevel" value="${purejavacomm.loglevel}"/>
             <jvmarg value="-Xms256m"/>
             <jvmarg value="-Xmx640m"/>
@@ -1644,8 +1642,6 @@
             <sysproperty key="log4j.ignoreTCL" path="true/"/>
             <sysproperty key="java.library.path"
                          path=".:${arch.lib.path}:${libdir}"/>
-            <sysproperty key="jinput.plugins"
-                         path="net.bobis.jinput.hidraw.HidRawEnvironmentPlugin"/><!-- not in tests, left here for historical reasons -->
             <sysproperty key="purejavacomm.loglevel" value="${purejavacomm.loglevel}"/>
 
             <jvmarg value="-Xdebug"/>
@@ -1771,8 +1767,6 @@
             <sysproperty key="file.encoding" value="UTF-8"/>
             <sysproperty key="java.library.path"
                          path=".:${arch.lib.path}:${libdir}"/>
-            <sysproperty key="jinput.plugins"
-                         path="net.bobis.jinput.hidraw.HidRawEnvironmentPlugin"/>
             <jvmarg value="-Xms256m"/>
             <jvmarg value="-Xmx640m"/>
 
@@ -1804,7 +1798,6 @@
             <sysproperty key="apple.laf.useScreenMenuBar" value="true"/>
             <sysproperty key="log4j.ignoreTCL" path="true/"/>
             <sysproperty key="java.library.path" path=".:${libdir}:${arch.lib.path}"/>
-            <!-- <sysproperty key="jinput.plugins" path="net.bobis.jinput.hidraw.HidRawEnvironmentPlugin"/> no longer specify specific library -->
             <jvmarg line="${jvm.args}"/>
             <arg value="${antargline}"/>
         </java>
@@ -2158,7 +2151,6 @@
             <sysproperty key="jmri.prefsdir" path="${tempdir}"/>
             <sysproperty key="jmri.shutdownmanager" value="jmri.util.MockShutDownManager" />
             <sysproperty key="jmri.skipBuildHelpFilesTest" value="true"/><!-- skip BuildHelpFilesTest test -->
-            <!-- <sysproperty key="jinput.plugins" path="net.bobis.jinput.hidraw.HidRawEnvironmentPlugin"/> no longer specify specific library -->
 
             <sysproperty key="user.language" value="en"/>
         <sysproperty key="user.country" value="US"/>
@@ -2445,7 +2437,6 @@
             <arg value="-Dlog4j.ignoreTCL=true/"/>
             <arg value="-Dfile.encoding=UTF-8"/>
             <arg value="-Djava.library.path.:${arch.lib.path}:${libdir}"/>
-            <arg value="-Djinput.plugins=net.bobis.jinput.hidraw.HidRawEnvironmentPlugin"/><!-- not in tests, left here for historical reasons -->
 
             <arg value="apps.PanelPro.PanelPro"/>
             <arg value="PanelPro"/>
