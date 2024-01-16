@@ -195,7 +195,11 @@ public class AutoEngineerMicro extends AbstractAutoTrainControl {
         // log.info("throt[{}]Step[{}]", currentThrottleSetting, currentStep);
         if (rosterEntry != null && rosterEntry.getSpeedProfile() != null) {
             currentThrottlePerHour = rosterEntry.getSpeedProfile()
+<<<<<<< HEAD
                     .mmsToScaleSpeed(rosterEntry.getSpeedProfile().getSpeed(currentThrottleSetting, true));
+=======
+                    .MMSToScaleSpeed(rosterEntry.getSpeedProfile().getSpeed(currentThrottleSetting, true));
+>>>>>>> fa4d2cbdf7 (ClubBase-2024)
         }
         updatePgEnd();
         btnThrottle.setIcon(iconSpeeds.get(currentStep));
