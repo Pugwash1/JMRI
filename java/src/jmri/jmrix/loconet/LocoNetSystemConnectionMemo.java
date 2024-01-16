@@ -225,7 +225,9 @@ public class LocoNetSystemConnectionMemo extends DefaultSystemConnectionMemo imp
 
         ClockControl cc = getClockControl();
 
-        InstanceManager.setDefault(ClockControl.class, cc);
+        if (cc != null) {
+            InstanceManager.setDefault(ClockControl.class, cc);
+        }
 
         getIdTagManager();
 
@@ -280,7 +282,11 @@ public class LocoNetSystemConnectionMemo extends DefaultSystemConnectionMemo imp
         if (getDisabled()) {
             return null;
         }
-        return (LnClockControl) classObjectMap.computeIfAbsent(ClockControl.class,(Class<?> c) -> new LnClockControl(this));
+        if (get(ClockControl.class) == null) {
+            return (LnClockControl) classObjectMap.computeIfAbsent(ClockControl.class,
+                    (Class<?> c) -> new LnClockControl(this));
+        }
+        return null;
     }
 
     public LnReporterManager getReporterManager() {
