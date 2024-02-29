@@ -34,7 +34,7 @@ import org.apache.logging.log4j.core.config.Property;
  *
  * @author Bob Jacobsen - Copyright 2007
  */
-//@Plugin(name="JUnitAppender", category="Core", elementType="appender", printObject=true)
+@Plugin(name="JUnitAppender", category="Core", elementType="appender", printObject=true)
 public class JUnitAppender extends AbstractAppender {
 
     protected JUnitAppender(final String name, final Filter filter, final Layout layout, 

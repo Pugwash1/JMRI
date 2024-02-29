@@ -22,8 +22,8 @@
         <jetty-servlet.version>9.4.53.v20231009</jetty-servlet.version>
         <!-- this is a custom version, see lib/README.md -->
         <jemmy.version>RELEASE200</jemmy.version>
-        <slf4j.version>2.1.0-alpha1</slf4j.version>
-        <log4j.version>3.0.0-beta1</log4j.version>
+        <slf4j.version>2.0.7</slf4j.version>   <!-- 2.1.0-alpha   -->
+        <log4j.version>2.20.0</log4j.version>  <!-- 3.0.3-beta -->
         <jackson-core.version>2.16.1</jackson-core.version>
         <jackson-databind.version>2.16.1</jackson-databind.version>
         <jackson-annotations.version>2.16.1</jackson-annotations.version>
