@@ -135,6 +135,9 @@
                     </ul>
                 </li>
                 <li>Additions for better conformance with OpenLCB standards</li>
+                <li>Add the <strong>STL Editor</strong> tool to the OpenLCB/LCC menu.  The
+                tool is used to generate the STL logic for the RR-CirKits Tower LCC+Q.  The
+                Tower LCC+Q uses a subset of the Siemens Structured List PLC language.</li>
             </ul>
 
         <h4>Powerline</h4>
@@ -490,6 +493,9 @@ LogixNG: IQ:AUTO:0001
               </li>
           <li>The LogixNG action <strong>Set reporter</strong> has been
               added.</li>
+          <li>The actions <strong>Listen on Beans ...</strong> have been
+              updated to fix a problem when several beans changes
+              state at the same time.</li>
           <li></li>
         </ul>
 
@@ -554,7 +560,18 @@ LogixNG: IQ:AUTO:0001
     <h3>Scripting</h3>
         <a id="Scripting" name="Scripting"></a>
         <ul>
-            <li></li>
+            <li>Added three sample scripts
+                <ul>
+                    <li>AddPowerButton.py - shows how to add a button to the main
+                            PanelPro window. In this case, the button turns power on and off.
+                    <li>MainWindowToBack.py - moves the main PanelPro window to the back.
+                            Useful when you want PanelPro to start up with a panel
+                            at the front of the screen.
+                    <li>MenuItemDisable.py - shows how to disable menu items so they
+                            can't be used.  Sample disables LocoNet ability to reset slots,
+                            and ability to start the WiThrottle server.  Meant for e.g.
+                            club use.
+            </li>
         </ul>
 
     <h3>Signals</h3>
@@ -666,7 +683,7 @@ LogixNG: IQ:AUTO:0001
     <h3>Miscellaneous</h3>
         <a id="Misc" name="Misc"></a>
         <ul>
-            <li>Improve handling of block values that contain IdTags 
+            <li>Improve handling of block values that contain IdTags
                 across shutdown and startup.</li>
         </ul>
 
