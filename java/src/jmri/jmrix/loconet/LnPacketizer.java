@@ -180,6 +180,7 @@ public class LnPacketizer extends LnTrafficController {
      */
     protected byte readByteProtected(DataInputStream istream) throws java.io.IOException {
         while (true) { // loop will repeat until character found
+            try {
             int nchars;
             // The istream should be configured so that the following
             // read(..) call only blocks for a short time, e.g. 100msec, if no
@@ -191,6 +192,9 @@ public class LnPacketizer extends LnTrafficController {
             nchars = istream.read(rcvBuffer, 0, 1);
             if (nchars > 0) {
                 return rcvBuffer[0];
+            }
+            } catch (Exception Ex) {
+                log.info("DUH");
             }
         }
     }
@@ -449,8 +453,8 @@ public class LnPacketizer extends LnTrafficController {
             rcvHandler = new RcvHandler(this);
         }
         rcvThread = new Thread(rcvHandler, "LocoNet receive handler"); // NOI18N
-        rcvThread.setDaemon(true);
-        rcvThread.setPriority(Thread.MAX_PRIORITY);
+        //rcvThread.setDaemon(true);
+        //rcvThread.setPriority(Thread.MAX_PRIORITY);
         rcvThread.start();
 
         if (xmtHandler == null) {
@@ -463,8 +467,8 @@ public class LnPacketizer extends LnTrafficController {
             xmtThread = new Thread(xmtHandler, "LocoNet transmit handler"); // NOI18N
         }
         log.debug("Xmt thread starts at priority {}", xmtpriority); // NOI18N
-        xmtThread.setDaemon(true);
-        xmtThread.setPriority(Thread.MAX_PRIORITY - 1);
+        //xmtThread.setDaemon(true);
+        //xmtThread.setPriority(Thread.MAX_PRIORITY - 1);
         xmtThread.start();
 
         log.info("lnPacketizer Started");
