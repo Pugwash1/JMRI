@@ -1,7 +1,7 @@
 
     <h3>Hardware Support</h3>
         <ul>
-          <li></li>
+          <li>Fixed a freeze that could happen when changing the connection preferences.</li>
         </ul>
 
         <h4>Acela CTI</h4>
@@ -126,7 +126,10 @@
 
         <h4><a href="http://openlcb.org">OpenLCB</a> / LCC</h4>
             <ul>
-                <li></li>
+                <li>If you enter an value that's outside the acceptable range
+                    in the configuration tool, the background will now turn
+                    blue to indicate that to you.</li>
+                <li>Improved how the buttons are laid out at the bottom of the CDI window</li>
             </ul>
 
         <h4>Powerline</h4>
@@ -266,7 +269,8 @@
 
         <h4>Mistral Train Models</h4>
              <ul>
-                <li></li>
+                <li>Updated Lokommander II definitions. Implement CV114, 115 and 116 according to the firmware version. Firmware V3 : treat as binary and only support up to F8 Firmware V6 : treat as decimal and support up to F28
+                </li>
              </ul>
 
         <h4>MTH</h4>
@@ -407,7 +411,9 @@
     <h3>Layout Editor</h3>
         <a id="LE" name="LE"></a>
         <ul>
-            <li></li>
+            <li>Fixed the ability to connect turnouts by dragging and dropping. When end points
+            overlap, a track segment is automatically created. This works very nicely for creating
+            yard ladders.  The problem affected panels on Linux and Windows.</li>
         </ul>
 
         <h4>NX - Entry/Exit Tool</h4>
@@ -424,13 +430,21 @@
     <h3>LogixNG</h3>
         <a id="LogixNG" name="LogixNG"></a>
         <ul>
+          <li>The functions <strong>round()</strong>, <strong>ceil()</strong>
+              and <strong>floor()</strong> has been added to the Math module.
+              All three rounds a floating point value. ceil() rounds up and
+              floor() rounds down.</li>
+          <li>The constant <strong>oblocks</strong> has been added to
+              the Layout module.</li>
           <li></li>
         </ul>
 
     <h3>Meters and MeterFrames</h3>
         <a id="Meters" name="Meters"></a>
         <ul>
-            <li></li>
+            <li>Added a start-up action that will open the meters.</li>
+            <li>Add a MeterToMemory.py sample script that copies Meter
+                values to Memory variables</li>
         </ul>
 
     <h3>Operations</h3>
@@ -448,7 +462,7 @@
     <h3>Control Panel Editor</h3>
         <a id="CPE" name="CPE"></a>
         <ul>
-            <li></li>
+            <li>Fixed the popup context menu on Linux.</li>
         </ul>
         <h4>Circuit Builder</h4>
             <a id="CPE-CB" name="CPE-CB"></a>
@@ -488,7 +502,8 @@
     <h3>Scripting</h3>
         <a id="Scripting" name="Scripting"></a>
         <ul>
-            <li></li>
+            <li>New ThrottleBridgeF0F8.py for bridging a throttle between Lenz and Digitrax systems
+                including the F0 through F8 functions.</li>
         </ul>
 
     <h3>Signals</h3>

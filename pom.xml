@@ -6,7 +6,7 @@
     <name>JMRI</name>
     <groupId>org.jmri</groupId>
     <artifactId>jmri</artifactId>
-    <version>5.7.5-SNAPSHOT</version>
+    <version>5.7.6-SNAPSHOT</version>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <release.build_user>${user.name}</release.build_user>
@@ -28,7 +28,7 @@
         <jackson-databind.version>2.16.1</jackson-databind.version>
         <jackson-annotations.version>2.16.1</jackson-annotations.version>
         <jogamp.version>2.3.2</jogamp.version>
-        <openlcb.version>0.7.35</openlcb.version>
+        <openlcb.version>0.7.37</openlcb.version>
         <netbeans.version>RELEASE200</netbeans.version>
         <jacoco.version>0.8.11</jacoco.version>
         <jacoco.reportDir>${basedir}/target/</jacoco.reportDir>
