@@ -453,8 +453,8 @@ public class LnPacketizer extends LnTrafficController {
             rcvHandler = new RcvHandler(this);
         }
         rcvThread = new Thread(rcvHandler, "LocoNet receive handler"); // NOI18N
-        //rcvThread.setDaemon(true);
-        //rcvThread.setPriority(Thread.MAX_PRIORITY);
+        rcvThread.setDaemon(true);
+        rcvThread.setPriority(Thread.MAX_PRIORITY);
         rcvThread.start();
 
         if (xmtHandler == null) {
@@ -467,8 +467,8 @@ public class LnPacketizer extends LnTrafficController {
             xmtThread = new Thread(xmtHandler, "LocoNet transmit handler"); // NOI18N
         }
         log.debug("Xmt thread starts at priority {}", xmtpriority); // NOI18N
-        //xmtThread.setDaemon(true);
-        //xmtThread.setPriority(Thread.MAX_PRIORITY - 1);
+        xmtThread.setDaemon(true);
+        xmtThread.setPriority(Thread.MAX_PRIORITY - 1);
         xmtThread.start();
 
         log.info("lnPacketizer Started");
