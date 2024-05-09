@@ -180,7 +180,6 @@ public class LnPacketizer extends LnTrafficController {
      */
     protected byte readByteProtected(DataInputStream istream) throws java.io.IOException {
         while (true) { // loop will repeat until character found
-            try {
             int nchars;
             // The istream should be configured so that the following
             // read(..) call only blocks for a short time, e.g. 100msec, if no
@@ -192,9 +191,6 @@ public class LnPacketizer extends LnTrafficController {
             nchars = istream.read(rcvBuffer, 0, 1);
             if (nchars > 0) {
                 return rcvBuffer[0];
-            }
-            } catch (Exception Ex) {
-                log.info("DUH");
             }
         }
     }
