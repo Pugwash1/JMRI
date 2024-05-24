@@ -1,7 +1,7 @@
 
     <h3>Hardware Support</h3>
         <ul>
-          <li>Fixed a freeze that could happen when changing the connection preferences.</li>
+          <li></li>
         </ul>
 
         <h4>Acela CTI</h4>
@@ -126,10 +126,7 @@
 
         <h4><a href="http://openlcb.org">OpenLCB</a> / LCC</h4>
             <ul>
-                <li>If you enter an value that's outside the acceptable range
-                    in the configuration tool, the background will now turn
-                    blue to indicate that to you.</li>
-                <li>Improved how the buttons are laid out at the bottom of the CDI window</li>
+                <li></li>
             </ul>
 
         <h4>Powerline</h4>
@@ -269,8 +266,7 @@
 
         <h4>Mistral Train Models</h4>
              <ul>
-                <li>Updated Lokommander II definitions. Implement CV114, 115 and 116 according to the firmware version. Firmware V3 : treat as binary and only support up to F8 Firmware V6 : treat as decimal and support up to F28
-                </li>
+                <li></li>
              </ul>
 
         <h4>MTH</h4>
@@ -381,7 +377,8 @@
     <h3>DecoderPro</h3>
         <a id="DecoderPro" name="DecoderPro"></a>
         <ul>
-            <li></li>
+            <li>Better handling of selected items when roster list is updated</li>
+            <li>Enable/Disable bottom controls depending on selected item</li>
         </ul>
 
     <h3>CTC Tool</h3>
@@ -411,9 +408,9 @@
     <h3>Layout Editor</h3>
         <a id="LE" name="LE"></a>
         <ul>
-            <li>Fixed the ability to connect turnouts by dragging and dropping. When end points
-            overlap, a track segment is automatically created. This works very nicely for creating
-            yard ladders.  The problem affected panels on Linux and Windows.</li>
+            <li>Add the <strong>hidden</strong> attribute to the Layout Editor <strong>Shape</strong>
+            item.  The center popup menu has an option to hide the shape when not editing.  The
+            <strong>setHidden(boolean)</strong> public method can be used by scripts and LogixNG.</li>
         </ul>
 
         <h4>NX - Entry/Exit Tool</h4>
@@ -430,21 +427,13 @@
     <h3>LogixNG</h3>
         <a id="LogixNG" name="LogixNG"></a>
         <ul>
-          <li>The functions <strong>round()</strong>, <strong>ceil()</strong>
-              and <strong>floor()</strong> has been added to the Math module.
-              All three rounds a floating point value. ceil() rounds up and
-              floor() rounds down.</li>
-          <li>The constant <strong>oblocks</strong> has been added to
-              the Layout module.</li>
           <li></li>
         </ul>
 
     <h3>Meters and MeterFrames</h3>
         <a id="Meters" name="Meters"></a>
         <ul>
-            <li>Added a start-up action that will open the meters.</li>
-            <li>Add a MeterToMemory.py sample script that copies Meter
-                values to Memory variables</li>
+            <li></li>
         </ul>
 
     <h3>Operations</h3>
@@ -462,7 +451,7 @@
     <h3>Control Panel Editor</h3>
         <a id="CPE" name="CPE"></a>
         <ul>
-            <li>Fixed the popup context menu on Linux.</li>
+            <li></li>
         </ul>
         <h4>Circuit Builder</h4>
             <a id="CPE-CB" name="CPE-CB"></a>
@@ -502,8 +491,7 @@
     <h3>Scripting</h3>
         <a id="Scripting" name="Scripting"></a>
         <ul>
-            <li>New ThrottleBridgeF0F8.py for bridging a throttle between Lenz and Digitrax systems
-                including the F0 through F8 functions.</li>
+            <li></li>
         </ul>
 
     <h3>Signals</h3>
@@ -555,7 +543,11 @@
     <h3>Throttle</h3>
         <a id="throttle" name="throttle"></a>
         <ul>
-            <li></li>
+            <li>A visible property was added to function buttons defined in the label&amp;media panels of decoderpro, this property is used by the throttle UI.</li>
+            <li>A throttle preference was added to show/hide the speed step selector on the control panel of any new UI throttles.</li>
+            <li>When a throttle UI layout is saved using the File->Save current throttle menu entry, if it is linked to a roster entry, the user will be proposed to also export function buttons customizations to the roster entry.</li>
+            <li>Fix issue with throttle window title not resetting when a throttle is released</li>
+            <li>Fix issue with selection foreground color in throttles list window</li>
         </ul>
 
     <h3>Timetable</h3>
