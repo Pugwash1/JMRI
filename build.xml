@@ -470,6 +470,7 @@
     <path id="test.class.path">
         <pathelement location="${jartarget}"/>
         <path refid="compile.class.path"/>
+        
 <pathelement location="${libdir}/JavaVersionCheckWindow.jar"/>
 <pathelement location="${libdir}/angus-activation-2.0.2.jar"/>
 <pathelement location="${libdir}/antlr-2.7.7.jar"/>
