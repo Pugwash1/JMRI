@@ -452,11 +452,7 @@ public class LnPacketizer extends LnTrafficController {
         if (rcvHandler == null) {
             rcvHandler = new RcvHandler(this);
         }
-<<<<<<< HEAD
         rcvThread = jmri.util.ThreadingUtil.newThread(rcvHandler, "LocoNet receive handler"); // NOI18N
-=======
-        rcvThread = new Thread(rcvHandler, "LocoNet receive handler"); // NOI18N
->>>>>>> b164807007 (redor deamon)
         rcvThread.setDaemon(true);
         rcvThread.setPriority(Thread.MAX_PRIORITY);
         rcvThread.start();
