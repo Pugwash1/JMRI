@@ -329,7 +329,9 @@
 
         <h4>TCS</h4>
             <ul>
-                <li></li>
+                <li>The decoder definitions for the TCS WOW Steam version 4.6
+                    have been improved.
+                    </li>
             </ul>
 
         <h4>Team Digital</h4>
@@ -455,7 +457,7 @@
     <h3>OperationsPro</h3>
         <a id="Operations" name="Operations"></a>
         <ul>
-            <li></li>
+            <li>New feature, you can now control which caboose road names a train can use.</li>
         </ul>
 
    <h3>Panel Editor</h3>
