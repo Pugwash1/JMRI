@@ -98,6 +98,18 @@ public class TrainInfoFile extends jmri.jmrit.XmlFile {
                     } else {
                         log.error("Transit name missing when reading TrainInfoFile {}", name);
                     }
+                    if (traininfo.getAttribute("dynamictransit") != null ) {
+                        tInfo.setDynamicTransit(false);
+                        if (traininfo.getAttribute("dynamictransit").getValue().equals("yes")) {
+                            tInfo.setDynamicTransit(true);
+                        }
+                    }
+                    if (traininfo.getAttribute("dynamictransitcloseloop") != null ) {
+                        tInfo.setDynamicTransitCloseLoopIfPossible(false);
+                        if (traininfo.getAttribute("dynamictransitcloseloop").getValue().equals("yes")) {
+                            tInfo.setDynamicTransitCloseLoopIfPossible(true);
+                        }
+                    }
                     if (version < 6) {
                         if (traininfo.getAttribute("trainname") != null) {
                             tInfo.setTrainName(traininfo.getAttribute("trainname").getValue());
@@ -506,6 +518,7 @@ public class TrainInfoFile extends jmri.jmrit.XmlFile {
         traininfo.setAttribute("version", "7");
         traininfo.setAttribute("transitname", tf.getTransitName());
         traininfo.setAttribute("transitid", tf.getTransitId());
+        traininfo.setAttribute("dynamictransit", (tf.getDynamicTransit() ? "yes" : "no"));
         traininfo.setAttribute("trainname", tf.getTrainName());
         traininfo.setAttribute("trainusername", tf.getTrainUserName());
         traininfo.setAttribute("rosterid", tf.getRosterId());

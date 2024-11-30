@@ -3908,6 +3908,10 @@ public class LayoutBlock extends AbstractNamedBean implements PropertyChangeList
         return routes.size();
     }
 
+    public List<Routes> getRoutes() {
+        return routes;
+        
+    }
     /**
      * Get the direction of route i.
      *
