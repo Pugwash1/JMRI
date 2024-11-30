@@ -27,6 +27,8 @@ public class TrainInfo {
 
     // instance variables for both manual and automatic operation
     private int version = 1;
+    private boolean dynamicTransit = false;
+    private boolean dynamicTransitCloseLoopIfPossible = false;
     private String transitName = "";
     private String transitId = "";
     private String trainName = "";
@@ -116,7 +118,23 @@ public class TrainInfo {
     public String getTransitId() {
         return transitId;
     }
+    
+    public void setDynamicTransit(boolean b) {
+        dynamicTransit = b;
+    }
 
+    public boolean getDynamicTransit() {
+        return dynamicTransit;
+    }
+
+    
+    public void setDynamicTransitCloseLoopIfPossible(boolean b) {
+        dynamicTransitCloseLoopIfPossible = b;
+    }
+
+    public boolean getDynamicTransitCloseLoopIfPossible() {
+        return dynamicTransitCloseLoopIfPossible;
+    }
     public void setTrainName(String s) {
         trainName = s;
     }
