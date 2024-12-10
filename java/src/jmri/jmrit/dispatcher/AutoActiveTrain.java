@@ -3,9 +3,12 @@ package jmri.jmrit.dispatcher;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.LinkedList;
 
 import javax.annotation.CheckForNull;
+import javax.imageio.plugins.tiff.GeoTIFFTagSet;
 
 import jmri.*;
 import jmri.implementation.SignalSpeedMap;
@@ -621,6 +624,9 @@ public class AutoActiveTrain implements ThrottleListener {
                         // set the blocks as normal
                         _previousBlock = _currentBlock;
                         _nextBlock = getNextBlock(b, as);
+                        //if (_nextBlock.getState() == Block.OCCUPIED) {
+                        //    handleBlockStateChange(as, _nextBlock);
+                        //}
                         setupNewCurrentSignal(as, false);
                     } else {
                         // assume we have reached last block in this transit, for safety sake.
@@ -943,8 +949,29 @@ public class AutoActiveTrain implements ThrottleListener {
                 waitingOnAllocation = true;  // flag setSpeedBySignal required when another allocation made.
             }
         }
+        log.info("C[{}]N[{}]",_nextBlock.getDisplayName(),_currentBlock.getDisplayName());
+        if ( !(getTargetSpeed() == 0.0f || isStopping()) 
+                && _nextBlock != null 
+                && _currentBlock != null 
+                && _nextBlock.getSensor() != null
+                && _nextBlock.getComment() != null
+                && _nextBlock.getComment().contains("#")) {
+            if ( _currentBlock.getComment() != null
+                    && _currentBlock.getComment().contains("#")) {
+                log.error("Stopping due to two consecutive no sensor blocks [{}], [{}]",
+                        _currentBlock.getDisplayName(), _nextBlock.getDisplayName());
+            } else {
+                log.info("C[{}]N[{}]Com[{}]",_nextBlock.getDisplayName(),_currentBlock.getDisplayName(), _nextBlock.getComment());
+                try {
+                    _nextBlock.getSensor().setKnownState(Sensor.ACTIVE);
+                    _currentBlock.addPropertyChangeListener(new DarkTerritoryListener(_currentBlock,_nextBlock.getSensor()));
+                } catch (jmri.JmriException ex) {
+                    log.error("Error entering darkterratory");
+                }
+            }
+        }
     }
-
+        
     /*
      * Check at least the next section is allocated
      */
@@ -2216,6 +2243,34 @@ public class AutoActiveTrain implements ThrottleListener {
             return RAMP_SPEEDPROFILE;
         }
         return RAMP_NONE;
+    }
+    
+    class DarkTerritoryListener implements PropertyChangeListener {
+        private Sensor sensor;
+        private Block block;
+
+        public DarkTerritoryListener(Block block,Sensor sensor) {
+            this.sensor = sensor;
+            this.block = block;
+            log.info("Sensor[{}]",sensor.getDisplayName());
+        }
+
+        @Override
+        public void propertyChange(PropertyChangeEvent e) {
+            log.info("eg.getSource()[{}]e.getPropertyName()[{}]",((Block)e.getSource()).getDisplayName(),e.getPropertyName());
+            if ((Block)e.getSource() != block) {
+                return;
+            }
+            if (e.getPropertyName().equals("state")) {
+                sensor.removePropertyChangeListener(this);
+                try {
+                    log.info("Sensor INACTIVE[{}]",sensor.getDisplayName());
+                    sensor.setKnownState(Sensor.INACTIVE);
+                } catch (jmri.JmriException ex) {
+                    log.error("Error leaving darkterratory");
+                }
+            }
+        }                  
     }
 
     private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(AutoActiveTrain.class);

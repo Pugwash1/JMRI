@@ -2084,6 +2084,7 @@ public class ActivateTrainFrame extends JmriJFrame {
                         sbName.append(lBSrc.getRouteNextBlockAtIndex(rX).getDisplayName());
                         sbName.append(" - ");
                         sbName.append(lBSrc.getRouteDestBlockAtIndex(rX).getDisplayName());
+                        log.info("sbName[{}]",sbName.toString());
                         if (comboModel.getIndexOf(sbName.toString()) == -1) {
                             comboModel.addElement(sbName.toString());
                             startBlockVia.add(lBSrc.getRouteNextBlockAtIndex(rX));

@@ -527,7 +527,10 @@ final public class LayoutBlockConnectivityTools {
                     log.debug("the next block to our destination we are looking for is directly connected to this one");
                 } else if (!((protectingLayoutBlock == prevLBlock)&&(protectingLayoutBlock == nextLBlock))) {
                     if (nextLBlock != null) {
-                        log.debug("Add block {}", nextLBlock.getDisplayName());
+                        if (nextLBlock.getDisplayName().equals("B-77")) {
+                            log.info("AAAA");
+                        }
+                        log.info("Add block {}", nextLBlock.getDisplayName());
                     }
                     bt = new BlocksTested(nextLBlock);
                     blocksInRoute.add(bt);
