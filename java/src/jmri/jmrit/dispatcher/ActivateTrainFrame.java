@@ -48,6 +48,7 @@ import jmri.Section;
 import jmri.SectionManager;
 import jmri.Sensor;
 import jmri.Transit;
+import jmri.Transit.TransitType;
 import jmri.TransitManager;
 import jmri.TransitSection;
 import jmri.jmrit.dispatcher.ActiveTrain.TrainDetection;
@@ -1049,16 +1050,6 @@ public class ActivateTrainFrame extends JmriJFrame {
     }
 
     private Transit createTemporaryTransit(Block start, Block dest, Block via) {
-        Transit tenpTransit = null;
-        int wNo = 0;
-        while (tenpTransit == null) {
-            wNo++;
-            try {
-                tenpTransit = _TransitManager.createNewTransit("Dynamic" + Integer.toString(wNo));
-            } catch (Exception ex) {
-                log.debug("Transit [{}} already used.", "Dynamic" + Integer.toString(wNo));
-            }
-        }
         LayoutBlockManager lBM = jmri.InstanceManager.getDefault(LayoutBlockManager.class);
         SectionManager sm = jmri.InstanceManager.getDefault(SectionManager.class);
         LayoutBlock lbStart = lBM.getByUserName(start.getDisplayName(DisplayOptions.USERNAME));
@@ -1074,17 +1065,35 @@ public class ActivateTrainFrame extends JmriJFrame {
                     Bundle.getMessage("ErrorTitle"), JmriJOptionPane.ERROR_MESSAGE);
             }
             blocks = lBM.getLayoutBlockConnectivityTools().getLayoutBlocks(
-                    lbStart, lbEnd, lbVia, true, LayoutBlockConnectivityTools.Routing.NONE);
+                    lbStart, lbEnd, lbVia, false, LayoutBlockConnectivityTools.Routing.NONE);
         } catch (JmriException JEx) {
             log.error(JEx.getMessage());
             return null;
         }
+        Transit tempTransit = null;
+        int wNo = 0;
+        while (tempTransit == null && wNo < 99) {
+            wNo++;
+            try {
+                tempTransit = _TransitManager.createNewTransit("Dynamic" + Integer.toString(wNo));
+            } catch (Exception ex) {
+                log.debug("Transit [{}} already used.", "Dynamic" + Integer.toString(wNo));
+            }
+        }
+        if (tempTransit == null) {
+            log.error("All Transits already used.", "Dynamic" + Integer.toString(wNo));
+            JmriJOptionPane.showMessageDialog(initiateFrame, "Bad Test",
+                    Bundle.getMessage("ErrorTitle"), JmriJOptionPane.ERROR_MESSAGE);
+            return null;
+        }
+        tempTransit.setTransitType(TransitType.DYNAMICADHOC);
         int seq = 1;
         TransitSection prevTs = null;
         TransitSection curTs = null;
         for (LayoutBlock lB : blocks) {
             Block b = lB.getBlock();
-            Section currentSection = sm.createNewSection(tenpTransit.getUserName() + Integer.toString(seq) + "-" + b.getDisplayName());
+            Section currentSection = sm.createNewSection(tempTransit.getUserName() + Integer.toString(seq) + "-" + b.getDisplayName());
+            currentSection.setSectionType(Section.DYNAMICADHOC);;
             currentSection.addBlock(b);
             if (curTs == null) {
                 //first block shove it in.
@@ -1100,10 +1109,10 @@ public class ActivateTrainFrame extends JmriJFrame {
                 curTs = new TransitSection(currentSection, seq, Section.FORWARD);
             }
             curTs.setTemporary(true);
-            tenpTransit.addTransitSection(curTs);
+            tempTransit.addTransitSection(curTs);
             seq++;
         }
-        return tenpTransit;
+        return tempTransit;
     }
     
     private void initializeFreeTransitsCombo(List<Transit> transitList) {

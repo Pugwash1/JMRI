@@ -365,6 +365,8 @@ public class DispatcherFrame extends jmri.util.JmriJFrame implements InstanceMan
                     throw new IllegalArgumentException(Bundle.getMessage("Error27",at.getTrainName()));
                 }
             }
+            // we can go no further without attaching this.
+            at.setDispatcher(this);
             allocateNewActiveTrain(at);
             newTrainDone(at);
 

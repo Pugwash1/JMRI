@@ -117,6 +117,7 @@ public class DefaultSection extends AbstractNamedBean implements Section {
     /**
      * Operational instance variables (not saved between runs).
      */
+    private boolean mTemporary = false;
     private int mState = FREE;
     private int mOccupancy = UNOCCUPIED;
     private boolean mOccupancyInitialized = false;
@@ -2806,7 +2807,7 @@ public class DefaultSection extends AbstractNamedBean implements Section {
         }
         return report;
     }
-
+    
     private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(DefaultSection.class);
 
 }

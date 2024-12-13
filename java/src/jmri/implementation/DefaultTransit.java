@@ -15,6 +15,7 @@ import jmri.Sensor;
 import jmri.Transit;
 import jmri.TransitSection;
 import jmri.TransitSectionAction;
+import jmri.Section.SectionType;
 
 /**
  * A Transit is a group of Sections representing a specified path through a
@@ -571,6 +572,32 @@ public class DefaultTransit extends AbstractNamedBean implements Transit {
         return true;
 
     }
+    
+    private TransitType transitType = TransitType.USERDEFINED;
+
+    /**
+     * Set Transit Type.
+     * <ul>
+     * <li>USERDEFINED - Default Save all the information.
+     * <li>DYNAMICADHOC - Created on an as required basis, not to be saved.
+     * </ul>
+     * @param type constant of section type.
+     */
+    @Override
+    public void setTransitType(TransitType type) {
+        transitType = type;
+    }
+
+    /**
+     * Get Transit Type.
+     * Defaults to USERDEFINED.
+     * @return constant of transit type.
+     */
+    @Override
+    public TransitType getTransitType() {
+        return transitType;
+    }
+
 
     @Override
     public String getBeanType() {
