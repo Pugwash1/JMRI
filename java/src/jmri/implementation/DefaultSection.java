@@ -117,7 +117,6 @@ public class DefaultSection extends AbstractNamedBean implements Section {
     /**
      * Operational instance variables (not saved between runs).
      */
-    private boolean mTemporary = false;
     private int mState = FREE;
     private int mOccupancy = UNOCCUPIED;
     private boolean mOccupancyInitialized = false;

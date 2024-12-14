@@ -90,7 +90,6 @@ public class AutoAllocate implements Runnable {
     // operational variables
     private static final jmri.NamedBean.DisplayOptions USERSYS = jmri.NamedBean.DisplayOptions.USERNAME_SYSTEMNAME;
     private DispatcherFrame _dispatcher = null;
-    private int _signalType;
     private final List<AllocationPlan> _planList = new ArrayList<>();
     private int nextPlanNum = 1;
     private final List<AllocationRequest> orderedRequests = new ArrayList<>();
@@ -206,8 +205,7 @@ public class AutoAllocate implements Runnable {
                         continue;
                     }
                     // apparently holdAllocation() is not set when holding !!!
-                    if (InstanceManager.getDefault(DispatcherFrame.class)
-                            .getSignalType() == DispatcherFrame.SIGNALMAST &&
+                    if (activeTrain.getSignalType() == DispatcherFrame.SIGNALMAST &&
                             isSignalHeldAtStartOfSection(ar)) {
                         continue;
                     }
@@ -374,9 +372,9 @@ public class AutoAllocate implements Runnable {
                     // Section is currently free and not occupied
                     if ((ar.getSection().getState() == Section.FREE) &&
                             (ar.getSection().getOccupancy() != Section.OCCUPIED) &&
-                            (_dispatcher.getSignalType() == DispatcherFrame.SIGNALHEAD ||
-                                    _dispatcher.getSignalType() == DispatcherFrame.SECTIONSALLOCATED ||
-                                    (_dispatcher.getSignalType() == DispatcherFrame.SIGNALMAST &&
+                            (ar.getActiveTrain().getSignalType() == DispatcherFrame.SIGNALHEAD ||
+                                    ar.getActiveTrain().getSignalType() == DispatcherFrame.SECTIONSALLOCATED ||
+                                    (ar.getActiveTrain().getSignalType() == DispatcherFrame.SIGNALMAST &&
                                             _dispatcher.checkBlocksNotInAllocatedSection(ar.getSection(),
                                                     ar) == null))) {
                         // requested Section is currently free and not
@@ -591,9 +589,9 @@ public class AutoAllocate implements Runnable {
         for (int i = 0; i < sList.size(); i++) {
             if ((sList.get(i).getOccupancy() == Section.UNOCCUPIED) &&
                     (sList.get(i).getState() == Section.FREE) &&
-                    (_dispatcher.getSignalType() == DispatcherFrame.SIGNALHEAD ||
-                            _dispatcher.getSignalType() == DispatcherFrame.SECTIONSALLOCATED ||
-                            (_dispatcher.getSignalType() == DispatcherFrame.SIGNALMAST &&
+                    (ar.getActiveTrain().getSignalType() == DispatcherFrame.SIGNALHEAD ||
+                            ar.getActiveTrain().getSignalType() == DispatcherFrame.SECTIONSALLOCATED ||
+                            (ar.getActiveTrain().getSignalType() == DispatcherFrame.SIGNALMAST &&
                                     _dispatcher.checkBlocksNotInAllocatedSection(sList.get(i), ar) == null))) {
                 return sList.get(i);
             }
@@ -1210,7 +1208,7 @@ public class AutoAllocate implements Runnable {
                 }
             }
         }
-        if (InstanceManager.getDefault(DispatcherFrame.class).getSignalType() == DispatcherFrame.SIGNALMAST) {
+        if (ar.getActiveTrain().getSignalType() == DispatcherFrame.SIGNALMAST) {
             if (!at.isAllocationReversed()) {
                 for (int i = 0; i < tsList.size(); i++) {
                     if (tsList.get(i).getSequenceNumber() > curSeq) {

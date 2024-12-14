@@ -1330,8 +1330,8 @@ public class ActiveTrain implements PropertyChangeProvider {
                 }
             }
             mTransit.removeAllSections();
+            InstanceManager.getDefault(jmri.TransitManager.class).deleteTransit(mTransit);
         }
-        InstanceManager.getDefault(jmri.TransitManager.class).deleteTransit(mTransit);
     }
 
     public void dispose() {

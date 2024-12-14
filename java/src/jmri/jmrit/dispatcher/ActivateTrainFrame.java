@@ -37,20 +37,12 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
 
 import jmri.Block;
-import jmri.EntryPoint;
 import jmri.jmrit.display.layoutEditor.LayoutBlock;
-import jmri.jmrit.display.layoutEditor.LayoutBlockConnectivityTools;
 import jmri.jmrit.display.layoutEditor.LayoutBlockManager;
 import jmri.InstanceManager;
-import jmri.JmriException;
-import jmri.NamedBean.DisplayOptions;
-import jmri.Section;
-import jmri.SectionManager;
 import jmri.Sensor;
 import jmri.Transit;
-import jmri.Transit.TransitType;
 import jmri.TransitManager;
-import jmri.TransitSection;
 import jmri.jmrit.dispatcher.ActiveTrain.TrainDetection;
 import jmri.jmrit.dispatcher.ActiveTrain.TrainLengthUnits;
 import jmri.jmrit.dispatcher.DispatcherFrame.TrainsFrom;
@@ -112,8 +104,10 @@ public class ActivateTrainFrame extends JmriJFrame {
     private final JSpinner dccAddressSpinner = new JSpinner(new SpinnerNumberModel(3, 1, 9999, 1));
     private final JCheckBox inTransitBox = new JCheckBox(Bundle.getMessage("TrainInTransit"));
     private final JComboBox<String> startingBlockBox = new JComboBox<>();
+    private final JComboBox<String> viaBlockBox = new JComboBox<>();
+    private final JLabel viaBlockBoxLabel = new JLabel(Bundle.getMessage("ViaBlockBoxLabel"));
     private List<Block> startingBlockBoxList = new ArrayList<>();
-    private List<Block> startBlockVia = new ArrayList<>();
+    private List<Block> viaBlockBoxList = new ArrayList<>();
     private List<Integer> startingBlockSeqList = new ArrayList<>();
     //private final JComboBox<String> destinationBlockBox = JComboBox<>();
     private DefaultComboBoxModel<String> comboModel = new DefaultComboBoxModel<>(new String[] {});
@@ -189,6 +183,13 @@ public class ActivateTrainFrame extends JmriJFrame {
     private TrainInfo trainInfo;
 
     private final String nameOfTemplateFile="TrainInfoDefaultTemplate.xml";
+    // to be added and removed.
+    ActionListener viaBlockBoxListener = new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            handleViaBlockSelectionChanged(e);
+        }
+    };
 
     /**
      * Open up a new train window for a given roster entry located in a specific
@@ -383,6 +384,8 @@ public class ActivateTrainFrame extends JmriJFrame {
                         adHocCloseLoop.setEnabled(false);
                         inTransitBox.setEnabled(true);
                         inTransitBox.setEnabled(true);
+                        viaBlockBox.setVisible(false);
+                        viaBlockBoxLabel.setVisible(false);
                     }
                 }
             });
@@ -396,6 +399,8 @@ public class ActivateTrainFrame extends JmriJFrame {
                         inTransitBox.setEnabled(false);
                         inTransitBox.setEnabled(true);
                         initializeStartingBlockComboDynamic();
+                        viaBlockBox.setVisible(true);
+                        viaBlockBoxLabel.setVisible(true);
                     }
                 }
             });
@@ -469,6 +474,10 @@ public class ActivateTrainFrame extends JmriJFrame {
                     handleStartingBlockSelectionChanged(e);
                 }
             });
+            p3.add(viaBlockBoxLabel);
+            p3.add(viaBlockBox);
+            viaBlockBox.setToolTipText(Bundle.getMessage("ViaBlockBoxHint"));
+            viaBlockBox.addActionListener(viaBlockBoxListener);
             initiatePane.add(p3);
             JPanel p4 = new JPanel();
             p4.setLayout(new FlowLayout());
@@ -995,6 +1004,15 @@ public class ActivateTrainFrame extends JmriJFrame {
 
     private void handleStartingBlockSelectionChanged(ActionEvent e) {
         if (radioTransitsAdHoc.isSelected() ) {
+            initializeViaBlockDynamicCombo();
+        } else {
+            initializeDestinationBlockCombo();
+        }
+        initiateFrame.pack();
+    }
+
+    private void handleViaBlockSelectionChanged(ActionEvent e) {
+        if (radioTransitsAdHoc.isSelected() ) {
             initializeDestinationBlockDynamicCombo();
         } else {
             initializeDestinationBlockCombo();
@@ -1026,12 +1044,14 @@ public class ActivateTrainFrame extends JmriJFrame {
      */
     private void addNewTrain(ActionEvent e) {
         try {
+            validateDialog();
             if (radioTransitsAdHoc.isSelected()) {
-                int ixStart, ixEnd;
+                int ixStart, ixEnd, ixVia;
                 ixStart = startingBlockBox.getSelectedIndex();
                 ixEnd = destinationBlockBox.getSelectedIndex();
-                Transit tmpTransit = createTemporaryTransit(startingBlockBoxList.get(ixStart),destinationBlockBoxList.get(ixEnd), 
-                        startBlockVia.get(ixEnd));
+                ixVia = viaBlockBox.getSelectedIndex();
+                Transit tmpTransit = _dispatcher.createTemporaryTransit(startingBlockBoxList.get(ixStart),destinationBlockBoxList.get(ixEnd), 
+                        viaBlockBoxList.get(ixVia));
                 if (tmpTransit == null ) {
                     JmriJOptionPane.showMessageDialog(initiateFrame, "Invalid Transit",
                             Bundle.getMessage("ErrorTitle"), JmriJOptionPane.ERROR_MESSAGE);
@@ -1040,7 +1060,6 @@ public class ActivateTrainFrame extends JmriJFrame {
                 trainInfo.setTransitName(tmpTransit.getDisplayName());
                 trainInfo.setTransitId(tmpTransit.getDisplayName());
             }
-            validateDialog();
             dialogToTrainInfo(trainInfo);
             _dispatcher.loadTrainFromTrainInfoThrowsException(trainInfo,"NONE","");
         } catch (IllegalArgumentException ex) {
@@ -1049,71 +1068,71 @@ public class ActivateTrainFrame extends JmriJFrame {
         }
     }
 
-    private Transit createTemporaryTransit(Block start, Block dest, Block via) {
-        LayoutBlockManager lBM = jmri.InstanceManager.getDefault(LayoutBlockManager.class);
-        SectionManager sm = jmri.InstanceManager.getDefault(SectionManager.class);
-        LayoutBlock lbStart = lBM.getByUserName(start.getDisplayName(DisplayOptions.USERNAME));
-        LayoutBlock lbEnd = lBM.getByUserName(dest.getDisplayName(DisplayOptions.USERNAME));
-        LayoutBlock lbVia =  lBM.getByUserName(via.getDisplayName(DisplayOptions.USERNAME));
-        List<LayoutBlock> blocks = null;
-        LayoutBlock tmpLB = null;
-        try {
-            boolean result = lBM.getLayoutBlockConnectivityTools().checkValidDest(
-                    lbStart, lbVia, lbEnd, tmpLB, LayoutBlockConnectivityTools.Routing.NONE);
-            if (!result) {
-                JmriJOptionPane.showMessageDialog(initiateFrame, "Bad Test",
-                    Bundle.getMessage("ErrorTitle"), JmriJOptionPane.ERROR_MESSAGE);
-            }
-            blocks = lBM.getLayoutBlockConnectivityTools().getLayoutBlocks(
-                    lbStart, lbEnd, lbVia, false, LayoutBlockConnectivityTools.Routing.NONE);
-        } catch (JmriException JEx) {
-            log.error(JEx.getMessage());
-            return null;
-        }
-        Transit tempTransit = null;
-        int wNo = 0;
-        while (tempTransit == null && wNo < 99) {
-            wNo++;
-            try {
-                tempTransit = _TransitManager.createNewTransit("Dynamic" + Integer.toString(wNo));
-            } catch (Exception ex) {
-                log.debug("Transit [{}} already used.", "Dynamic" + Integer.toString(wNo));
-            }
-        }
-        if (tempTransit == null) {
-            log.error("All Transits already used.", "Dynamic" + Integer.toString(wNo));
-            JmriJOptionPane.showMessageDialog(initiateFrame, "Bad Test",
-                    Bundle.getMessage("ErrorTitle"), JmriJOptionPane.ERROR_MESSAGE);
-            return null;
-        }
-        tempTransit.setTransitType(TransitType.DYNAMICADHOC);
-        int seq = 1;
-        TransitSection prevTs = null;
-        TransitSection curTs = null;
-        for (LayoutBlock lB : blocks) {
-            Block b = lB.getBlock();
-            Section currentSection = sm.createNewSection(tempTransit.getUserName() + Integer.toString(seq) + "-" + b.getDisplayName());
-            currentSection.setSectionType(Section.DYNAMICADHOC);;
-            currentSection.addBlock(b);
-            if (curTs == null) {
-                //first block shove it in.
-                curTs = new TransitSection(currentSection, seq, Section.FORWARD);
-            } else {
-                prevTs = curTs;
-                EntryPoint fEp = new EntryPoint(prevTs.getSection().getBlockBySequenceNumber(0),b,"up");
-                fEp.setTypeReverse();
-                prevTs.getSection().addToReverseList(fEp);
-                EntryPoint rEp = new EntryPoint(b,prevTs.getSection().getBlockBySequenceNumber(0),"down");
-                rEp.setTypeForward();
-                currentSection.addToForwardList(rEp);
-                curTs = new TransitSection(currentSection, seq, Section.FORWARD);
-            }
-            curTs.setTemporary(true);
-            tempTransit.addTransitSection(curTs);
-            seq++;
-        }
-        return tempTransit;
-    }
+//    private Transit createTemporaryTransit(Block start, Block dest, Block via) {
+//        LayoutBlockManager lBM = jmri.InstanceManager.getDefault(LayoutBlockManager.class);
+//        SectionManager sm = jmri.InstanceManager.getDefault(SectionManager.class);
+//        LayoutBlock lbStart = lBM.getByUserName(start.getDisplayName(DisplayOptions.USERNAME));
+//        LayoutBlock lbEnd = lBM.getByUserName(dest.getDisplayName(DisplayOptions.USERNAME));
+//        LayoutBlock lbVia =  lBM.getByUserName(via.getDisplayName(DisplayOptions.USERNAME));
+//        List<LayoutBlock> blocks = new ArrayList<LayoutBlock>();
+//        try {
+//            boolean result = lBM.getLayoutBlockConnectivityTools().checkValidDest(
+//                    lbStart, lbVia, lbEnd, blocks, LayoutBlockConnectivityTools.Routing.NONE);
+//            if (!result) {
+//                JmriJOptionPane.showMessageDialog(initiateFrame, "Bad Test",
+//                    Bundle.getMessage("ErrorTitle"), JmriJOptionPane.ERROR_MESSAGE);
+//            }
+//            blocks = lBM.getLayoutBlockConnectivityTools().getLayoutBlocks(
+//                    lbStart, lbEnd, lbVia, false, LayoutBlockConnectivityTools.Routing.NONE);
+//        } catch (JmriException JEx) {
+//            log.error("Finding route",JEx.getMessage());
+//            return null;
+//        }
+//        Transit tempTransit = null;
+//        int wNo = 0;
+//        String baseTransitName = "-" + start.getDisplayName() + "-" + dest.getDisplayName();
+//        while (tempTransit == null && wNo < 99) {
+//            wNo++;
+//            try {
+//                tempTransit = _TransitManager.createNewTransit("#" + Integer.toString(wNo) + baseTransitName);
+//            } catch (Exception ex) {
+//                log.trace("Transit [{}} already used, try next.", "#" + Integer.toString(wNo) + baseTransitName);
+//            }
+//        }
+//        if (tempTransit == null) {
+//            log.error("Limit of Dynamic Transits for [{}] has been exceeded!", baseTransitName);
+//            JmriJOptionPane.showMessageDialog(initiateFrame, Bundle.getMessage("DynamicTransitsExceeded",baseTransitName),
+//                    Bundle.getMessage("ErrorTitle"), JmriJOptionPane.ERROR_MESSAGE);
+//            return null;
+//        }
+//        tempTransit.setTransitType(TransitType.DYNAMICADHOC);
+//        int seq = 1;
+//        TransitSection prevTs = null;
+//        TransitSection curTs = null;
+//        for (LayoutBlock lB : blocks) {
+//            Block b = lB.getBlock();
+//            Section currentSection = sm.createNewSection(tempTransit.getUserName() + Integer.toString(seq) + "-" + b.getDisplayName());
+//            currentSection.setSectionType(Section.DYNAMICADHOC);
+//            currentSection.addBlock(b);
+//            if (curTs == null) {
+//                //first block shove it in.
+//                curTs = new TransitSection(currentSection, seq, Section.FORWARD);
+//            } else {
+//                prevTs = curTs;
+//                EntryPoint fEp = new EntryPoint(prevTs.getSection().getBlockBySequenceNumber(0),b,"up");
+//                fEp.setTypeReverse();
+//                prevTs.getSection().addToReverseList(fEp);
+//                EntryPoint rEp = new EntryPoint(b,prevTs.getSection().getBlockBySequenceNumber(0),"down");
+//                rEp.setTypeForward();
+//                currentSection.addToForwardList(rEp);
+//                curTs = new TransitSection(currentSection, seq, Section.FORWARD);
+//            }
+//            curTs.setTemporary(true);
+//            tempTransit.addTransitSection(curTs);
+//            seq++;
+//        }
+//        return tempTransit;
+//    }
     
     private void initializeFreeTransitsCombo(List<Transit> transitList) {
         Set<Transit> excludeTransits = new HashSet<>();
@@ -1186,8 +1205,6 @@ public class ActivateTrainFrame extends JmriJFrame {
             info.setStopBySpeedProfile(false);
         }
     }
-
-
 
     private void initializeStartingBlockCombo() {
         startingBlockBox.removeAllItems();
@@ -1425,16 +1442,17 @@ public class ActivateTrainFrame extends JmriJFrame {
     private void trainInfoToDialog(TrainInfo info) {
         if (!info.getDynamicTransit()) {
             radioTransitsPredefined.setSelected(true);
-        if (!info.getTransitName().isEmpty()) {
-            try {
-                transitSelectBox.setSelectedItemByName(info.getTransitName());
-            } catch (Exception ex) {
-                log.warn("Transit {} from file not in Transit menu", info.getTransitName());
-                JmriJOptionPane.showMessageDialog(initiateFrame,
-                        Bundle.getMessage("TransitWarn", info.getTransitName()),
-                        null, JmriJOptionPane.WARNING_MESSAGE);
+            if (!info.getTransitName().isEmpty()) {
+                try {
+                    transitSelectBox.setSelectedItemByName(info.getTransitName());
+                } catch (Exception ex) {
+                    log.warn("Transit {} from file not in Transit menu", info.getTransitName());
+                    JmriJOptionPane.showMessageDialog(initiateFrame,
+                            Bundle.getMessage("TransitWarn", info.getTransitName()),
+                            null, JmriJOptionPane.WARNING_MESSAGE);
+                }
             }
-        }} else {
+        } else {
             radioTransitsAdHoc.setSelected(true);
         }
         switch (info.getTrainsFrom()) {
@@ -1471,10 +1489,23 @@ public class ActivateTrainFrame extends JmriJFrame {
         trainNameField.setText(info.getTrainUserName());
         trainDetectionComboBox.setSelectedItemByValue(info.getTrainDetection());
         inTransitBox.setSelected(info.getTrainInTransit());
-        initializeStartingBlockCombo();
-        initializeDestinationBlockCombo();
+        if (radioTransitsAdHoc.isSelected()) {
+            initializeStartingBlockComboDynamic();
+        } else {
+            initializeStartingBlockCombo();
+        }
         setComboBox(startingBlockBox, info.getStartBlockName());
+        if (radioTransitsAdHoc.isSelected()) {
+            initializeViaBlockDynamicCombo();
+            setComboBox(viaBlockBox, info.getViaBlockName());
+        }
+        if (radioTransitsAdHoc.isSelected()) {
+            initializeDestinationBlockDynamicCombo();
+        } else {
+            initializeDestinationBlockCombo();
+        }
         setComboBox(destinationBlockBox, info.getDestinationBlockName());
+        
         setAllocateMethodButtons(info.getAllocationMethod());
         prioritySpinner.setValue(info.getPriority());
         resetWhenDoneBox.setSelected(info.getResetWhenDone());
@@ -1543,6 +1574,12 @@ public class ActivateTrainFrame extends JmriJFrame {
         if (index < 0) {
             throw new IllegalArgumentException(Bundle.getMessage("Error8"));
         }
+        if (radioTransitsAdHoc.isSelected()) {
+            index = viaBlockBox.getSelectedIndex();
+            if (index < 0) {
+                throw new IllegalArgumentException(Bundle.getMessage("Error8"));
+            }
+        }
         if ((!reverseAtEndBox.isSelected()) && resetWhenDoneBox.isSelected()
                 && (!selectedTransit.canBeResetWhenDone())) {
             resetWhenDoneBox.setSelected(false);
@@ -1599,13 +1636,7 @@ public class ActivateTrainFrame extends JmriJFrame {
         info.setDestinationBlockId(destinationBlockBoxList.get(index).getDisplayName());
         info.setDestinationBlockName(destinationBlockBoxList.get(index).getDisplayName());
         if (info.getDynamicTransit()) {
-            Transit ts = _TransitManager.getByUserName(info.getTransitName());
-            if (ts != null) {
-                info.setDestinationBlockSeq(ts.getMaxSequence());
-            } else {
-                log.error("Transit [{}] lost between validate and save!",info.getTransitName());
-                return false;
-            }
+            info.setViaBlockName(viaBlockBoxList.get(viaBlockBox.getSelectedIndex()).getDisplayName());
         } else {
             info.setDestinationBlockSeq(destinationBlockSeqList.get(index).intValue());
         }
@@ -2054,7 +2085,7 @@ public class ActivateTrainFrame extends JmriJFrame {
     /*
      * Layout block stuff
      */
-    private ArrayList<LayoutBlock> getBLBlockList() {
+    private ArrayList<LayoutBlock> getOccupiedBlockList() {
         LayoutBlockManager lBM = jmri.InstanceManager.getDefault(LayoutBlockManager.class);
         ArrayList<LayoutBlock> lBlocks = new ArrayList<LayoutBlock>();
         for (LayoutBlock lB : lBM.getNamedBeanSet()) {
@@ -2068,7 +2099,7 @@ public class ActivateTrainFrame extends JmriJFrame {
     private void initializeStartingBlockComboDynamic() {
         startingBlockBox.removeAllItems();
         startingBlockBoxList.clear();
-        for (LayoutBlock lB: getBLBlockList()) {
+        for (LayoutBlock lB: getOccupiedBlockList()) {
             if (!startingBlockBoxList.contains(lB.getBlock())) {
                 startingBlockBoxList.add(lB.getBlock());
                 startingBlockBox.addItem(getBlockName(lB.getBlock()));
@@ -2077,26 +2108,42 @@ public class ActivateTrainFrame extends JmriJFrame {
         JComboBoxUtil.setupComboBoxMaxRows(startingBlockBox);
     }
 
-    private void initializeDestinationBlockDynamicCombo() {
-        destinationBlockBox.removeAllItems();
-        destinationBlockBoxList.clear();
-        startBlockVia.clear();
+    private void initializeViaBlockDynamicCombo() {
+        viaBlockBox.removeActionListener(viaBlockBoxListener);
+        viaBlockBox.removeAllItems();
+        viaBlockBoxList.clear();
         LayoutBlockManager lBM = jmri.InstanceManager.getDefault(LayoutBlockManager.class);
         if (startingBlockBox.getSelectedItem() != null) {
             LayoutBlock lBSrc = null;
             if (startingBlockBox.getSelectedIndex() >= 0) {
                 lBSrc = lBM.getByUserName((String) startingBlockBox.getSelectedItem());
                 if (lBSrc != null) {
+                    int rX = lBSrc.getNumberOfNeighbours() - 1;
+                    for (; rX > -1; rX--) {
+                        viaBlockBox.addItem(lBSrc.getNeighbourAtIndex(rX).getDisplayName());
+                        viaBlockBoxList.add(lBSrc.getNeighbourAtIndex(rX));
+                    }
+                }
+            }
+        }
+        viaBlockBox.addActionListener(viaBlockBoxListener);
+    }
+
+    private void initializeDestinationBlockDynamicCombo() {
+        destinationBlockBox.removeAllItems();
+        destinationBlockBoxList.clear();
+        LayoutBlockManager lBM = jmri.InstanceManager.getDefault(LayoutBlockManager.class);
+        if (startingBlockBox.getSelectedItem() != null) {
+            LayoutBlock lBSrc = null;
+            if (startingBlockBox.getSelectedIndex() >= 0 
+                    && viaBlockBox.getSelectedIndex() >= 0) {
+                lBSrc = lBM.getByUserName((String) startingBlockBox.getSelectedItem());
+                Block b = viaBlockBoxList.get(viaBlockBox.getSelectedIndex());
+                if (lBSrc != null) {
                     int rX = lBSrc.getNumberOfRoutes() - 1;
                     for (; rX > 0; rX--) {
-                        StringBuilder sbName = new StringBuilder();
-                        sbName.append(lBSrc.getRouteNextBlockAtIndex(rX).getDisplayName());
-                        sbName.append(" - ");
-                        sbName.append(lBSrc.getRouteDestBlockAtIndex(rX).getDisplayName());
-                        log.info("sbName[{}]",sbName.toString());
-                        if (comboModel.getIndexOf(sbName.toString()) == -1) {
-                            comboModel.addElement(sbName.toString());
-                            startBlockVia.add(lBSrc.getRouteNextBlockAtIndex(rX));
+                        if (lBSrc.getRouteNextBlockAtIndex(rX) == b) {
+                            destinationBlockBox.addItem(lBSrc.getRouteDestBlockAtIndex(rX).getDisplayName());
                             destinationBlockBoxList.add(lBSrc.getRouteDestBlockAtIndex(rX));
                         }
                     }

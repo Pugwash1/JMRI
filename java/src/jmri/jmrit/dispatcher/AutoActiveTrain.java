@@ -8,7 +8,6 @@ import java.util.LinkedList;
 import javax.annotation.CheckForNull;
 
 import jmri.*;
-import jmri.Transit.TransitType;
 import jmri.implementation.SignalSpeedMap;
 import jmri.jmrit.dispatcher.ActiveTrain.TrainDetection;
 import jmri.jmrit.roster.RosterEntry;
@@ -2245,8 +2244,7 @@ public class AutoActiveTrain implements ThrottleListener {
      */
     class DarkTerritoryListener implements PropertyChangeListener {
         private Sensor sensor;
-        private Block block;
-
+        
         public DarkTerritoryListener(Sensor sensor) {
             this.sensor = sensor;
             log.trace("Sensor[{}]",sensor.getDisplayName());

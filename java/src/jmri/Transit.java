@@ -2,8 +2,6 @@ package jmri;
 
 import java.util.ArrayList;
 
-import jmri.Section.SectionType;
-
 /**
  * A Transit is a group of Sections representing a specified path through a
  * layout.

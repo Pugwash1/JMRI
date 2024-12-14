@@ -15,7 +15,6 @@ import jmri.Sensor;
 import jmri.Transit;
 import jmri.TransitSection;
 import jmri.TransitSectionAction;
-import jmri.Section.SectionType;
 
 /**
  * A Transit is a group of Sections representing a specified path through a

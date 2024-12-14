@@ -37,6 +37,7 @@ public class TrainInfo {
     private String dccAddress = "3";
     private boolean trainInTransit = false;
     private String startBlockName = "";
+    private String viaBlockName = "";
     private String startBlockId = "";
     private int startBlockSeq = -1;
     private String destinationBlockName = "";
@@ -181,6 +182,14 @@ public class TrainInfo {
 
     public String getStartBlockName() {
         return startBlockName;
+    }
+
+    public void setViaBlockName(String s) {
+        viaBlockName = s;
+    }
+
+    public String getViaBlockName() {
+        return viaBlockName;
     }
 
     public void setStartBlockId(String s) {
