@@ -1046,7 +1046,7 @@ public class ActivateTrainFrame extends JmriJFrame {
                 ixStart = startingBlockBox.getSelectedIndex();
                 ixEnd = destinationBlockBox.getSelectedIndex();
                 ixVia = viaBlockBox.getSelectedIndex();
-                Transit tmpTransit = _dispatcher.createTemporaryTransit(startingBlockBoxList.get(ixStart),destinationBlockBoxList.get(ixEnd), 
+                Transit tmpTransit = _dispatcher.createTemporaryTransit(startingBlockBoxList.get(ixStart),destinationBlockBoxList.get(ixEnd),
                         viaBlockBoxList.get(ixVia));
                 if (tmpTransit == null ) {
                     JmriJOptionPane.showMessageDialog(initiateFrame, "Invalid Transit",

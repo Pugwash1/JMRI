@@ -727,11 +727,11 @@ public class ActiveTrain implements PropertyChangeProvider {
     public int getMode() {
         return mMode;
     }
-    
+
     public void forcePassNextSafeSection() {
         for (AllocatedSection as: mAllocatedSections) {
-            if (as.getTransitSection().getSection() == mLastAllocatedSection 
-                    && as.getTransitSection().isSafe() 
+            if (as.getTransitSection().getSection() == mLastAllocatedSection
+                    && as.getTransitSection().isSafe()
                     && as.getNextSection().getOccupancy() == Section.UNOCCUPIED) {
                 mLastAllocOverrideSafe = mLastAllocatedSection;
             }

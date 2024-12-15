@@ -20,7 +20,7 @@ import jmri.InstanceManager;
     import org.junit.jupiter.api.condition.DisabledIfSystemProperty;
     import org.netbeans.jemmy.operators.JButtonOperator;
     import org.netbeans.jemmy.operators.JFrameOperator;
-    
+
     import static org.assertj.core.api.Assertions.assertThat;
     import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -78,7 +78,7 @@ public class DispatcherAdHocAndGhostTest {
 
             ActiveTrain at = d.getActiveTrainsList().get(0);
             assertEquals( DispatcherFrame.SECTIONSALLOCATED, at.getSignalType(),"Train must be by allocations (NoSignals)");
-            
+
             aat = at.getAutoActiveTrain();
             List<Block> blkList = at.getTransit().getInternalBlocksList();
             String[] expectedBlks = { "South Block","West Block","West Platform Switch","South Platform", "East Platform Switch", "East Block" };
@@ -119,8 +119,8 @@ public class DispatcherAdHocAndGhostTest {
             JUnitUtil.waitFor(() -> {
                 return (aat.getThrottle().getSpeedSetting() == 0.0f );
                 }, "Failed To Stop");
-           
-            
+
+
             // cancel (terminate) the train. The train is set not to terminate at end
             // as we dont see the throttle go to zero if we do that.
 
@@ -139,7 +139,7 @@ public class DispatcherAdHocAndGhostTest {
             JUnitUtil.dispose(d);
             InstanceManager.getDefault(jmri.SignalMastManager.class).dispose();
             InstanceManager.getDefault(jmri.SignalMastLogicManager.class).dispose();
-            
+
         }
 
         @Test
@@ -178,7 +178,7 @@ public class DispatcherAdHocAndGhostTest {
 
             ActiveTrain at = d.getActiveTrainsList().get(0);
             assertEquals( DispatcherFrame.SECTIONSALLOCATED, at.getSignalType(),"Train must be by allocations (NoSignals)");
-            
+
             aat = at.getAutoActiveTrain();
             List<Block> blkList = at.getTransit().getInternalBlocksList();
             String[] expectedBlks = { "South Block","West Block","West Platform Switch","South Platform", "East Platform Switch", "East Block" };
@@ -190,7 +190,7 @@ public class DispatcherAdHocAndGhostTest {
             }
             // make ghost
             blkList.get(2).setIsGhost(true); // west platform sw
-           
+
             // trains loads and runs, 4 allocated sections, the one we are in and 3 ahead.
             JUnitUtil.waitFor(() -> {
                 return(d.getAllocatedSectionsList().size()==4);
@@ -228,8 +228,8 @@ public class DispatcherAdHocAndGhostTest {
             JUnitUtil.waitFor(() -> {
                 return (aat.getThrottle().getSpeedSetting() == 0.0f );
                 }, "Failed To Stop");
-           
-            
+
+
             // cancel (terminate) the train. The train is set not to terminate at end
             // as we dont see the throttle go to zero if we do that.
 
@@ -248,7 +248,7 @@ public class DispatcherAdHocAndGhostTest {
             JUnitUtil.dispose(d);
             InstanceManager.getDefault(jmri.SignalMastManager.class).dispose();
             InstanceManager.getDefault(jmri.SignalMastLogicManager.class).dispose();
-            
+
         }
 
         private float speedMedium = 0.0f;
