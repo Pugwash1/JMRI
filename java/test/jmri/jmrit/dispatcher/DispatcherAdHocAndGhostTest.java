@@ -6,13 +6,15 @@
     import java.nio.file.Path;
     import java.nio.file.StandardCopyOption;
 
-    import jmri.InstanceManager;
+import jmri.Block;
+import jmri.InstanceManager;
     import jmri.Sensor;
     import jmri.SensorManager;
     import jmri.implementation.SignalSpeedMap;
     import jmri.jmrit.logix.WarrantPreferences;
     import jmri.util.FileUtil;
     import jmri.util.JUnitUtil;
+    import java.util.List;
 
     import org.junit.jupiter.api.*;
     import org.junit.jupiter.api.condition.DisabledIfSystemProperty;
@@ -40,7 +42,6 @@ public class DispatcherAdHocAndGhostTest {
             JUnitUtil.WAITFOR_DELAY_STEP = 20;
         }
 
-        @SuppressWarnings("null")  // spec says cannot happen, everything defined in test data.
         @Test
         public void testAdHocLoad() throws Exception {
              jmri.configurexml.ConfigXmlManager cm = new jmri.configurexml.ConfigXmlManager() {
@@ -76,18 +77,159 @@ public class DispatcherAdHocAndGhostTest {
             assertThat(d.getActiveTrainsList().size()).withFailMessage("Train Loaded").isEqualTo(1);
 
             ActiveTrain at = d.getActiveTrainsList().get(0);
+            assertEquals( DispatcherFrame.SECTIONSALLOCATED, at.getSignalType(),"Train must be by allocations (NoSignals)");
+            
             aat = at.getAutoActiveTrain();
-
+            List<Block> blkList = at.getTransit().getInternalBlocksList();
+            String[] expectedBlks = { "South Block","West Block","West Platform Switch","South Platform", "East Platform Switch", "East Block" };
+            int blkListSize= blkList.size();
+            assertEquals(6,blkListSize,"Wrong AdHoc Block list size");
+            int ixBlk = 0;
+            for (ixBlk = 0; ixBlk < blkListSize ; ixBlk++) {
+                assertEquals(expectedBlks[ixBlk],blkList.get(ixBlk).getUserName(),"Wrong AdHoc Block list");
+            }
             // trains loads and runs, 4 allocated sections, the one we are in and 3 ahead.
             JUnitUtil.waitFor(() -> {
-                return(d.getAllocatedSectionsList().size()==3);
+                return(d.getAllocatedSectionsList().size()==4);
             },"Allocated sections should be 4");
 
             assertEquals(true, aat.getThrottle().getIsForward(),"Throttle should be in forward");
             JUnitUtil.waitFor(() -> {
                 return (Math.abs(aat.getThrottle().getSpeedSetting() - speedNormal ) < TOLERANCE );
-                }, "Failed To Start - Stop / Resume");
+                }, "Failed To Start");
+            sm.provideSensor("Occ West Block").setState(Sensor.ACTIVE);
+            sm.provideSensor("Occ South Block").setState(Sensor.INACTIVE);
+            sm.getSensor("Occ West Platform Switch").setState(Sensor.ACTIVE);
+            sm.getSensor("Occ West Block").setState(Sensor.INACTIVE);
+            sm.getSensor("Occ South Platform").setState(Sensor.ACTIVE);
+            sm.getSensor("Occ West Platform Switch").setState(Sensor.INACTIVE);
+            JUnitUtil.waitFor(() -> {
+                return (Math.abs(aat.getThrottle().getSpeedSetting() - speedNormal ) < TOLERANCE );
+                }, "Failed To Keep Going");
+            sm.getSensor("Occ East Platform Switch").setState(Sensor.ACTIVE);
+            JUnitUtil.waitFor(() -> {
+                return (Math.abs(aat.getThrottle().getSpeedSetting() - speedMedium ) < TOLERANCE );
+                }, "Failed To Slow");
+            sm.getSensor("Occ South Platform").setState(Sensor.INACTIVE);
+            sm.getSensor("Occ East Block").setState(Sensor.ACTIVE);
+            JUnitUtil.waitFor(() -> {
+                return (Math.abs(aat.getThrottle().getSpeedSetting() - speedRestrictedSlow ) < TOLERANCE );
+                }, "Failed To prepare to stop");
+            sm.provideSensor("Occ East Platform Switch").setState(Sensor.INACTIVE);
+            JUnitUtil.waitFor(() -> {
+                return (aat.getThrottle().getSpeedSetting() == 0.0f );
+                }, "Failed To Stop");
+           
+            
+            // cancel (terminate) the train. The train is set not to terminate at end
+            // as we dont see the throttle go to zero if we do that.
 
+            JButtonOperator bo = new JButtonOperator(dw, Bundle.getMessage("TerminateTrain"));
+            bo.push();
+            // wait for cleanup to finish
+            JUnitUtil.waitFor(200);
+
+            assertThat((d.getActiveTrainsList().isEmpty())).withFailMessage("All trains terminated").isTrue();
+            JFrameOperator aw = new JFrameOperator("AutoTrains");
+
+            aw.requestClose();
+            dw.requestClose();
+
+            // cleanup window
+            JUnitUtil.dispose(d);
+            InstanceManager.getDefault(jmri.SignalMastManager.class).dispose();
+            InstanceManager.getDefault(jmri.SignalMastLogicManager.class).dispose();
+            
+        }
+
+        @Test
+        public void tesAdHocGhostLoad() throws Exception {
+             jmri.configurexml.ConfigXmlManager cm = new jmri.configurexml.ConfigXmlManager() {
+            };
+            // Assume.assumeFalse("Ignoring intermittent test", Boolean.getBoolean("jmri.skipTestsRequiringSeparateRunning"));
+
+            // more time for us less for the waitfor code...
+            increaseWaitForStep();
+
+            WarrantPreferences.getDefault().setShutdown(WarrantPreferences.Shutdown.NO_MERGE);
+
+            // load layout file
+            java.io.File f = new java.io.File("java/test/jmri/jmrit/dispatcher/DispatcherSMLLayout.xml");
+            cm.load(f);
+
+            InstanceManager.getDefault(jmri.jmrit.display.layoutEditor.LayoutBlockManager.class).initializeLayoutBlockPaths();
+
+            // load dispatcher, with all the correct options
+            OptionsFile.setDefaultFileName("java/test/jmri/jmrit/dispatcher/TestTrainDispatcherOptions.xml");
+            DispatcherFrame d = InstanceManager.getDefault(DispatcherFrame.class);
+            JFrameOperator dw = new JFrameOperator(Bundle.getMessage("TitleDispatcher"));
+            // signal mast manager - but adhoc uses No Signals, number of sectionsallocated
+            // SignalMastManager smm = InstanceManager.getDefault(SignalMastManager.class);
+
+            checkAndSetSpeedsSML();
+            SensorManager sm = InstanceManager.getDefault(SensorManager.class);
+            // BlockManager bm = InstanceManager.getDefault(BlockManager.class);
+
+            JUnitUtil.setBeanStateAndWait(sm.provideSensor("Occ South Block"), Sensor.ACTIVE);
+
+            d.loadTrainFromTrainInfo("SOUTH_EAST_SOUTHPLATORM.xml");
+
+            assertThat(d.getActiveTrainsList().size()).withFailMessage("Train Loaded").isEqualTo(1);
+
+            ActiveTrain at = d.getActiveTrainsList().get(0);
+            assertEquals( DispatcherFrame.SECTIONSALLOCATED, at.getSignalType(),"Train must be by allocations (NoSignals)");
+            
+            aat = at.getAutoActiveTrain();
+            List<Block> blkList = at.getTransit().getInternalBlocksList();
+            String[] expectedBlks = { "South Block","West Block","West Platform Switch","South Platform", "East Platform Switch", "East Block" };
+            int blkListSize= blkList.size();
+            assertEquals(6,blkListSize,"Wrong AdHoc Block list size");
+            int ixBlk = 0;
+            for (ixBlk = 0; ixBlk < blkListSize ; ixBlk++) {
+                assertEquals(expectedBlks[ixBlk],blkList.get(ixBlk).getUserName(),"Wrong AdHoc Block list");
+            }
+            // make ghost
+            blkList.get(2).setIsGhost(true); // west platform sw
+           
+            // trains loads and runs, 4 allocated sections, the one we are in and 3 ahead.
+            JUnitUtil.waitFor(() -> {
+                return(d.getAllocatedSectionsList().size()==4);
+            },"Allocated sections should be 4");
+
+            assertEquals(true, aat.getThrottle().getIsForward(),"Throttle should be in forward");
+            JUnitUtil.waitFor(() -> {
+                return (Math.abs(aat.getThrottle().getSpeedSetting() - speedNormal ) < TOLERANCE );
+                }, "Failed To Start");
+            assertEquals(Sensor.INACTIVE,sm.provideSensor("Occ West Platform Switch").getState(),"Sensor must be inactive");
+            sm.provideSensor("Occ West Block").setState(Sensor.ACTIVE);
+            sm.provideSensor("Occ South Block").setState(Sensor.INACTIVE);
+            JUnitUtil.waitFor(() -> {
+                return (sm.provideSensor("Occ West Platform Switch").getState() == Sensor.ACTIVE);
+            },"Sensor did not go active");
+            sm.provideSensor("Occ West Block").setState(Sensor.INACTIVE);
+            JUnitUtil.waitFor(() -> {
+                return (sm.provideSensor("Occ West Platform Switch").getState() == Sensor.INACTIVE);
+            },"Sensor did not go inactive");
+            sm.provideSensor("Occ South Platform").setState(Sensor.ACTIVE);
+            sm.provideSensor("Occ West Platform Switch").setState(Sensor.INACTIVE);
+            JUnitUtil.waitFor(() -> {
+                return (Math.abs(aat.getThrottle().getSpeedSetting() - speedNormal ) < TOLERANCE );
+                }, "Failed To Keep Going");
+            sm.provideSensor("Occ East Platform Switch").setState(Sensor.ACTIVE);
+            JUnitUtil.waitFor(() -> {
+                return (Math.abs(aat.getThrottle().getSpeedSetting() - speedMedium ) < TOLERANCE );
+                }, "Failed To Slow");
+            sm.provideSensor("Occ South Platform").setState(Sensor.INACTIVE);
+            sm.provideSensor("Occ East Block").setState(Sensor.ACTIVE);
+            JUnitUtil.waitFor(() -> {
+                return (Math.abs(aat.getThrottle().getSpeedSetting() - speedRestrictedSlow ) < TOLERANCE );
+                }, "Failed To prepare to stop");
+            sm.provideSensor("Occ East Platform Switch").setState(Sensor.INACTIVE);
+            JUnitUtil.waitFor(() -> {
+                return (aat.getThrottle().getSpeedSetting() == 0.0f );
+                }, "Failed To Stop");
+           
+            
             // cancel (terminate) the train. The train is set not to terminate at end
             // as we dont see the throttle go to zero if we do that.
 
