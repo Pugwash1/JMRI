@@ -106,12 +106,10 @@
     </block>
     <block systemName="IB1" length="0.0" curve="0">
       <systemName>IB1</systemName>
-      <permissive>no</permissive>
     </block>
     <block systemName="IB2" length="0.0" curve="0">
       <systemName>IB2</systemName>
       <userName>Some block</userName>
-      <permissive>no</permissive>
     </block>
   </blocks>
   <oblocks class="jmri.jmrit.logix.configurexml.OBlockManagerXml">

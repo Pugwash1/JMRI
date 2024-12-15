@@ -78,10 +78,10 @@ public class DispatcherAdHocAndGhostTest {
             ActiveTrain at = d.getActiveTrainsList().get(0);
             aat = at.getAutoActiveTrain();
 
-            // trains loads and runs, 2 allocated sections, the one we are in and 1 ahead.
+            // trains loads and runs, 4 allocated sections, the one we are in and 3 ahead.
             JUnitUtil.waitFor(() -> {
-                return(d.getAllocatedSectionsList().size()==2);
-            },"Allocated sections should be 2");
+                return(d.getAllocatedSectionsList().size()==3);
+            },"Allocated sections should be 4");
 
             assertEquals(true, aat.getThrottle().getIsForward(),"Throttle should be in forward");
             JUnitUtil.waitFor(() -> {
