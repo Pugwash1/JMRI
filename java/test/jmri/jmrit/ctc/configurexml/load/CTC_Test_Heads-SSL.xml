@@ -220,14 +220,16 @@
       <systemName>IB:AUTO:0001</systemName>
       <userName>B-Left-Approach</userName>
       <permissive>no</permissive>
-      <ghost>no</ghost>      <occupancysensor>S-Left-Approach</occupancysensor>
+      <ghost>no</ghost>
+      <occupancysensor>S-Left-Approach</occupancysensor>
       <path todir="64" fromdir="128" block="IB:AUTO:0002" />
     </block>
     <block systemName="IB:AUTO:0002" length="0.0" curve="0">
       <systemName>IB:AUTO:0002</systemName>
       <userName>B-Alpha-Left</userName>
       <permissive>no</permissive>
-      <ghost>no</ghost>      <occupancysensor>S-Alpha-Left</occupancysensor>
+      <ghost>no</ghost>
+      <occupancysensor>S-Alpha-Left</occupancysensor>
       <path todir="128" fromdir="64" block="IB:AUTO:0001" />
       <path todir="64" fromdir="128" block="IB:AUTO:0003">
         <beansetting setting="2">
@@ -244,6 +246,7 @@
       <systemName>IB:AUTO:0003</systemName>
       <userName>B-Alpha-Main</userName>
       <permissive>yes</permissive>
+      <ghost>no</ghost>
       <occupancysensor>S-Alpha-Main</occupancysensor>
       <path todir="128" fromdir="64" block="IB:AUTO:0002">
         <beansetting setting="2">
