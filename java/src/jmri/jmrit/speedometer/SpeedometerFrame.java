@@ -1,17 +1,30 @@
 package jmri.jmrit.speedometer;
 
+import java.awt.BorderLayout;
 import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.time.LocalTime;
 import java.util.List;
+import java.util.concurrent.LinkedBlockingQueue;
+
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSeparator;
+import javax.swing.JTabbedPane;
+import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.table.DefaultTableModel;
 
 import jmri.Application;
+import jmri.Block;
+import jmri.BlockManager;
 import jmri.InstanceManager;
 import jmri.NamedBeanHandle;
 import jmri.Sensor;
@@ -19,6 +32,7 @@ import jmri.SensorManager;
 import jmri.jmrit.XmlFile;
 import jmri.jmrit.catalog.NamedIcon;
 import jmri.jmrit.display.SensorIcon;
+import jmri.swing.NamedBeanComboBox;
 import jmri.util.FileUtil;
 import jmri.util.IntlUtilities;
 import jmri.util.swing.JmriJOptionPane;
@@ -84,6 +98,21 @@ public class SpeedometerFrame extends jmri.util.JmriJFrame {
     SensorIcon stopSensorIcon1;
     SensorIcon stopSensorIcon2;
 
+    // Continuous rolling grid.
+    JButton startDynoBlocksButton = new JButton(Bundle.getMessage("ButtonStart"));
+
+    String rollingDynamicBlocksCols[] = {"Block","Length","Speed", "Calc Length","Last Update","start","end"};
+    DefaultTableModel rollingTableModel = new DefaultTableModel(rollingDynamicBlocksCols, 0);
+    JTable rollingBlockSpeedLengthTable = new JTable(rollingTableModel);
+    JScrollPane rollingSpeedTableScrollPane = new JScrollPane(rollingBlockSpeedLengthTable);
+    NamedBeanComboBox<Block> refBlockBox = new NamedBeanComboBox<>(InstanceManager.getDefault(BlockManager.class));
+    JCheckBox useRefBlock = new JCheckBox("Use Ref Block");
+    // fixed grid one line per block
+    String dynamicBlocksCols[] = {"Block","Length","Speed", "Calc Length","Last Update","Count","Avr Spd","Avr Len"};
+    DefaultTableModel tableModel = new DefaultTableModel(dynamicBlocksCols, 0);
+    JTable blockSpeedLengthTable = new JTable(tableModel);
+    JScrollPane speedTableScrollPane = new JScrollPane(blockSpeedLengthTable);
+    
     /**
      * Set Input sensors.
      * @param start start sensor name.
@@ -120,6 +149,12 @@ public class SpeedometerFrame extends jmri.util.JmriJFrame {
     public SpeedometerFrame() {
         super(false, false);
 
+        JTabbedPane mainTabbedPanel = new JTabbedPane();
+        JPanel legacySpeedO = new JPanel();
+        JPanel dynoBlocks = new JPanel();
+        
+        mainTabbedPanel.addTab("Legacy", legacySpeedO);
+        
         setInputBehavior(true, true, true);
 
         startGroup.add(startOnEntry);
@@ -131,7 +166,7 @@ public class SpeedometerFrame extends jmri.util.JmriJFrame {
 
         // general GUI config
         setTitle(Bundle.getMessage("TitleSpeedometer"));
-        getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
+        legacySpeedO.setLayout(new BoxLayout(legacySpeedO, BoxLayout.Y_AXIS));
 
         // need a captive panel editor for
         // the sensor icons to work
@@ -154,7 +189,7 @@ public class SpeedometerFrame extends jmri.util.JmriJFrame {
         setupIconMap(startSensorIcon);
         startSensorIcon.setToolTipText(Bundle.getMessage("TooltipStartSensorIcon"));
         pane1.add(startSensorIcon);
-        getContentPane().add(pane1);
+        legacySpeedO.add(pane1);
 
         JPanel pane2 = new JPanel();
         pane2.setLayout(new FlowLayout());
@@ -170,7 +205,7 @@ public class SpeedometerFrame extends jmri.util.JmriJFrame {
         setupIconMap(stopSensorIcon1);
         stopSensorIcon1.setToolTipText(Bundle.getMessage("TooltipStartSensorIcon"));
         pane2.add(stopSensorIcon1);
-        getContentPane().add(pane2);
+        legacySpeedO.add(pane2);
 
         JPanel pane3 = new JPanel();
         pane3.setLayout(new FlowLayout());
@@ -186,21 +221,21 @@ public class SpeedometerFrame extends jmri.util.JmriJFrame {
         setupIconMap(stopSensorIcon2);
         stopSensorIcon2.setToolTipText(Bundle.getMessage("TooltipStartSensorIcon"));
         pane3.add(stopSensorIcon2);
-        getContentPane().add(pane3);
+        legacySpeedO.add(pane3);
 
         JPanel pane4 = new JPanel();
         pane4.setLayout(new FlowLayout());
         pane4.add(text1);
         text1.setLabelFor(distance1);
         pane4.add(distance1);
-        getContentPane().add(pane4);
+        legacySpeedO.add(pane4);
 
         JPanel pane5 = new JPanel();
         pane5.setLayout(new FlowLayout());
         pane5.add(text2);
         text2.setLabelFor(distance2);
         pane5.add(distance2);
-        getContentPane().add(pane5);
+        legacySpeedO.add(pane5);
 
         JPanel buttons = new JPanel();
         buttons.add(dimButton);
@@ -208,7 +243,7 @@ public class SpeedometerFrame extends jmri.util.JmriJFrame {
         buttons.add(startButton);
         buttons.add(clearButton);
         buttons.add(saveButton);
-        getContentPane().add(buttons);
+        legacySpeedO.add(buttons);
 
         clearButton.setVisible(false);
 
@@ -227,7 +262,7 @@ public class SpeedometerFrame extends jmri.util.JmriJFrame {
         pane6.add(time1Label);
         pane6.add(time1);
         time1Label.setLabelFor(time1);
-        getContentPane().add(pane6);
+        legacySpeedO.add(pane6);
 
         JPanel pane7 = new JPanel();
         pane7.setLayout(new FlowLayout());
@@ -238,10 +273,43 @@ public class SpeedometerFrame extends jmri.util.JmriJFrame {
         pane7.add(time2Label);
         pane7.add(time2);
         time2Label.setLabelFor(time2);
-        getContentPane().add(pane7);
+        legacySpeedO.add(pane7);
 
+        mainTabbedPanel.addTab("DynoBlocks", dynoBlocks);
+        dynoBlocks.setLayout(new BoxLayout(dynoBlocks, BoxLayout.Y_AXIS));
+
+        JPanel paneStartButton = new JPanel();
+        paneStartButton.add(startDynoBlocksButton);
+        startDynoBlocksButton.addActionListener(new java.awt.event.ActionListener() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent e) {
+                dynoSetup();
+            }
+        });
+        dynoBlocks.add(paneStartButton);
+        dynoBlocks.add(new JSeparator());
+         
+        JPanel pane8 = new JPanel();
+        pane8.add(useRefBlock);
+        useRefBlock.addActionListener(this::useRefBlockPressed);
+        pane8.add(refBlockBox);
+        refBlockBox.addActionListener(this::refBlockPressed);
+        dynoBlocks.add(pane8);
+        dynoBlocks.add(new JSeparator());
+        
+        JPanel pane9 = new JPanel(new BorderLayout());
+        pane9.add(rollingSpeedTableScrollPane);
+        dynoBlocks.add(pane9);
+        dynoBlocks.add(new JSeparator());
+        
+        JPanel pane10 = new JPanel();
+        pane10.add(speedTableScrollPane);
+        dynoBlocks.add(pane10);
+        dynoBlocks.add(new JSeparator());
         // set the units consistently
         dim();
+        
+        this.add(mainTabbedPanel);
 
         // add the actions to the config button
         dimButton.addActionListener(new java.awt.event.ActionListener() {
@@ -250,7 +318,6 @@ public class SpeedometerFrame extends jmri.util.JmriJFrame {
                 dim();
             }
         });
-
         startButton.addActionListener(new java.awt.event.ActionListener() {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent e) {
@@ -306,6 +373,25 @@ public class SpeedometerFrame extends jmri.util.JmriJFrame {
         doLoad();
     }
 
+    void refBlockPressed(ActionEvent e) {
+        refBlock = refBlockBox.getSelectedItem();
+    }
+    
+    void useRefBlockPressed(ActionEvent e) {
+        if (useRefBlock.isSelected()) {
+            refBlock = refBlockBox.getSelectedItem();
+        } else {
+            refBlock = null;
+        }
+    }
+    
+    @Override
+    public void dispose() {
+        super.dispose();
+        if (processSensors != null) {
+            processSensors.setAbort();
+        }
+    }
     long startTime = 0;
     long stopTime1 = 0;
     long stopTime2 = 0;
@@ -335,9 +421,173 @@ public class SpeedometerFrame extends jmri.util.JmriJFrame {
         }
     }
 
+    //long t;
+    ///long t2;
+    //jmri.Block b;
+    //long lbLength;
+    jmri.Block refBlock = null;
+    float refBlockSpeedMMS = 0.0f;
+    //Sensor lastSensor = null;
+    
+  
+    private synchronized void mListener (java.beans.PropertyChangeEvent e) {
+        long timeGrab = System.currentTimeMillis();
+        //log.info("Sensor[{}] Property[{}]",((Sensor)e.getSource()).getDisplayName(),e.getPropertyName());
+        if (e.getPropertyName().equals("KnownState")) {
+            Sensor sensor = (Sensor)e.getSource();
+            if ((int)e.getNewValue() == Sensor.ACTIVE) {
+                processSensors.add(new SensorData(timeGrab-sensor.getSensorDebounceGoingActiveTimer(),sensor));
+            }
+        }
+   }
+    
+    private class SensorData {
+        protected long timeStamp;
+        protected Sensor sensor;
+        public SensorData(long time, Sensor sensor) {
+            this.timeStamp = time;
+            this.sensor = sensor;
+        }
+        protected long getTimeStamp() {
+            return timeStamp;
+        }
+        protected Sensor getSensor() {
+            return sensor;
+        }
+
+    }
+ 
+    private class ProcessSensors implements Runnable {
+
+        LinkedBlockingQueue<SensorData> sensorList;
+
+        public ProcessSensors() {
+            sensorList = new LinkedBlockingQueue<>();
+        }
+
+        private boolean abort = false;
+
+        /**
+         * Stops the autoAllocate nicely
+         */
+        protected void setAbort() {
+            abort = true;
+        }
+
+        protected void add(SensorData sensorData) {
+            sensorList.add(sensorData);
+        }
+
+        @Override
+        public void run() {
+            Sensor currentSensor = null;
+            long timeStart = 0;
+            long timeEnd = 0;
+            jmri.Block currentBlock = null;
+            while (!abort) {
+                try {
+                    SensorData sensorData = sensorList.take();
+                    if (sensorData.getSensor() != currentSensor) {
+                        currentSensor = sensorData.getSensor();
+                        timeEnd = sensorData.getTimeStamp();
+                        float speed = 0.0f;
+                        float length = 0.0f;
+                        if (timeStart > 0.0f && currentBlock != null) {
+                            if (refBlock == null || currentBlock == refBlock) {
+                                 speed = calcSpeed(timeStart,timeEnd,currentBlock.getLengthMm());
+                                 if (currentBlock == refBlock) {
+                                     refBlockSpeedMMS = currentBlock.getLengthMm() / ((timeEnd-timeStart)/1000.0f);
+                                 }
+                            }
+                            length = refBlockSpeedMMS * ((timeEnd-timeStart)/1000.0f);
+                            LocalTime dateTime = LocalTime.now();
+                            Object[] rollingRow = {currentBlock.getDisplayName(),
+                                    currentBlock.getLengthMm(),
+                                    speed,
+                                    length,
+                                    dateTime,
+                                    timeEnd-timeStart
+                                    ,refBlockSpeedMMS};
+                            Object[] summaryRow = {currentBlock.getDisplayName(),
+                                    currentBlock.getLengthMm(),
+                                    speed,
+                                    length,
+                                    dateTime,
+                                    1.0f,
+                                    speed,
+                                    length};
+//                            "Block","Length","Speed", "Calc Length","Last Update","Count","Avr Spd","Avr Len"
+                            boolean found = false;
+                            for (int ix =0 ; ix<tableModel.getRowCount(); ix++) {
+                                if (tableModel.getValueAt(ix, 0).equals(currentBlock.getDisplayName())) {
+                                    tableModel.setValueAt(speed,ix, 2);
+                                    tableModel.setValueAt(length,ix, 3);
+                                    tableModel.setValueAt(dateTime, ix, 4);
+                                    float count = (float)tableModel.getValueAt(ix, 5);
+                                    float avrSp = (float)tableModel.getValueAt(ix, 6);
+                                    float avrLen = (float)tableModel.getValueAt(ix, 7);
+                                    avrSp = ((avrSp * count) + speed )/(count+1);
+                                    avrLen = ((avrLen * count) + length )/(count+1);
+                                    count++;
+                                    tableModel.setValueAt(count, ix, 5);
+                                    tableModel.setValueAt(avrSp, ix, 6);
+                                    tableModel.setValueAt(avrLen, ix, 7);
+                                    found = true;
+                                    break;
+                                }
+                            }
+                            if (!found) {
+                                tableModel.addRow(summaryRow);
+                            }
+                            rollingTableModel.addRow(rollingRow);
+                        }
+                        for (jmri.Block b1:jmri.InstanceManager.getDefault(jmri.BlockManager.class).getNamedBeanSet()) {
+                            if (currentSensor == b1.getSensor()) {
+                                currentBlock = b1;
+                                log.info("Block[{}]",currentBlock.getDisplayName());
+                            }
+                        }
+                        timeStart = timeEnd;
+                    }
+                                
+                } catch (InterruptedException ex) {
+                    abort = true;
+                }
+            }
+        }
+    }
+    
+    private float calcSpeed(long startT, long endT, float mm) {
+        float secs = endT - startT;
+        float speed;
+        float fact = (float)jmri.ScaleManager.getScale("N").getScaleRatio();
+        float mmPS = mm/(secs/1000.0f);
+        
+        float scalemmPS = mmPS * fact;
+        if (dim) {
+            speed = scalemmPS * 0.00223694f ;
+        } else {
+            speed = scalemmPS * 0.0036f ;
+        }
+        return speed;
+    }
+
+    ProcessSensors processSensors = null;
+    Thread processSensorsThread;
+    
+    public void dynoSetup() {
+        //refBlock = InstanceManager.getDefault(jmri.BlockManager.class).getBlock("B-09-12-M");
+        for (Sensor s : InstanceManager.getDefault(SensorManager.class).getNamedBeanSet()) {
+            s.addPropertyChangeListener(e->mListener(e));
+        }
+        if (processSensors == null ) {
+            processSensors = new ProcessSensors();
+            processSensorsThread = jmri.util.ThreadingUtil.newThread(processSensors, "Speed Processor ");
+            processSensorsThread.start();
+        }
+    }
     public void setup() {
         //startButton.setToolTipText("You can only configure this once");
-
         // Check inputs are valid and get the number of valid stop sensors
         int valid = verifyInputs(true);
         if (log.isDebugEnabled()) {
@@ -394,10 +644,21 @@ public class SpeedometerFrame extends jmri.util.JmriJFrame {
                             log.error("invalid floating point number as input: {}", distance1.getText());
                         }
                         float speed;
+                        float fact = (float)jmri.ScaleManager.getScale("N").getScaleRatio();
+                        float mm;
                         if (dim == false) {
-                            speed = (feet / 5280.f) * (3600.f / secs);
+                            mm = feet * 304.8f;
+                            speed = ((feet*fact) / 5280.f) * (3600.f / secs);
                         } else {
-                            speed = (feet / 100000.f) * (3600.f / secs);
+                            mm = feet;
+                            speed = ((feet*fact) / 100000.f) * (3600.f / secs);
+                        }
+                        float mmPS = mm/secs;
+                        float scalemmPS = mmPS * fact;
+                        if (dim) {
+                            speed = scalemmPS * 0.00223694f ;
+                        } else {
+                            speed = scalemmPS * 0.0036f ;
                         }
                         if (log.isDebugEnabled()) {
                             log.debug("calc from {},{}:{}", secs, feet, speed);
