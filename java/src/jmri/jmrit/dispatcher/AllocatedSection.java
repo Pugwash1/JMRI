@@ -122,11 +122,15 @@ public class AllocatedSection {
         if (mSection == null) {
             return length;
         }
+        boolean foundBlock = false;
         if (mSection.getState() == Section.FORWARD) {
             for (int ix = 0;ix < mSection.getNumBlocks();ix++) {
                 Block b = (mSection.getBlockBySequenceNumber(ix));
                 if (b != null) {
-                    if (length > 0.0f || b == block) {
+                    if (b == block) {
+                        foundBlock = true;
+                    }
+                    if (foundBlock) {
                         length += b.getLengthMm();
                     }
                 }
@@ -136,7 +140,10 @@ public class AllocatedSection {
             for (int ix =  mSection.getNumBlocks()-1;ix > -1 ;ix--) {
                 Block b = (mSection.getBlockBySequenceNumber(ix));
                 if (b != null) {
-                    if (length > 0.0f || b == block) {
+                    if (b == block) {
+                        foundBlock = true;
+                    }
+                    if (foundBlock) {
                         length += b.getLengthMm();
                     }
                 }
