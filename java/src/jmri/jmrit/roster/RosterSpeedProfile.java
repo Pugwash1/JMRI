@@ -737,7 +737,8 @@ public class RosterSpeedProfile {
         } else {
             speed = requestedSpeed;
         }
-        if (Float.compare(speed, t.getSpeedSetting()) == 0) {
+        if (Float.compare(speed, t.getSpeedSetting()) == 0
+                || (Math.round(speed/t.getSpeedIncrement()) == Math.round(t.getSpeedSetting()/t.getSpeedIncrement()))) {
             log.debug("Throttle and request speed setting are the same {} {} so will quit", speed, t.getSpeedSetting());
             //Already at correct speed setting
             finishChange();
