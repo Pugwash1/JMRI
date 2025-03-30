@@ -564,7 +564,7 @@ public class RosterSpeedProfileTest {
         float testDistance = 50.0f;
         sp.changeLocoSpeed(throttle,testDistance, 0.0f);
         // Allow speed step table to be constructed
-        //JUnitUtil.waitFor(5000);
+        JUnitUtil.waitFor(5000);
         // Note it must be a perfect 0.0
         // Assert.assertEquals("Speed didnt get to a perfect zero", 0.0f, throttle.getSpeedSetting(), 0.0f);
         JUnitUtil.waitFor(()->(throttle.getSpeedSetting() == 0.00f),"Failed to reach requested speed");
