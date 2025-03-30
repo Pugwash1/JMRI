@@ -838,7 +838,7 @@ public class RosterSpeedProfile {
         }
 
         boolean calculated = false;
-
+        // calculatingStep = calculatingStep - stepIncrement;
         while (!calculated) {
             float spd = 0;
             if (calculatingStep != 0.0) { // current speed
@@ -866,20 +866,34 @@ public class RosterSpeedProfile {
 
             int timePerStep = Math.abs((int) (time / noSteps));
             float calculatedStepInc = stepIncrement;
-            if (calculatingStep > (stepIncrement * 2)) {
+            if (Math.abs(speeddiff) > (stepIncrement * 2)) {
                 //We do not get reliable time results if the duration per speed step is less than 500ms
                 //therefore we calculate how many speed steps will fit in to 750ms.
                 if (timePerStep <= 500 && timePerStep > 0) {
                     //thing tIncrement should be different not sure about this bit
                     float tmp = (750.0f / timePerStep);
-                    calculatedStepInc = stepIncrement * tmp;
+                    
+                    if ( (calculatedDistance 
+                            - getDistanceTravelled(_throttle.getIsForward(),
+                                    calculatingStep - (stepIncrement * tmp),
+                                    ((float) (750 / 1000.0)))) >= 0)
+ {
+                        calculatedStepInc = stepIncrement * tmp;
+                        timePerStep = 750;
+                    }
                     log.debug("time per step was {} no of increments in 750 ms is {} new step increment in {}", timePerStep, tmp, calculatedStepInc);
-
-                    timePerStep = 750;
+                   
+                }
+            } else {
+                // last bit calculate duration from distance remaining
+                timePerStep = Math.round(calculatedDistance/getSpeed(calculatingStep,_throttle.getIsForward())*1000);
+                if (!increaseSpeed) {
+                    calculatedStepInc = calculatingStep - desiredSpeedStep;
+                } else {
+                    calculatedStepInc = desiredSpeedStep - calculatingStep ;
                 }
             }
             log.debug("per interval {}", timePerStep);
-
             //Calculate the new speed setting
             if (increaseSpeed) {
                 calculatingStep = calculatingStep + calculatedStepInc;
@@ -887,42 +901,45 @@ public class RosterSpeedProfile {
                     calculatingStep = 1.0f;
                     calculated = true;
                 }
-                if (calculatingStep > desiredSpeedStep) {
+                if (calculatingStep >= desiredSpeedStep) {
                     calculatingStep = desiredSpeedStep;
                     calculated = true;
                 }
             } else {
+                if (calculatingStep - calculatedStepInc == desiredSpeedStep) {
+                    // last step(s)
+                    calculated = true;
+                    SpeedSetting ss = new SpeedSetting(calculatingStep, timePerStep, andStop);
+                    addSpeedStepItem(calculated,ss);
+                    break;
+                }
                 calculatingStep = calculatingStep - calculatedStepInc;
                 if (calculatingStep < _throttle.getSpeedIncrement()) {
                     calculatingStep = 0.0f;
                     calculated = true;
                     timePerStep = 0;
                 }
-                if (calculatingStep < desiredSpeedStep) {
+                if (calculatingStep <= desiredSpeedStep) {
                     calculatingStep = desiredSpeedStep;
                     calculated = true;
                 }
             }
+
             log.debug("Speed Step current {} speed to set {}", _throttle.getSpeedSetting(), calculatingStep);
 
             SpeedSetting ss = new SpeedSetting(calculatingStep, timePerStep, andStop);
-            synchronized (this) {
-                stepQueue.addLast(ss);
-                if (profileInTestMode) {
-                    testSteps.add(ss);
-                }
-                if (andStop && calculated) {
-                    ss = new SpeedSetting( 0.0f, 0, andStop);
-                    stepQueue.addLast(ss);
-                    if (profileInTestMode) {
-                        testSteps.add(ss);
-                    }
-                }
-            }
+            addSpeedStepItem(calculated,ss);
             if (stopTimer == null) { //If this is the first time round then kick off the speed change
                 setNextStep();
             }
 
+            if (calculated) {
+               if (andStop) {
+                   ss = new SpeedSetting(0.0f, 10, andStop);
+               } else {
+                   ss = new SpeedSetting(desiredSpeedStep, 10, andStop);
+               }
+               addSpeedStepItem(calculated,ss);            }
             // The throttle can disappear during a stop situation
             if (_throttle != null) {
                 calculatedDistance = calculatedDistance - getDistanceTravelled(_throttle.getIsForward(), calculatingStep, ((float) (timePerStep / 1000.0)));
@@ -930,13 +947,28 @@ public class RosterSpeedProfile {
                 log.warn("Throttle destroyed before zero length[{}] remaining.",calculatedDistance);
                 calculatedDistance = 0;
             }
+
             if (calculatedDistance <= 0 && !calculated) {
                 log.warn("distance remaining is now 0, but we have not reached desired speed setting {} v {}", desiredSpeedStep, calculatingStep);
                 ss = new SpeedSetting(desiredSpeedStep, 10, andStop);
-                synchronized (this) {
-                    stepQueue.addLast(ss);
-                }
+                addSpeedStepItem(calculated,ss);
                 calculated = true;
+            }
+        }
+    }
+
+    private void addSpeedStepItem(Boolean calculated, SpeedSetting ss) {
+        synchronized (this) {
+            stepQueue.addLast(ss);
+            if (profileInTestMode) {
+                testSteps.add(ss);
+            }
+            if (ss.andStop && calculated) {
+                ss = new SpeedSetting( 0.0f, 0, ss.andStop);
+                stepQueue.addLast(ss);
+                if (profileInTestMode) {
+                    testSteps.add(ss);
+                }
             }
         }
     }

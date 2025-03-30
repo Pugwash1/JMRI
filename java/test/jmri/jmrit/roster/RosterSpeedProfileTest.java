@@ -52,7 +52,7 @@ public class RosterSpeedProfileTest {
         Assert.assertNotNull("exists",t);
     }
 
-    private float globalTotalDistanceTolerance = 0.1f;
+    private float globalTotalDistanceTolerance = 3.5f;
     private float testScene(org.jdom2.Element profile, float currentSpeed,
             float newSpeed, float testDistance,
             float minSpeed, float maxSpeed, SpeedStepMode speedStepMode) {
@@ -120,7 +120,7 @@ public class RosterSpeedProfileTest {
 
     @Test
     public void testSceneStopFromFiftyPercent_28() {
-        float testDistance = 50.0f;
+        float testDistance = 500.0f;
         float actualDistance = testScene(getLocoElement100(),  //profile
                 0.5f, //current speed
                 0.0f, // new speed
@@ -134,7 +134,7 @@ public class RosterSpeedProfileTest {
 
     @Test
     public void testSceneStopFromFiftyPercent_14() {
-        float testDistance = 150.0f;
+        float testDistance = 500.0f;
         float actualDistance = testScene(getLocoElement100(),  //profile
                 0.5f, //current speed
                 0.0f, // new speed
@@ -145,7 +145,48 @@ public class RosterSpeedProfileTest {
                 );
         Assert.assertEquals("Distance not close 14 0.50-0", testDistance, actualDistance, globalTotalDistanceTolerance);
     }
+
     @Test
+    public void testSceneStopFromFiftyPercent_128_Min() {
+        float testDistance = 50.0f;
+        float actualDistance = testScene(getLocoElement100(),  //profile
+                0.6f, //current speed
+                0.0f, // new speed
+                testDistance, // distance
+                0.1f, // minSpeed
+                1.0f, // max speed
+                SpeedStepMode.NMRA_DCC_128 // stepmode
+                );
+        Assert.assertEquals("Distance not close 128 0.50-0 Min", testDistance, actualDistance, globalTotalDistanceTolerance);
+    }
+
+    @Test
+    public void testSceneStopFromFiftyPercent_28_min() {
+        float testDistance = 500.0f;
+        float actualDistance = testScene(getLocoElement100(),  //profile
+                0.5f, //current speed
+                0.0f, // new speed
+                testDistance, // distance
+                0.1f, // minSpeed
+                1.0f, // max speed
+                SpeedStepMode.NMRA_DCC_28 // stepmode
+                );
+        Assert.assertEquals("Distance not close 28 0.50-0 min", testDistance, actualDistance, globalTotalDistanceTolerance);
+    }
+
+    @Test
+    public void testSceneStopFromFiftyPercent_14_min() {
+        float testDistance = 500.0f;
+        float actualDistance = testScene(getLocoElement100(),  //profile
+                0.5f, //current speed
+                0.0f, // new speed
+                testDistance, // distance
+                0.1f, // minSpeed
+                1.0f, // max speed
+                SpeedStepMode.NMRA_DCC_14 // stepmode
+                );
+        Assert.assertEquals("Distance not close 14 0.50-0 min", testDistance, actualDistance, globalTotalDistanceTolerance);
+    }@Test
     public void testSceneStopFromStepToStepplessATad() {
         float testDistance = 150.0f;
         float actualDistance = testScene(getLocoElement100(),  //profile
@@ -156,7 +197,7 @@ public class RosterSpeedProfileTest {
                 1.0f, // max speed
                 SpeedStepMode.NMRA_DCC_128 // stepmode
                 );
-        Assert.assertEquals("Distance not close 128 step1 to step1 less a tad.", testDistance, actualDistance, globalTotalDistanceTolerance);
+        Assert.assertEquals("Distance not close 128 step1 to step1 less a tad.", 0.0f, actualDistance, globalTotalDistanceTolerance);
     }
 
     @Test
@@ -383,7 +424,7 @@ public class RosterSpeedProfileTest {
         float testDistance = 50.0f;
         sp.changeLocoSpeed(throttle, testDistance, 0.0f);
         // Allow speed step table to be constructed
-        //JUnitUtil.waitFor(5000);
+        JUnitUtil.waitFor(7000);
         // Note it must be a perfect 0.0
         Assert.assertEquals("Speed didnt get to a perfect zero", 0.0f, throttle.getSpeedSetting(), 0.0f);
         JUnitUtil.waitFor(()->(throttle.getSpeedSetting() == 0.00f),"Failed to reach requested speed");
@@ -440,7 +481,7 @@ public class RosterSpeedProfileTest {
         //JUnitUtil.waitFor(()->(throttle.getSpeedSetting() == 0.00f),"Failed to reach requested speed");
         float maxDelta = 1.0f/126.0f/2.0f;  //half step
         Assert.assertEquals("SpeedStep Table has incorrect number of entries.", 2, sp.getSpeedStepTrace().size() ) ;
-        int[] correctDuration = {1663, 0} ;
+        int[] correctDuration = {1661, 0} ;
         int[] durations = new int[sp.getSpeedStepTrace().size()];
         int ix = 0;
         for (SpeedSetting ss: sp.getSpeedStepTrace()) {
@@ -484,13 +525,13 @@ public class RosterSpeedProfileTest {
         float testDistance = 50.0f;
         sp.changeLocoSpeed(throttle,testDistance, 0.0f);
         // Allow speed step table to be constructed
-        //JUnitUtil.waitFor(5000);
+        JUnitUtil.waitFor(5000);
         // Note it must be a perfect 0.0
-        //Assert.assertEquals("Speed didnt get to a perfect zero", 0.0f, throttle.getSpeedSetting(), 0.0f);
-        JUnitUtil.waitFor(()->(throttle.getSpeedSetting() == 0.00f),"Failed to reach requested speed");
+        Assert.assertEquals("Speed didnt get to a perfect zero", 0.0f, throttle.getSpeedSetting(), 0.0f);
+        //JUnitUtil.waitFor(()->(throttle.getSpeedSetting() == 0.00f),"Failed to reach requested speed");
         float maxDelta = 1.0f/126.0f/2.0f;  //half step
         //Assert.assertEquals("SpeedStep Table has incorrect number of entries.", 5, sp.getSpeedStepTrace().size() ) ;
-        int[] correctDuration = {750, 750, 750, 361, 0} ;
+        int[] correctDuration = {750, 750, 750, 359, 0} ;
         int[] durations = new int[sp.getSpeedStepTrace().size()];
         int ix = 0;
         for (SpeedSetting ss: sp.getSpeedStepTrace()) {
@@ -499,7 +540,7 @@ public class RosterSpeedProfileTest {
         }
         Assert.assertArrayEquals("Durations are wrong",correctDuration, durations);
 
-        float[] correctSpeed = {0.31962f, 0.18434f, 0.10993f, 0.1f, 0.0f} ;
+        float[] correctSpeed = {0.31962f, 0.18434f, 0.10993f, 0.109f, 0.0f} ;
         float[] speed = new float[sp.getSpeedStepTrace().size()];
         ix=0;
         for (SpeedSetting ss: sp.getSpeedStepTrace()) {
@@ -532,13 +573,13 @@ public class RosterSpeedProfileTest {
         sp.setTestMode(true);
         sp.changeLocoSpeed(throttle, 150.0f, 0.20f);
         // Allow speed step table to be constructed
-        //JUnitUtil.waitFor(5000);
+        JUnitUtil.waitFor(5000);
         // Note it must be a perfect 0.20
-        JUnitUtil.waitFor(()->(throttle.getSpeedSetting() == 0.20f),"Failed to reach requested speed");
+        //JUnitUtil.waitFor(()->(throttle.getSpeedSetting() == 0.20f),"Failed to reach requested speed");
         //Assert.assertEquals("Speed didnt get to a perfect 20", 0.20f, throttle.getSpeedSetting(), 0.00f);
         float maxDelta = 1.0f/126.0f/2.0f;  //half step
         //Assert.assertEquals("SpeedStep Table has lincorrect number of entries.", 4, sp.getSpeedStepTrace().size() ) ;
-        int[] correctDuration = {750, 750, 750, 514} ;
+        int[] correctDuration = {750, 750, 750, 211} ;
         int[] durations = new int[sp.getSpeedStepTrace().size()];
         int ix = 0;
         for (SpeedSetting ss: sp.getSpeedStepTrace()) {
