@@ -769,7 +769,7 @@ public class RosterSpeedProfile {
 
         float adjSpeed = speed;
         boolean andStop = false;
-        if (speed <= 0.0 && minReliableOperatingSpeed > 0.0f) {
+        if (speed <= 0.0) {
             andStop = true;
         }
         if (speed < minReliableOperatingSpeed) {
@@ -873,13 +873,21 @@ public class RosterSpeedProfile {
                     //thing tIncrement should be different not sure about this bit
                     float tmp = (750.0f / timePerStep);
                     
-                    if ( (calculatedDistance 
-                            - getDistanceTravelled(_throttle.getIsForward(),
-                                    calculatingStep - (stepIncrement * tmp),
-                                    ((float) (750 / 1000.0)))) >= 0)
- {
-                        calculatedStepInc = stepIncrement * tmp;
-                        timePerStep = 750;
+                    if (increaseSpeed) {
+                        if (calculatedDistance - getDistanceTravelled(_throttle.getIsForward(),
+                                    calculatingStep + (stepIncrement * tmp),
+                                    ((float) (750 / 1000.0))) > 0) {
+                            calculatedStepInc = stepIncrement * tmp;
+                            timePerStep = 750;
+                        }
+                    } else {
+                        if ( (calculatedDistance 
+                                - getDistanceTravelled(_throttle.getIsForward(),
+                                        calculatingStep - (stepIncrement * tmp),
+                                        ((float) (750 / 1000.0)))) > 0) {
+                            calculatedStepInc = stepIncrement * tmp;
+                            timePerStep = 750;
+                        }
                     }
                     log.debug("time per step was {} no of increments in 750 ms is {} new step increment in {}", timePerStep, tmp, calculatedStepInc);
                    
@@ -896,6 +904,13 @@ public class RosterSpeedProfile {
             log.debug("per interval {}", timePerStep);
             //Calculate the new speed setting
             if (increaseSpeed) {
+                if (calculatingStep + calculatedStepInc == desiredSpeedStep) {
+                    // last step(s)
+                    calculated = true;
+                    SpeedSetting ss = new SpeedSetting(calculatingStep, timePerStep, andStop);
+                    addSpeedStepItem(calculated,ss);
+                    break;
+                }
                 calculatingStep = calculatingStep + calculatedStepInc;
                 if (calculatingStep > 1.0f) {
                     calculatingStep = 1.0f;
