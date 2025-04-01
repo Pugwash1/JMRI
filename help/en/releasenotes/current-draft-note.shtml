@@ -250,6 +250,11 @@
                 <li></li>
             </ul>
 
+        <h4>Decoderwerk</h4>
+            <ul>
+                <li>New decoder definition for the Decoderwerk LokCommander 7090x
+            </ul>
+            
         <h4>Digikeijs (Digirails)</h4>
             <ul>
                 <li></li>
@@ -466,7 +471,7 @@
    <h3>Dispatcher</h3>
         <a id="Dispatcher" name="Dispatcher"></a>
         <ul>
-             <li></li>
+             <li>Fix TSA edit bugs, when over riding from roster update internal dcc address.</li>
         </ul>
 
     <h3>Dispatcher System</h3>
@@ -643,9 +648,13 @@
    <h3>Warrants</h3>
         <a id="Wt" name="Wt"></a>
         <ul>
-            <li>SCWarrants brought back to life with a few fixes. 
-			    One of them being that it is once again possible to create SCWarrants. 
-				Another one that train tracking is now working.</li>
+             <li>SCWarrants brought back to life with a few fixes:  
+	        <ul>
+                    <li>It is once again possible to create SCWarrants.</li>
+		    <li>Train tracking is now working.</li>
+		    <li>Opening the edit dialog for an SCWarrant now shows the correct warrant type.</li>
+		</ul>
+            </li>
         </ul>
 
    <h3>Web Access</h3>
