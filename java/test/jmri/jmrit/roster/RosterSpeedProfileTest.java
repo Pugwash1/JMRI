@@ -11,7 +11,6 @@ import jmri.ThrottleListener;
 import jmri.ThrottleManager;
 import jmri.implementation.SignalSpeedMap;
 import jmri.jmrit.roster.RosterSpeedProfile.SpeedSetting;
-import jmri.util.JUnitAppender;
 
 import org.junit.Assert;
 import org.junit.jupiter.api.*;
@@ -52,8 +51,29 @@ public class RosterSpeedProfileTest {
         Assert.assertNotNull("exists",t);
     }
 
-    private float globalTotalDistanceTolerance = 3.5f;
-    private float testScene(org.jdom2.Element profile, float currentSpeed,
+    class ReturnValues {
+        public float totalDistance;
+        public float finalSpeed;
+        public int numberOfElements;
+        ReturnValues() {
+            totalDistance = 0.0f;
+            finalSpeed = 0.0f;
+            numberOfElements = 0;
+        }
+        ReturnValues(float totalDistance, float finalSpeed, int numberOfElements) {
+            this.totalDistance = totalDistance;
+            this.finalSpeed = finalSpeed;
+            this.numberOfElements = numberOfElements;
+        }
+        @Override
+        public String toString() {
+            return Float.toString(totalDistance)
+                    + "," + Float.toString(finalSpeed) 
+                    + "," + Integer.toString(numberOfElements);
+        }
+    }
+    private float globalTotalDistanceTolerance = 0.0f;
+    private ReturnValues testScene(org.jdom2.Element profile, float currentSpeed,
             float newSpeed, float testDistance,
             float minSpeed, float maxSpeed, SpeedStepMode speedStepMode) {
         // statics for test objects
@@ -79,20 +99,23 @@ public class RosterSpeedProfileTest {
         sp.changeLocoSpeed(throttle, testDistance, newSpeed);
         // Allow speed step table to be constructed
         //JUnitUtil.waitFor(2000);
-        float totalDistance = 0.0f;
+        ReturnValues returnValues = new ReturnValues();
+        returnValues.totalDistance = 0.0f;
+        returnValues.numberOfElements = sp.getSpeedStepTrace().size();
         for (SpeedSetting ss : sp.getSpeedStepTrace()) {
-            totalDistance += (ss.getDuration() / 1000.0f) * (ss.getSpeedStep() * mmFactor);
+            returnValues.totalDistance += (ss.getDuration() / 1000.0f) * (ss.getSpeedStep() * mmFactor);
+            returnValues.finalSpeed = ss.getSpeedStep();
         }
-
+        
         sp.cancelSpeedChange();
 
-        return totalDistance;
+        return returnValues;
     }
 
     @Test
     public void testScenefiftyFromZeroPercent_128() {
         float testDistance = 50.0f;
-        float actualDistance = testScene(getLocoElement100(),  //profile
+        ReturnValues returnValues = testScene(getLocoElement100(),  //profile
                 0.0f, //current speed
                 0.5f, // new speed
                 testDistance, // distance
@@ -100,14 +123,14 @@ public class RosterSpeedProfileTest {
                 1.0f, // max speed
                 SpeedStepMode.NMRA_DCC_128 // stepmode
                 );
-        Assert.assertEquals("Distance not close 128 0-0.50", testDistance, actualDistance, globalTotalDistanceTolerance);
+        Assert.assertEquals("Distance not close 128 0-0.50", testDistance, returnValues.totalDistance, globalTotalDistanceTolerance);
     }
 
 
     @Test
     public void testSceneStopFromFiftyPercent_128() {
         float testDistance = 500.0f;
-        float actualDistance = testScene(getLocoElement100(),  //profile
+        ReturnValues returnValues = testScene(getLocoElement100(),  //profile
                 0.6f, //current speed
                 0.0f, // new speed
                 testDistance, // distance
@@ -115,13 +138,13 @@ public class RosterSpeedProfileTest {
                 1.0f, // max speed
                 SpeedStepMode.NMRA_DCC_128 // stepmode
                 );
-        Assert.assertEquals("Distance not close 128 0.50-0", testDistance, actualDistance, globalTotalDistanceTolerance);
+        Assert.assertEquals("Distance not close 128 0.50-0", testDistance, returnValues.totalDistance, globalTotalDistanceTolerance);
     }
 
     @Test
     public void testSceneStopFromFiftyPercent_28() {
         float testDistance = 500.0f;
-        float actualDistance = testScene(getLocoElement100(),  //profile
+        ReturnValues returnValues = testScene(getLocoElement100(),  //profile
                 0.5f, //current speed
                 0.0f, // new speed
                 testDistance, // distance
@@ -129,13 +152,13 @@ public class RosterSpeedProfileTest {
                 1.0f, // max speed
                 SpeedStepMode.NMRA_DCC_28 // stepmode
                 );
-        Assert.assertEquals("Distance not close 28 0.50-0", testDistance, actualDistance, globalTotalDistanceTolerance);
+        Assert.assertEquals("Distance not close 28 0.50-0", testDistance, returnValues.totalDistance, globalTotalDistanceTolerance);
     }
 
     @Test
     public void testSceneStopFromFiftyPercent_14() {
         float testDistance = 500.0f;
-        float actualDistance = testScene(getLocoElement100(),  //profile
+        ReturnValues returnValues = testScene(getLocoElement100(),  //profile
                 0.5f, //current speed
                 0.0f, // new speed
                 testDistance, // distance
@@ -143,13 +166,13 @@ public class RosterSpeedProfileTest {
                 1.0f, // max speed
                 SpeedStepMode.NMRA_DCC_14 // stepmode
                 );
-        Assert.assertEquals("Distance not close 14 0.50-0", testDistance, actualDistance, globalTotalDistanceTolerance);
+        Assert.assertEquals("Distance not close 14 0.50-0", testDistance, returnValues.totalDistance, globalTotalDistanceTolerance);
     }
 
     @Test
     public void testSceneStopFromFiftyPercent_128_Min() {
         float testDistance = 50.0f;
-        float actualDistance = testScene(getLocoElement100(),  //profile
+        ReturnValues returnValues = testScene(getLocoElement100(),  //profile
                 0.6f, //current speed
                 0.0f, // new speed
                 testDistance, // distance
@@ -157,13 +180,13 @@ public class RosterSpeedProfileTest {
                 1.0f, // max speed
                 SpeedStepMode.NMRA_DCC_128 // stepmode
                 );
-        Assert.assertEquals("Distance not close 128 0.50-0 Min", testDistance, actualDistance, globalTotalDistanceTolerance);
+        Assert.assertEquals("Distance not close 128 0.50-0 Min", testDistance, returnValues.totalDistance, globalTotalDistanceTolerance);
     }
 
     @Test
     public void testSceneStopFromFiftyPercent_28_min() {
         float testDistance = 500.0f;
-        float actualDistance = testScene(getLocoElement100(),  //profile
+        ReturnValues returnValues = testScene(getLocoElement100(),  //profile
                 0.5f, //current speed
                 0.0f, // new speed
                 testDistance, // distance
@@ -171,13 +194,13 @@ public class RosterSpeedProfileTest {
                 1.0f, // max speed
                 SpeedStepMode.NMRA_DCC_28 // stepmode
                 );
-        Assert.assertEquals("Distance not close 28 0.50-0 min", testDistance, actualDistance, globalTotalDistanceTolerance);
+        Assert.assertEquals("Distance not close 28 0.50-0 min", testDistance, returnValues.totalDistance, globalTotalDistanceTolerance);
     }
 
     @Test
     public void testSceneStopFromFiftyPercent_14_min() {
         float testDistance = 500.0f;
-        float actualDistance = testScene(getLocoElement100(),  //profile
+        ReturnValues returnValues = testScene(getLocoElement100(),  //profile
                 0.5f, //current speed
                 0.0f, // new speed
                 testDistance, // distance
@@ -185,11 +208,11 @@ public class RosterSpeedProfileTest {
                 1.0f, // max speed
                 SpeedStepMode.NMRA_DCC_14 // stepmode
                 );
-        Assert.assertEquals("Distance not close 14 0.50-0 min", testDistance, actualDistance, globalTotalDistanceTolerance);
+        Assert.assertEquals("Distance not close 14 0.50-0 min", testDistance, returnValues.totalDistance, globalTotalDistanceTolerance);
     }@Test
     public void testSceneStopFromStepToStepplessATad() {
         float testDistance = 150.0f;
-        float actualDistance = testScene(getLocoElement100(),  //profile
+        ReturnValues returnValues = testScene(getLocoElement100(),  //profile
                 1.0f/128.0f, //current speed
                 1.0f/128.0f-0.0001f, // new speed
                 testDistance, // distance
@@ -197,13 +220,13 @@ public class RosterSpeedProfileTest {
                 1.0f, // max speed
                 SpeedStepMode.NMRA_DCC_128 // stepmode
                 );
-        Assert.assertEquals("Distance not close 128 step1 to step1 less a tad.", 0.0f, actualDistance, globalTotalDistanceTolerance);
+        Assert.assertEquals("Distance not close 128 step1 to step1 less a tad.", 0.0f, returnValues.totalDistance, globalTotalDistanceTolerance);
     }
 
     @Test
     public void testSceneStopFromFiftyPercentWIthMinimum() {
         float testDistance = 150.0f;
-        float actualDistance = testScene(getLocoElement100(),  //profile
+        ReturnValues returnValues = testScene(getLocoElement100(),  //profile
                 0.5f, //current speed 
                 0.0f, // new speed
                 testDistance, // distance
@@ -211,13 +234,13 @@ public class RosterSpeedProfileTest {
                 100.0f, // max speed
                 SpeedStepMode.NMRA_DCC_128 // stepmode
                 );
-        Assert.assertEquals("Distance not close 128 0.50-0 min 0.1", testDistance, actualDistance, globalTotalDistanceTolerance);
+        Assert.assertEquals("Distance not close 128 0.50-0 min 0.1", testDistance, returnValues.totalDistance, globalTotalDistanceTolerance);
     }
 
     @Test
     public void testSceneSlowFromFiftyPercentToTwenty() {
         float testDistance = 150.0f;
-        float actualDistance = testScene(getLocoElement200(),  //profile
+        ReturnValues returnValues = testScene(getLocoElement200(),  //profile
                 0.6f, //current speed
                 0.2f, // new speed
                 testDistance, // distance
@@ -225,27 +248,43 @@ public class RosterSpeedProfileTest {
                 1.0f, // max speed
                 SpeedStepMode.NMRA_DCC_128 // max speed
                 );
-        Assert.assertEquals("Distance not close 128 0.50-0.20", testDistance, actualDistance, globalTotalDistanceTolerance);
+        Assert.assertEquals("Distance not close 128 0.50-0.20", testDistance, returnValues.totalDistance, globalTotalDistanceTolerance);
     }
 
     @Test
-    public void testSceneSlowFrom301WithMin300() {
+    public void testSceneStopFrom301WithMin300() {
         float testDistance = 150.0f;
-        float actualDistance = testScene(getLocoElement200(),  //profile
+        ReturnValues returnValues = testScene(getLocoElement200(),  //profile
                 0.301f, //current speed
-                0.2f, // new speed
+                0.0f, // new speed
                 testDistance, // distance
                 0.3f, // minSpeed
                 1.0f, // max speed
                 SpeedStepMode.NMRA_DCC_128 // stepmode
                 );
-        Assert.assertEquals("Distance not close 128 0.3-.301 min .3", testDistance, actualDistance, globalTotalDistanceTolerance);
+        // No change as number of elemnts is 0.
+        Assert.assertEquals("Distance not close 128 0.3-.301 min .3", "150.0184,0.0,2", returnValues.toString());
+    }
+
+    @Test
+    public void testSceneSlowFrom301WithMin300() {
+        float testDistance = 150.0f;
+        ReturnValues returnValues = testScene(getLocoElement200(),  //profile
+                0.301f, //current speed
+                0.3f, // new speed
+                testDistance, // distance
+                0.3f, // minSpeed
+                1.0f, // max speed
+                SpeedStepMode.NMRA_DCC_128 // stepmode
+                );
+        // No change as number of elemnts is 0.
+        Assert.assertEquals("Distance not close 128 0.3-.301 min .3", "0.0,0.0,0", returnValues.toString());
     }
 
     @Test
     public void testSceneFrom50to501_128() {
         float testDistance = 152.0f;
-        float actualDistance = testScene(getLocoElement200(),  //profile
+        ReturnValues returnValues = testScene(getLocoElement200(),  //profile
                 0.5f, //current speed 
                 0.501f, // new speed
                 testDistance, // distance
@@ -254,13 +293,13 @@ public class RosterSpeedProfileTest {
                 SpeedStepMode.NMRA_DCC_128 // stepmode
                 );
         // less than a speed step no speed change
-        Assert.assertEquals("Distance not close 128 0.5-0.501", 0.0f, actualDistance, globalTotalDistanceTolerance);
+        Assert.assertEquals("Distance not close 128 0.5-0.501", 0.0f, returnValues.totalDistance, globalTotalDistanceTolerance);
     }
 
     @Test
     public void testSceneFrom50to501_28() {
         float testDistance = 152.0f;
-        float actualDistance = testScene(getLocoElement200(),  //profile
+        ReturnValues returnValues = testScene(getLocoElement200(),  //profile
                 0.5f, //current speed 
                 0.501f, // new speed
                 testDistance, // distance
@@ -269,13 +308,13 @@ public class RosterSpeedProfileTest {
                 SpeedStepMode.NMRA_DCC_28 // stepmode
                 );
         // distance 0.0f less than a speed step
-        Assert.assertEquals("Distance not close 28 0.5-0.501", 0.0f, actualDistance, globalTotalDistanceTolerance);
+        Assert.assertEquals("Distance not close 28 0.5-0.501", 0.0f, returnValues.totalDistance, globalTotalDistanceTolerance);
     }
 
     @Test
     public void testSceneFrom50to501_14() {
         float testDistance = 152.0f;
-        float actualDistance = testScene(getLocoElement200(),  //profile
+        ReturnValues returnValues = testScene(getLocoElement200(),  //profile
                 0.5f, //current speed 
                 0.501f, // new speed
                 testDistance, // distance
@@ -284,13 +323,13 @@ public class RosterSpeedProfileTest {
                 SpeedStepMode.NMRA_DCC_14 // stepmode
                 );
         // less than a speed step. distance 0
-        Assert.assertEquals("Distance not close 14 0.5-0.501", 0.0f, actualDistance, globalTotalDistanceTolerance);
+        Assert.assertEquals("Distance not close 14 0.5-0.501", 0.0f, returnValues.totalDistance, globalTotalDistanceTolerance);
     }
 
     @Test
     public void testSceneZeroto50_14() {
         float testDistance = 150.0f;
-        float actualDistance = testScene(getLocoElement140(),  //profile
+        ReturnValues returnValues = testScene(getLocoElement140(),  //profile
                 0.0f, //current speed 
                 0.5f, // new speed
                 testDistance, // distance
@@ -299,13 +338,13 @@ public class RosterSpeedProfileTest {
                 SpeedStepMode.NMRA_DCC_128 // stepmode
                 );
         // less than a speed step. distance 0
-        Assert.assertEquals("Distance not close 14 0.0-0.5", testDistance, actualDistance, globalTotalDistanceTolerance);
+        Assert.assertEquals("Distance not close 14 0.0-0.5", testDistance, returnValues.totalDistance, globalTotalDistanceTolerance);
     }
 
     @Test
     public void testSceneStopFromSixtyPercentWIthMinimum_128() {
         float testDistance = 150.0f;
-        float actualDistance = testScene(getLocoElement100(),  //profile
+        ReturnValues returnValues = testScene(getLocoElement100(),  //profile
                 8.0f/14.0f, // 57% throttle current speed 
                 0.0f, // new speed
                 testDistance, // distance
@@ -313,13 +352,13 @@ public class RosterSpeedProfileTest {
                 100.0f, // max speed
                 SpeedStepMode.NMRA_DCC_128 // stepmode
                 );
-        Assert.assertEquals("Distance not close 128 0.6-0 min 0.1", testDistance, actualDistance, globalTotalDistanceTolerance);
+        Assert.assertEquals("Distance not close 128 0.6-0 min 0.1", testDistance, returnValues.totalDistance, globalTotalDistanceTolerance);
     }
 
     @Test
     public void testSceneStopFromSixtyPercentWIthMinimum_28() {
         float testDistance = 150.0f;
-        float actualDistance = testScene(getLocoElement100(),  //profile
+        ReturnValues returnValues = testScene(getLocoElement100(),  //profile
                 8.0f/14.0f, // 57% throttle current speed 
                 0.0f, // new speed
                 testDistance, // distance
@@ -327,12 +366,12 @@ public class RosterSpeedProfileTest {
                 100.0f, // max speed
                 SpeedStepMode.NMRA_DCC_28 // stepmode
                 );
-        Assert.assertEquals("Distance not close 28 0.6-0 min 0.1", testDistance, actualDistance, globalTotalDistanceTolerance);
+        Assert.assertEquals("Distance not close 28 0.6-0 min 0.1", testDistance, returnValues.totalDistance, globalTotalDistanceTolerance);
     }
     @Test
     public void testSceneStopFromSixtyPercentWIthMinimum_14() {
         float testDistance = 150.0f;
-        float actualDistance = testScene(getLocoElement100(),  //profile
+        ReturnValues returnValues = testScene(getLocoElement100(),  //profile
                 8.0f/14.0f, // 57% throttle current speed 
                 0.0f, // new speed
                 testDistance, // distance
@@ -340,7 +379,7 @@ public class RosterSpeedProfileTest {
                 100.0f, // max speed
                 SpeedStepMode.NMRA_DCC_14 // stepmode
                 );
-        Assert.assertEquals("Distance not close 14 0.6-0 min 0.1", testDistance, actualDistance, globalTotalDistanceTolerance);
+        Assert.assertEquals(" 14 0.6-0 min 0.1", testDistance, returnValues.totalDistance, globalTotalDistanceTolerance);
     }
 
     private static org.jdom2.Element getLocoElement100() {
@@ -568,15 +607,15 @@ public class RosterSpeedProfileTest {
 
         JUnitUtil.waitFor(()-> (throttleResult), "Got No throttle");
         throttle.setIsForward(true);
-        throttle.setSpeedSetting(0.6f);
+        throttle.setSpeedSetting(76/126.0f); // approx 0.06
         RosterSpeedProfile sp = rF1.getSpeedProfile();
         sp.setTestMode(true);
-        sp.changeLocoSpeed(throttle, 150.0f, 0.20f);
+        sp.changeLocoSpeed(throttle, 150.0f, 25/126.0f); // approx 0.2
         // Allow speed step table to be constructed
         // JUnitUtil.waitFor(5000);
         // Note it must be a perfect 0.20
-        JUnitUtil.waitFor(()->(throttle.getSpeedSetting() == 0.20f),"Failed to reach requested speed");
-        //Assert.assertEquals("Speed didnt get to a perfect 20", 0.20f, throttle.getSpeedSetting(), 0.00f);
+        JUnitUtil.waitFor(()->(Math.abs(throttle.getSpeedSetting()-25/126.0f) < 1/126.0f),"Failed to reach requested speed");
+        //Assert.assertEquals("Speed didnt get to a perfect 20", 26/126.0f, throttle.getSpeedSetting(), 0.00f);
         float maxDelta = 1.0f/126.0f/2.0f;  //half step
         //Assert.assertEquals("SpeedStep Table has lincorrect number of entries.", 4, sp.getSpeedStepTrace().size() ) ;
         int[] correctDuration = {750, 750, 750, 211} ;
