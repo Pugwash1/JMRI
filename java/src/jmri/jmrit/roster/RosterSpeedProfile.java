@@ -907,8 +907,12 @@ public class RosterSpeedProfile {
                 if (calculatingStep + calculatedStepInc == desiredSpeedStep) {
                     // last step(s)
                     calculated = true;
+                    if (!andStop) { calculatingStep = desiredSpeedStep;timePerStep=10;}
                     SpeedSetting ss = new SpeedSetting(calculatingStep, timePerStep, andStop);
                     addSpeedStepItem(calculated,ss);
+                    if (stopTimer == null) { //If this is the first time round then kick off the speed change
+                        setNextStep();
+                    }
                     break;
                 }
                 calculatingStep = calculatingStep + calculatedStepInc;
@@ -926,6 +930,9 @@ public class RosterSpeedProfile {
                     calculated = true;
                     SpeedSetting ss = new SpeedSetting(calculatingStep, timePerStep, andStop);
                     addSpeedStepItem(calculated,ss);
+                    if (stopTimer == null) { //If this is the first time round then kick off the speed change
+                        setNextStep();
+                    }
                     break;
                 }
                 calculatingStep = calculatingStep - calculatedStepInc;
