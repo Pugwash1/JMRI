@@ -93,7 +93,11 @@
                 <li>The LocoIO pane that was deprecated since 4.12 has been removed. The LocoIO configuration
                   documentation is retained under html LocoNet help.</li>
                 <li>Added the Digitrax UR90X to the LocoNet Monitor tool and
-                JMRI's Help.</li>
+                    JMRI's Help.</li>
+                <li>Added the BDL716 as a "decoder" in the JMRI Roster.  Added 
+                    LocoNet Monitor support of some BDL716-related messages.</li>
+                <li>Improved the CV configuration mechanism for Digitrax 
+                    7th-generation Accessory devices.</li>
             </ul>
 
         <h4>Maple</h4>
@@ -527,11 +531,14 @@
     <h3>OperationsPro</h3>
         <a id="Operations" name="Operations"></a>
         <ul>
-            <li>New feature, when building a train, the program now warns for set out 
-            and pick up conflicts between trains when using aggressive mode.</li>
+          <li>New feature, when building a train, the program now warns for set out and pick up
+            conflicts between trains when using aggressive mode.</li>
+          <li>Program file locations were changed in this release. Start up actions involving
+            operations windows from previous releases no longer work. You'll need to remove them and add
+            them back if needed.</li>
         </ul>
 
-   <h3>Panel Editor</h3>
+<h3>Panel Editor</h3>
         <a id="PE" name="PE"></a>
         <ul>
             <li></li>
