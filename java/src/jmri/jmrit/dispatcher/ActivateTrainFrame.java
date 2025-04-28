@@ -1472,7 +1472,7 @@ public class ActivateTrainFrame extends JmriJFrame {
             throw new IllegalArgumentException(Bundle.getMessage("NoResetMessage"));
         }
         int max = Math.round((float) maxSpeedSpinner.getValue()*100.0f);
-        int min = Math.round((float) minReliableOperatingSpeedSpinner.getValue()*100.0f);
+        int min = Math.round((float)((double) minReliableOperatingSpeedSpinner.getValue()*100.0f));
         if ((max-min) < 10) {
             throw new IllegalArgumentException(Bundle.getMessage("Error49",
                     maxSpeedSpinner.getValue(), minReliableOperatingSpeedSpinner.getValue()));
@@ -1918,18 +1918,18 @@ public class ActivateTrainFrame extends JmriJFrame {
     private void autoRunItemsToTrainInfo(TrainInfo info) {
         info.setSpeedFactor((float) speedFactorSpinner.getValue());
         info.setMaxSpeed((float) maxSpeedSpinner.getValue());
-        info.setMinReliableOperatingSpeed((float) minReliableOperatingSpeedSpinner.getValue());
+        info.setMinReliableOperatingSpeed((float) ((double)minReliableOperatingSpeedSpinner.getValue()));
         info.setRampRate((String) rampRateBox.getSelectedItem());
         info.setRunInReverse(runInReverseBox.isSelected());
         info.setSoundDecoder(soundDecoderBox.isSelected());
         info.setTrainLengthUnits(((TrainLengthUnitsItem) trainLengthUnitsComboBox.getSelectedItem()).getValue());
-        info.setMaxTrainLengthScaleMeters(maxTrainLengthToScaleMeters( info.getTrainLengthUnits(), (float) maxTrainLengthSpinner.getValue()));
+        info.setMaxTrainLengthScaleMeters(maxTrainLengthToScaleMeters( info.getTrainLengthUnits(), (float)((double) maxTrainLengthSpinner.getValue())));
 
         // Only use speed profile values if enabled
         if (useSpeedProfileCheckBox.isEnabled()) {
             info.setUseSpeedProfile(useSpeedProfileCheckBox.isSelected());
             info.setStopBySpeedProfile(stopBySpeedProfileCheckBox.isSelected());
-            info.setStopBySpeedProfileAdjust((float) stopBySpeedProfileAdjustSpinner.getValue());
+            info.setStopBySpeedProfileAdjust((float)((double) stopBySpeedProfileAdjustSpinner.getValue()));
         } else {
             info.setUseSpeedProfile(false);
             info.setStopBySpeedProfile(false);
