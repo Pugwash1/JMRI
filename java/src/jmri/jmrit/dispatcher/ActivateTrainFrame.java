@@ -1472,7 +1472,7 @@ public class ActivateTrainFrame extends JmriJFrame {
             throw new IllegalArgumentException(Bundle.getMessage("NoResetMessage"));
         }
         int max = Math.round((float) maxSpeedSpinner.getValue()*100.0f);
-        int min = Math.round((float)((double) minReliableOperatingSpeedSpinner.getValue()*100.0f));
+        int min = Math.round((float)minReliableOperatingSpeedSpinner.getValue()*100.0f);
         if ((max-min) < 10) {
             throw new IllegalArgumentException(Bundle.getMessage("Error49",
                     maxSpeedSpinner.getValue(), minReliableOperatingSpeedSpinner.getValue()));
@@ -1727,18 +1727,18 @@ public class ActivateTrainFrame extends JmriJFrame {
         initializeScaleLengthBox();
         pa1.setLayout(new FlowLayout());
         pa1.add(speedFactorLabel);
-        speedFactorSpinner.setModel(new SpinnerNumberModel(1.0f, 0.1f, 2.0f, 0.01f));
+        speedFactorSpinner.setModel(new SpinnerNumberModel(Float.valueOf(1.0f),Float.valueOf(0.1f),Float.valueOf(2.0f),Float.valueOf(0.01f)));
         speedFactorSpinner.setEditor(new JSpinner.NumberEditor(speedFactorSpinner, "# %"));
         pa1.add(speedFactorSpinner);
         speedFactorSpinner.setToolTipText(Bundle.getMessage("SpeedFactorHint"));
         pa1.add(new JLabel("   "));
         pa1.add(maxSpeedLabel);
-        maxSpeedSpinner.setModel(new SpinnerNumberModel(1.0f, 0.1f, 1.0f, 0.01f));
+        maxSpeedSpinner.setModel(new SpinnerNumberModel(Float.valueOf(1.0f),Float.valueOf(0.1f),Float.valueOf(1.0f),Float.valueOf(0.01f)));
         maxSpeedSpinner.setEditor(new JSpinner.NumberEditor(maxSpeedSpinner, "# %"));
         pa1.add(maxSpeedSpinner);
         maxSpeedSpinner.setToolTipText(Bundle.getMessage("MaxSpeedHint"));
         pa1.add(minReliableOperatingSpeedLabel);
-        minReliableOperatingSpeedSpinner.setModel(new SpinnerNumberModel(0.0f, 0.0f, 1.0f, 0.01f));
+        minReliableOperatingSpeedSpinner.setModel(new SpinnerNumberModel(Float.valueOf(0.0f), Float.valueOf(0.0f),Float.valueOf(1.0f), Float.valueOf(0.01f)));
         minReliableOperatingSpeedSpinner.setEditor(new JSpinner.NumberEditor(minReliableOperatingSpeedSpinner, "# %"));
         pa1.add(minReliableOperatingSpeedSpinner);
         minReliableOperatingSpeedSpinner.setToolTipText(Bundle.getMessage("MinReliableOperatingSpeedHint"));
@@ -1756,7 +1756,7 @@ public class ActivateTrainFrame extends JmriJFrame {
         pa2a.add(stopBySpeedProfileCheckBox);
         stopBySpeedProfileCheckBox.setToolTipText(Bundle.getMessage("UseSpeedProfileHint")); // reuse identical hint for Stop
         pa2a.add(stopBySpeedProfileAdjustLabel);
-        stopBySpeedProfileAdjustSpinner.setModel(new SpinnerNumberModel( 1.0f, 0.1f, 5.0f, 0.01f));
+        stopBySpeedProfileAdjustSpinner.setModel(new SpinnerNumberModel( Float.valueOf(1.0f),Float.valueOf(0.1f),Float.valueOf(5.0f),Float.valueOf(0.01f)));
         stopBySpeedProfileAdjustSpinner.setEditor(new JSpinner.NumberEditor(stopBySpeedProfileAdjustSpinner, "# %"));
         pa2a.add(stopBySpeedProfileAdjustSpinner);
         stopBySpeedProfileAdjustSpinner.setToolTipText(Bundle.getMessage("StopBySpeedProfileAdjustHint"));
@@ -1768,7 +1768,7 @@ public class ActivateTrainFrame extends JmriJFrame {
         pa3.add(runInReverseBox);
         runInReverseBox.setToolTipText(Bundle.getMessage("RunInReverseBoxHint"));
         initiatePane.add(pa3);
-        maxTrainLengthSpinner.setModel(new SpinnerNumberModel(18.0f, 0.0f, 10000.0f, 0.5f));
+        maxTrainLengthSpinner.setModel(new SpinnerNumberModel(Float.valueOf(18.0f),Float.valueOf(0.0f),Float.valueOf(10000.0f),Float.valueOf(0.5f)));
         maxTrainLengthSpinner.setEditor(new JSpinner.NumberEditor(maxTrainLengthSpinner, "###0.0"));
         maxTrainLengthSpinner.setToolTipText(Bundle.getMessage("MaxTrainLengthHint")); // won't be updated while Dispatcher is open
         maxTrainLengthSpinner.addChangeListener( e -> handlemaxTrainLengthChangeUnitsLength());
@@ -1918,18 +1918,18 @@ public class ActivateTrainFrame extends JmriJFrame {
     private void autoRunItemsToTrainInfo(TrainInfo info) {
         info.setSpeedFactor((float) speedFactorSpinner.getValue());
         info.setMaxSpeed((float) maxSpeedSpinner.getValue());
-        info.setMinReliableOperatingSpeed((float) ((double)minReliableOperatingSpeedSpinner.getValue()));
+        info.setMinReliableOperatingSpeed((float)minReliableOperatingSpeedSpinner.getValue());
         info.setRampRate((String) rampRateBox.getSelectedItem());
         info.setRunInReverse(runInReverseBox.isSelected());
         info.setSoundDecoder(soundDecoderBox.isSelected());
         info.setTrainLengthUnits(((TrainLengthUnitsItem) trainLengthUnitsComboBox.getSelectedItem()).getValue());
-        info.setMaxTrainLengthScaleMeters(maxTrainLengthToScaleMeters( info.getTrainLengthUnits(), (float)((double) maxTrainLengthSpinner.getValue())));
+        info.setMaxTrainLengthScaleMeters(maxTrainLengthToScaleMeters( info.getTrainLengthUnits(), (float) maxTrainLengthSpinner.getValue()));
 
         // Only use speed profile values if enabled
         if (useSpeedProfileCheckBox.isEnabled()) {
             info.setUseSpeedProfile(useSpeedProfileCheckBox.isSelected());
             info.setStopBySpeedProfile(stopBySpeedProfileCheckBox.isSelected());
-            info.setStopBySpeedProfileAdjust((float)((double) stopBySpeedProfileAdjustSpinner.getValue()));
+            info.setStopBySpeedProfileAdjust((float)stopBySpeedProfileAdjustSpinner.getValue());
         } else {
             info.setUseSpeedProfile(false);
             info.setStopBySpeedProfile(false);
