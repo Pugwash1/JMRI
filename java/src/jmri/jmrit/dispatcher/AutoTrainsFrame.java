@@ -264,6 +264,7 @@ public class AutoTrainsFrame extends jmri.util.JmriJFrame {
     String canFloat = this.getClass().getName() + ".CanFloat"; // NOI18N
     String alWaysOnTop = this.getClass().getName() + ".AlWaysOnTop"; // NOI18N
     String onTopOnSpeedChange = this.getClass().getName() + ".OnTopOnSpeedChange"; // NOI18N
+
     String classicControl = this.getClass().getName() + ".UseClassicControl"; // NOI18N
 
     private final static Logger log = LoggerFactory.getLogger(AutoTrainsFrame.class);
