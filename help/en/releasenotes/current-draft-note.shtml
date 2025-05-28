@@ -529,6 +529,14 @@
     <h3>Scripting</h3>
         <a id="Scripting" name="Scripting"></a>
         <ul>
+            <li>The script <strong>InitUnknownTurnoutsSensorsExceptInternal.py</strong>
+                has been added.<br />
+                <strong>InitUnknownTurnoutsSensorsExceptInternal.py</strong>
+                sets "Unknown" hardware states to default values for sensors
+                (Inactive) and turnouts (Closed). This prevents overriding
+                known states.<br />
+                The existing script <strong>InitAllTurnoutsSensors.py</strong>
+                would override sensor Active and turnout Thrown states.</li>
             <li></li>
         </ul>
 
@@ -539,7 +547,8 @@
         </ul>
         <h4>Signal Systems</h4>
             <ul>
-                <li></li>
+                <li>The aspect mapping in the Italian FS-1987 
+                    signal system has been updated.</li>
             </ul>
 
         <h4>Signal Heads</h4>
