@@ -110,6 +110,8 @@ public class DefaultSection extends AbstractNamedBean implements Section {
     private String mReverseBlockingSensorName = "";
     private String mForwardStoppingSensorName = "";
     private String mReverseStoppingSensorName = "";
+    private int fwdStoppingLength;
+    private int revStoppingLength;
     private final List<Block> mBlockEntries = new NonNullArrayList<>();
     private final List<EntryPoint> mForwardEntryPoints = new NonNullArrayList<>();
     private final List<EntryPoint> mReverseEntryPoints = new NonNullArrayList<>();
@@ -474,6 +476,40 @@ public class DefaultSection extends AbstractNamedBean implements Section {
             return s;
         }
         return null;
+    }
+
+    /**
+     * Sets actual stopping length in millimetres when section allocated fwd.
+     * @param val length in millimeters;
+     */
+    @Override
+    public void setFwdStoppingActualLength(int val) {
+        fwdStoppingLength = val;
+    }
+
+    /**
+     * Returns the actual stopping length in millimetres when section allocated fwd.
+     */
+    @Override
+    public int getFwdStoppingActualLength() {
+        return fwdStoppingLength;
+    }
+
+    /**
+     * Sets actual stopping length in millimetres when section allocated fwd.
+     * @param val length in millimeters;
+     */
+    @Override
+    public void setRevStoppingActualLength(int val) {
+        revStoppingLength = val;
+    }
+
+    /**
+     * Returns the actual stopping length in millimetres when section allocated fwd.
+     */
+    @Override
+    public int getRevStoppingActualLength() {
+        return revStoppingLength;
     }
 
     /**

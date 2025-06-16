@@ -216,6 +216,34 @@ public interface Section extends NamedBean {
     int getActualLength();
 
     /**
+     * Sets the actual forward stopping length without any scaling
+     *
+     * @param mills the forward stopping length in millimeters
+     */
+    void setFwdStoppingActualLength(int mills);
+
+    /**
+     * Sets the actual reverse stopping length without any scaling
+     *
+     * @param mills the forward stopping length in millimeters
+     */
+    void setRevStoppingActualLength(int mills);
+
+    /**
+     * Gets the actual forward stopping length without any scaling
+     *
+     * @return the forward stopping length in millimeters
+     */
+    int getFwdStoppingActualLength();
+
+   /**
+     * Gets the actual reverse stopping length without any scaling
+     *
+     * @return the reverse stopping in millimeters
+     */
+    int getRevStoppingActualLength();
+
+    /**
      * Get Block by its Sequence number in the Section.
      *
      * @param seqNumber the sequence number
