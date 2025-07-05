@@ -26,9 +26,7 @@
 
         <h4>CBUS</h4>
             <ul>
-                <li>When WiThrottle is asked Share / Steal / Cancel? or Share / Cancel ? , the main
-                    JMRI Throttle silent Steal / silent Share options are checked for preferred behaviour.</li>
-                 <li>The Console Filter is now displayed as a check-box tree.</li>
+                <li></li>
             </ul>
 
         <h4>C/MRI</h4>
@@ -88,8 +86,7 @@
 
         <h4>LocoNet</h4>
             <ul>
-                <li>Resolved a Console log 'Error' message that could be seen when
-                    using the Slot Monitor's "Clear All Non-InUse Slots" button.</li>
+                <li></li>
             </ul>
 
         <h4>Maple</h4>
@@ -129,7 +126,7 @@
 
         <h4><a href="http://openlcb.org">OpenLCB</a> / LCC</h4>
             <ul>
-                <li></li>
+                <li>Added a column to the LccPro main window for the node's user-entered description.</li>
             </ul>
 
         <h4>Powerline</h4>
@@ -474,21 +471,30 @@
     <h3>LogixNG</h3>
         <a id="LogixNG" name="LogixNG"></a>
         <ul>
-          <li>The class <strong>jmri.jmrit.logixng.Category</strong> has been split into
-              <strong>jmri.Category</strong> and <strong>jmri.jmrit.logixng.LogixNG_Category</strong>.</li>
+          <li>It's now possible to execute some LogixNG commands when a LogixNG error occurs.
+              It's useful if JMRI run without a display and you want a notification for
+              example by a sensor. To use it, select menu item
+              <strong>Tools -> LogixNG -> Edit error handling module</strong>.</li>
+          <li><strong>Preferences -> LogixNG -> Default error handling</strong>
+              has the new option <strong>Abort without error</strong>. If it
+              is selected and there is an error in the CondtionalNG, the
+              ConditionalNG will be aborted but there will be no logging to the
+              system console. This might be useful together with the
+              <strong>Error handling module</strong>.</li>
           <li></li>
         </ul>
 
     <h3>Meters and MeterFrames</h3>
         <a id="Meters" name="Meters"></a>
         <ul>
-            <li>The shutdown process has been modified to detect changes to the meter settings.</li>
+            <li></li>
         </ul>
 
     <h3>OperationsPro</h3>
         <a id="Operations" name="Operations"></a>
         <ul>
-            <li></li>
+            <li>Additional improvements to quick service tracks</li>
+            <li>Fixed a bug with alternate tracks in FIFO or LIFO mode</li>
         </ul>
 
    <h3>Panel Editor</h3>
@@ -506,8 +512,7 @@
     <h3>Preferences</h3>
         <a id="Preferences" name="Preferences"></a>
         <ul>
-            <li>The Shutdown preference help has been updated. The store request now includes
-            a <strong>Cancel</strong> option which cancels the shutdown process.</li>
+            <li></li>
         </ul>
 
     <h3>Resources</h3>
@@ -531,7 +536,7 @@
     <h3>Scripting</h3>
         <a id="Scripting" name="Scripting"></a>
         <ul>
-            <li>Upgrade YAAT to 3.4.  The @include statement has been added.</li>
+            <li></li>
         </ul>
 
     <h3>Signals</h3>
@@ -607,7 +612,7 @@
    <h3>Warrants</h3>
         <a id="Wt" name="Wt"></a>
         <ul>
-            <li></li>
+            <li>Fix OBlock java.util.MissingResourceException: Resource 'BlockUnknown' not found exception.</li>
         </ul>
 
    <h3>Web Access</h3>
@@ -651,3 +656,4 @@
         <ul>
             <li></li>
         </ul>
+
