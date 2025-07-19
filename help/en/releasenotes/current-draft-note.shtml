@@ -426,7 +426,11 @@
     <h3>DecoderPro</h3>
         <a id="DecoderPro" name="DecoderPro"></a>
         <ul>
-            <li></li>
+            <li>There are two new columns in the DecoderPro main 
+                display:  "Decoder Manufacturer" and "Decoder Family".
+                These start out hidden.  To display them, 
+                right or control click in the header of any column, 
+                and then put a check next to the column name.</li>
         </ul>
 
    <h3>Dispatcher</h3>
@@ -486,6 +490,7 @@
         <a id="Operations" name="Operations"></a>
         <ul>
             <li>New feature, a non-lead car in a kernel departing staging or spur can now have a custom load that doesn't match the lead car</li>
+            <li>Added "hyphen" feature to the train name.  The program will drop "-(something)" from the train's name on Manifests and switch lists
         </ul>
 
    <h3>Panel Editor</h3>
@@ -515,7 +520,11 @@
     <h3>Roster</h3>
         <a id="Roster" name="Roster"></a>
         <ul>
-            <li></li>
+            <li>There are two new columns in the DecoderPro display of the 
+                roster:  "Decoder Manufacturer" and "Decoder Family".
+                These start out hidden.  To display them, 
+                right or control click in the header of any column, 
+                and then put a check next to the column name.</li>
         </ul>
 
     <h3>Routes</h3>
@@ -646,5 +655,6 @@
         <a id="Misc" name="Misc"></a>
         <ul>
             <li>Fixed a formating problem in "Report Issue" tool</li>
+            <li>Added a link to the JMRI users group in the Help menu</li>
         </ul>
 
