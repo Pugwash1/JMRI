@@ -404,7 +404,7 @@
     <h3>Control Panel Editor</h3>
         <a id="CPE" name="CPE"></a>
         <ul>
-            <li></li>
+            <li>Fixed a bug that would cause Markers to be created in random locations.</li>
         </ul>
         <h4>Circuit Builder</h4>
             <a id="CPE-CB" name="CPE-CB"></a>
@@ -426,10 +426,10 @@
     <h3>DecoderPro</h3>
         <a id="DecoderPro" name="DecoderPro"></a>
         <ul>
-            <li>There are two new columns in the DecoderPro main 
+            <li>There are two new columns in the DecoderPro main
                 display:  "Decoder Manufacturer" and "Decoder Family".
-                These start out hidden.  To display them, 
-                right or control click in the header of any column, 
+                These start out hidden.  To display them,
+                right or control click in the header of any column,
                 and then put a check next to the column name.</li>
         </ul>
 
@@ -454,7 +454,7 @@
     <h3>Layout Editor</h3>
         <a id="LE" name="LE"></a>
         <ul>
-            <li></li>
+            <li>Fixed a bug that would cause Markers to be created in random locations.</li>
         </ul>
 
         <h4>NX - Entry/Exit Tool</h4>
@@ -496,7 +496,7 @@
    <h3>Panel Editor</h3>
         <a id="PE" name="PE"></a>
         <ul>
-            <li></li>
+            <li>Fixed a bug that would cause Markers to be created in random locations.</li>
         </ul>
 
     <h3>Permissions</h3>
@@ -520,10 +520,10 @@
     <h3>Roster</h3>
         <a id="Roster" name="Roster"></a>
         <ul>
-            <li>There are two new columns in the DecoderPro display of the 
+            <li>There are two new columns in the DecoderPro display of the
                 roster:  "Decoder Manufacturer" and "Decoder Family".
-                These start out hidden.  To display them, 
-                right or control click in the header of any column, 
+                These start out hidden.  To display them,
+                right or control click in the header of any column,
                 and then put a check next to the column name.</li>
         </ul>
 
@@ -551,7 +551,10 @@
 
         <h4>Signal Heads</h4>
             <ul>
-                <li></li>
+                <li>For signal heads using the DCC Signal Decoder, an option has been added to the
+                Add/Edit dialog to copy the set of appearance numbers from another signal head.  This
+                can be used to create a custom set of appearance numbers that can be easily applied
+                to new and existing signal heads.</li>
             </ul>
 
         <h4>Signal Masts</h4>
