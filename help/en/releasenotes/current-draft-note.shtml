@@ -26,7 +26,7 @@
 
         <h4>CBUS</h4>
             <ul>
-                <li></li>
+                <li>Improved Node Manager CANCMDB support.</li>
             </ul>
 
         <h4>C/MRI</h4>
@@ -492,6 +492,7 @@
             <li>New feature, a non-lead car in a kernel departing staging or spur can now have a custom load that doesn't match the lead car</li>
             <li>Added "hyphen" feature to the train name.  The program will drop "-(something)" from the train's name on Manifests and switch lists</li>
             <li>New enhancement, you can now set the maximum length for a track in a pool</li>
+            <li>Added G scale 1:24 ratio option in the Setting window, renamed G scale 1:32 ratio "Gauge 1"</li>
         </ul>
 
    <h3>Panel Editor</h3>
@@ -616,7 +617,10 @@
    <h3>Warrants</h3>
         <a id="Wt" name="Wt"></a>
         <ul>
-            <li></li>
+            <li>The <strong>getWarrantSpeedMessage()</strong> method has been added to the Warrant class.
+            This is a public class that can be used by scripts and LogixNG formulas to get the current
+            Warrant speed message.  The message format depends on the <strong>Interpretation</strong>
+            selection in <strong>Preferences &rArr; Warrants</strong>.</li>
         </ul>
 
    <h3>Web Access</h3>
