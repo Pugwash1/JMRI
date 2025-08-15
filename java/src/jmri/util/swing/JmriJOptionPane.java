@@ -109,9 +109,9 @@ public class JmriJOptionPane {
             if ( callback !=null ) {
                 pane.addPropertyChangeListener(JOptionPane.VALUE_PROPERTY, unused -> callback.run());
             }
-            setDialogLocation(parentComponent, dialog);
+//            setDialogLocation(parentComponent, dialog);
             dialog.setModal(false);
-            dialog.setAlwaysOnTop(true);
+//            dialog.setAlwaysOnTop(true);
             dialog.toFront();
             dialog.setVisible(true);
         });
@@ -299,9 +299,9 @@ public class JmriJOptionPane {
             dialog.setModalityType(Dialog.ModalityType.DOCUMENT_MODAL);
             w.addPropertyChangeListener(pcl);
         }
-        setDialogLocation(parentComponent, dialog);
-        dialog.setAlwaysOnTop(true);
-        dialog.toFront();
+        //setDialogLocation(parentComponent, dialog);
+        //dialog.setAlwaysOnTop(true);
+        //dialog.toFront();
         dialog.setVisible(true); // and waits for input
         dialog.dispose();
         if ( w != null ) {
