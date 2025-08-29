@@ -174,6 +174,7 @@ public class JmriJOptionPane {
         Icon icon, Object[] options, Object initialValue)
         throws HeadlessException {
         log.debug("showOptionDialog comp {} ", parentComponent);
+        log.info("showOptionDialog parent[{}] title[{}]", parentComponent, title);
 
         return ThreadingUtil.runOnGUIwithReturn( () -> {
             JOptionPane pane = new JOptionPane(message, messageType,
@@ -291,8 +292,13 @@ public class JmriJOptionPane {
     }
 
     private static void displayDialog(JOptionPane pane, Component parentComponent, String title){
+        log.info("Display with Parent title [{}]",title);
         pane.setComponentOrientation(JOptionPane.getRootFrame().getComponentOrientation());
-        Window w = findWindowForComponent(parentComponent);
+        Window w = null;
+        //if (parentComponent == null) {
+        //    w = jmri.util.JmriJFrame.getFrameList().get(0);
+        //}
+        w = findWindowForComponent(parentComponent);
         JDialog dialog = pane.createDialog(parentComponent, title);
         JDialogListener pcl = new JDialogListener(dialog);
         if ( w != null ) {
