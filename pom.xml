@@ -451,7 +451,7 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.1</version>
                 <configuration>
-                    <Source>21</source>
+                    <source>21</source>
                     <target>21</target>
                     <compilerArgs>
                         <arg>-proc:full</arg>
