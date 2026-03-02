@@ -458,7 +458,14 @@
    <h3>Dispatcher</h3>
         <a id="Dispatcher" name="Dispatcher"></a>
         <ul>
-             <li></li>
+             <li>Stop train immediately if it has no occupied section, or
+                 blocks go active in the wrong order. This behaviour can be turned off
+                 in dispatcher options.</li>
+             <li>Add the current, next block and train held status to the dispatcher screen.</li>
+             <li>When resuming from a failure, inform user where the head of train needs to be
+                 or which block needs to be cleared. If they have being using Manual
+                 present them with choice about the direction.</li>
+             <li>Fix NPE error on dispatcher train restart.</li>
         </ul>
 
     <h3>Dispatcher System</h3>
@@ -649,6 +656,10 @@
    <h3>Web Server</h3>
         <a id="server" name="server"></a>
         <ul>
+            <li>The web server folder <strong>app</strong> has been
+                removed. It might cause third party applications to
+                fail. If this happens to you, please contact us on 
+                <a href="https://groups.io/g/jmriusers">the JMRI users group</a>.</li>
             <li></li>
         </ul>
 

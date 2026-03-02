@@ -18,7 +18,12 @@ import javax.swing.event.AncestorEvent;
 import javax.swing.event.AncestorListener;
 import javax.swing.plaf.basic.BasicToolBarUI;
 
+import jmri.Block;
+import jmri.Throttle;
+import jmri.jmrit.roster.RosterEntry;
 import jmri.util.JmriJFrame;
+import jmri.util.swing.JmriJOptionPane;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
