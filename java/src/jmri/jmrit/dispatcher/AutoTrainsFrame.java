@@ -179,6 +179,7 @@ public class AutoTrainsFrame extends jmri.util.JmriJFrame {
                 if (ob instanceof AbstractAutoTrainControl) {
                     AbstractAutoTrainControl atnn = (AbstractAutoTrainControl) ob;
                     if (trainsCanBeFloated.isSelected()) {
+                        ((BasicToolBarUI) atnn.componentJPanel.getUI()).setFloating(true, null);
                         atnn.componentJPanel.setFloatable(true);
                     } else {
                         // rejoin floating throttles before banning

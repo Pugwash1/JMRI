@@ -208,28 +208,10 @@ public class AutoEngineerMicro extends AbstractAutoTrainControl {
     }
 
     private void stopResumeTrain() {
-        if (activeTrain.getStatus() == ActiveTrain.STOPPED) {
-            // resume
-            autoActiveTrain.setEngineDirection();
-            autoActiveTrain.getAutoEngineer().setHalt(false);
-            autoActiveTrain.restoreSavedSpeedAndDirection();
-            activeTrain.setStatus(autoActiveTrain.getSavedStatus());
-            if ((activeTrain.getStatus() == ActiveTrain.RUNNING) ||
-                    (activeTrain.getStatus() == ActiveTrain.WAITING)) {
-                autoActiveTrain.setSpeedBySignal();
-            }
-            btnNewBbtnStartStop.setIcon(iconGoIcon);
-        } else if (activeTrain.getStatus() == ActiveTrain.DONE) {
-            // restart
-            activeTrain.allocateAFresh();
-            activeTrain.restart();
+        super.stopToResume();
+        if (activeTrain.getStatus() != ActiveTrain.STOPPED) {
             btnNewBbtnStartStop.setIcon(iconGoIcon);
         } else {
-            // stop
-            autoActiveTrain.getAutoEngineer().setHalt(true);
-            autoActiveTrain.saveSpeedAndDirection();
-            autoActiveTrain.setSavedStatus(activeTrain.getStatus());
-            activeTrain.setStatus(ActiveTrain.STOPPED);
             btnNewBbtnStartStop.setIcon(iconStopIcon);
         }
     }

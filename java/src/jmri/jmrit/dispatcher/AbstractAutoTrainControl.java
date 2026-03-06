@@ -10,8 +10,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import edu.umd.cs.findbugs.annotations.OverrideMustInvoke;
+import jmri.Block;
 import jmri.Throttle;
 import jmri.jmrit.roster.RosterEntry;
+import jmri.util.swing.JmriJOptionPane;
 
 abstract  class AbstractAutoTrainControl extends JPanel {
 
@@ -162,13 +164,67 @@ abstract  class AbstractAutoTrainControl extends JPanel {
             ActiveTrain at = autoActiveTrain.getActiveTrain();
             if (at.getStatus() == ActiveTrain.STOPPED) {
                 log.trace("Train Is Stopped - Resume");
-                autoActiveTrain.setEngineDirection();
+                if (autoActiveTrain.getCurrentBlock().getState() != Block.OCCUPIED) {
+                    JmriJOptionPane.showMessageDialog(
+                            this,
+                            Bundle.getMessage("AutoTrainsFramePleaseMoveTrain",autoActiveTrain.getCurrentBlock().getDisplayName()),
+                            Bundle.getMessage("ResumeAutoButton"),
+                            JmriJOptionPane.INFORMATION_MESSAGE
+                        );
+                    return;
+                }
+                Block b = autoActiveTrain.isBlockAhead();
+                if (b != null) {
+                    JmriJOptionPane.showMessageDialog(
+                            this,
+                            Bundle.getMessage("AutoTrainsFrameUnExplainedOccupancy",
+                                    b.getDisplayName(),
+                                    autoActiveTrain.getNextBlock()),
+                            Bundle.getMessage("ResumeAutoButton"),
+                            JmriJOptionPane.INFORMATION_MESSAGE
+                        );
+                    return;
+                }
+
+                boolean tmpIsForward = true;
+                if ( autoActiveTrain.getRunInReverse() !=  at.isTransitReversed()) {
+                    tmpIsForward = false;
+                }
+                Object[] options = {Bundle.getMessage("AutoTrainsFrameUseImpliedDirection",getDirString(tmpIsForward)),
+                        Bundle.getMessage("AutoTrainsFrameRestoreSaved",getDirString(autoActiveTrain.getSavedDirection())),
+                        Bundle.getMessage("AutoTrainsFrameUseCurrent",getDirString(autoActiveTrain.getForward())) };
+                if ( tmpIsForward != autoActiveTrain.getSavedDirection() ||
+                        tmpIsForward != autoActiveTrain.getForward()) {
+                    int retval = JmriJOptionPane.showOptionDialog(this,
+                            Bundle.getMessage("AutoTrainsFrameWhichDirectionToUse"),
+                            Bundle.getMessage("AutoTrainsFrameDirectionConflict"),
+                            JmriJOptionPane.YES_NO_OPTION,
+                            JmriJOptionPane.QUESTION_MESSAGE, null, options, options[1]);
+                    switch (retval) {
+                        case 0:
+                            autoActiveTrain.setEngineDirection(tmpIsForward);
+                            break;
+                        case 1:
+                            autoActiveTrain.setEngineDirection(autoActiveTrain.getSavedDirection());
+                            break;
+                        case 2:
+                            autoActiveTrain.setEngineDirection(autoActiveTrain.getForward());
+                            break;
+                        default:
+                            // do nothing.
+                            log.info("rturneded[{}]",retval);
+                    }
+                }
                 autoActiveTrain.getAutoEngineer().setHalt(false);
-                autoActiveTrain.restoreSavedSpeedAndDirection();
                 at.setStatus(autoActiveTrain.getSavedStatus());
+                if (at.getStatus() == ActiveTrain.STOPPED) {
+                    at.setStatus(ActiveTrain.WAITING);
+                }
                 if ((at.getStatus() == ActiveTrain.RUNNING) || (at.getStatus() == ActiveTrain.WAITING)) {
                     autoActiveTrain.setSpeedBySignal();
                 }
+            } else if (at.getStatus() == ActiveTrain.READY) {
+                handleActiveTrainListen(new java.beans.PropertyChangeEvent (this,"status", Integer.valueOf(0), Integer.valueOf(ActiveTrain.READY)));
             } else if (at.getStatus() == ActiveTrain.DONE) {
                 log.trace("Train Is Done - Restart");
                 // restart
@@ -177,14 +233,19 @@ abstract  class AbstractAutoTrainControl extends JPanel {
             } else {
                 log.trace("Process As Stop");
                 // stop
-                autoActiveTrain.getAutoEngineer().setHalt(true);
                 autoActiveTrain.saveSpeedAndDirection();
+                autoActiveTrain.getAutoEngineer().setHalt(true);
                 autoActiveTrain.setSavedStatus(at.getStatus());
                 at.setStatus(ActiveTrain.STOPPED);
+//                speedSlider.setValue(0);
             }
         } else {
             log.error("unexpected null autoEngineer");
         }
+    }
+
+    private String getDirString(boolean isFwd) {
+        return isFwd ? Bundle.getMessage("Fwd") : Bundle.getMessage("Rev");
     }
 
     private final static Logger log = LoggerFactory.getLogger(AbstractAutoTrainControl.class);

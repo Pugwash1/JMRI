@@ -271,6 +271,13 @@ public class AutoTrainControlDefault extends AbstractAutoTrainControl  {
             add(componentJPanel, BorderLayout.EAST);
         }
 
+        private void stopResume() {
+            super.stopToResume();
+            if (activeTrain.getStatus() != ActiveTrain.STOPPED) {
+                speedSlider.setValue(0);
+            }
+        }
+
         /*
          * Using dummy strings get max size of the statustext
          */
@@ -286,38 +293,6 @@ public class AutoTrainControlDefault extends AbstractAutoTrainControl  {
                                 getGraphics().getFontMetrics().getHeight()));
             }
         }
-
-        public void stopResume() {
-            if (autoActiveTrain.getAutoEngineer() != null) {
-                ActiveTrain at = autoActiveTrain.getActiveTrain();
-                if (at.getStatus() == ActiveTrain.STOPPED) {
-                    log.trace("Train Is Stopped - Resume");
-                    autoActiveTrain.setEngineDirection();
-                    autoActiveTrain.getAutoEngineer().setHalt(false);
-                    autoActiveTrain.restoreSavedSpeedAndDirection();
-                    at.setStatus(autoActiveTrain.getSavedStatus());
-                    if ((at.getStatus() == ActiveTrain.RUNNING) || (at.getStatus() == ActiveTrain.WAITING)) {
-                        autoActiveTrain.setSpeedBySignal();
-                    }
-                } else if (at.getStatus() == ActiveTrain.DONE) {
-                    log.trace("Train Is Done - Restart");
-                    // restart
-                    at.allocateAFresh();
-                    at.restart();
-                } else {
-                    log.trace("Process As Stop");
-                    // stop
-                    autoActiveTrain.getAutoEngineer().setHalt(true);
-                    autoActiveTrain.saveSpeedAndDirection();
-                    autoActiveTrain.setSavedStatus(at.getStatus());
-                    at.setStatus(ActiveTrain.STOPPED);
-                    if (at.getMode() == ActiveTrain.MANUAL) {
-                        speedSlider.setValue(0);
-                    }
-                }
-            }
-        }
-
 
         public void resumeAutoOperation() {
             autoActiveTrain.resumeAutomaticRunning();
