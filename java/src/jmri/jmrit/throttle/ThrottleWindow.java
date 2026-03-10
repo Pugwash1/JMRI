@@ -713,7 +713,6 @@ public class ThrottleWindow extends JmriJFrame implements ThrottleControllersUIC
 
     @Override
     public void addThrottleControllerAt(ThrottleControllerUI tp, int idx) {
-        ThrottleFrame otf = getCurrentThrottleFrame();        
         String txt = "ThrottleFrame-" + throttleFrameManager.generateUniqueFrameID();
         ((ThrottleFrame)tp).setTitle(txt);
         if (idx>throttleFrames.size()) {
@@ -723,7 +722,7 @@ public class ThrottleWindow extends JmriJFrame implements ThrottleControllersUIC
         throttlesPanel.add((ThrottleFrame)tp,txt,idx);
         ((ThrottleFrame)tp).setEditMode(isEditMode); // sync with window     
         updateGUI();
-        pcs.firePropertyChange("ThrottleFrameAdded", otf, getCurrentThrottleFrame());
+        pcs.firePropertyChange("ThrottleFrameAdded", null, this);
     }
 
     @Override

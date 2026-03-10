@@ -124,6 +124,9 @@ public class ThrottlesListPanel extends JPanel {
     public void setXml(Element tlp) {
         Element window = tlp.getChild("window");
         if (window != null) {
+            if (this.getTopLevelAncestor() == null) {
+                InstanceManager.getDefault(ThrottleFrameManager.class).showThrottlesList();
+            }
             WindowPreferences.setPreferences(this.getTopLevelAncestor(), window);
         }
     }
