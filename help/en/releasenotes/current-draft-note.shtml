@@ -518,6 +518,8 @@
         <ul>
             <li>Added a copy/cut/paste pop-up menu to text fields that 
                 didn't previously have a pop-up menu.
+            <li>Added "Print Table" and "Export CSV" buttons that
+                do pretty much what they say.
         </ul>
 
     <h3>Logix</h3>
