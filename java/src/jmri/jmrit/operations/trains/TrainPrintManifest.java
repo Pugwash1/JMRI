@@ -167,9 +167,11 @@ public class TrainPrintManifest extends TrainCommon {
             line = line.replace(VERTICAL_LINE_CHAR, SPACE);
             
             //TODO fix how line length is calculated when writing out to file
-            Integer charPerLine = writer.getCharactersPerLine();
-            if (charPerLine != null && line.length() > writer.getCharactersPerLine()) {
-                line = line.substring(0, writer.getCharactersPerLine());
+            if (writer.isMonospaced()) {
+                Integer charPerLine = writer.getCharactersPerLine();
+                if (charPerLine != null && line.length() > charPerLine) {
+                    line = line.substring(0, charPerLine);
+                }
             }
 
             if (color != null) {

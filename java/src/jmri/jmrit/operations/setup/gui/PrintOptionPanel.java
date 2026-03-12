@@ -9,6 +9,7 @@ import javax.print.attribute.standard.Sides;
 import javax.swing.*;
 
 import jmri.InstanceManager;
+import jmri.jmrit.operations.OperationsPanel;
 import jmri.jmrit.operations.setup.*;
 import jmri.jmrit.operations.trains.TrainManager;
 import jmri.jmrit.operations.trains.trainbuilder.TrainCommon;
@@ -208,9 +209,7 @@ public class PrintOptionPanel extends OperationsPreferencesPanel implements java
         pDuplex.setBorder(BorderFactory.createTitledBorder(Bundle.getMessage("BorderLayoutDuplex")));
         pDuplex.add(printDuplexComboBox);
 
-        printDuplexComboBox.addItem(Sides.ONE_SIDED);
-        printDuplexComboBox.addItem(Sides.TWO_SIDED_LONG_EDGE);
-        printDuplexComboBox.addItem(Sides.TWO_SIDED_SHORT_EDGE);
+        loadDuplexSidesComboBox();
 
         p1.add(pFont);
         p1.add(pFontSize);
@@ -738,6 +737,13 @@ public class PrintOptionPanel extends OperationsPreferencesPanel implements java
             fontComboBox.addItem(font);
         }
         fontComboBox.setSelectedItem(Setup.getFontName());
+    }
+    
+    private void loadDuplexSidesComboBox() {
+        printDuplexComboBox.addItem(Sides.ONE_SIDED);
+        printDuplexComboBox.addItem(Sides.TWO_SIDED_LONG_EDGE);
+        printDuplexComboBox.addItem(Sides.TWO_SIDED_SHORT_EDGE);
+        OperationsPanel.padComboBox(printDuplexComboBox, Sides.TWO_SIDED_SHORT_EDGE.toString().length());
     }
 
     @Override
