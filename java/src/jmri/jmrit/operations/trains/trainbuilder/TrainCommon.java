@@ -2316,6 +2316,8 @@ public class TrainCommon {
         } catch (HardcopyWriter.PrintCanceledException ex) {
             log.debug("Print canceled");
         }
+        log.debug("orientation: {}, fontName: {}, fontStyle: {}, fontSize {}, chars/line: {}", orientation, fontName,
+                fontStyle, fontSize, charsPerLine);
         return charsPerLine;
     }
 

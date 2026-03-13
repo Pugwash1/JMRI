@@ -1090,6 +1090,10 @@ public class AutoActiveTrain implements ThrottleListener {
     protected synchronized void setupNewCurrentSignal(AllocatedSection as, boolean forceSpeedChange) {
         log.trace("setupNewCurrentSignal Called Section[{}] forceSpeedChange[{}]", as != null ? as.getSectionName() : "null",forceSpeedChange);
         removeCurrentSignal();
+        if (as == null && _currentAllocatedSection == null) {
+            // nothing we can do deferred till later
+            return;
+        }
         if (_activeTrain.getSignalType() == DispatcherFrame.SIGNALHEAD) {
             SignalHead sh = _lbManager.getFacingSignalHead(_currentBlock, _nextBlock);
             if (sh != null) {

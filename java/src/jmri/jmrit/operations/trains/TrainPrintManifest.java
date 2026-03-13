@@ -42,17 +42,12 @@ public class TrainPrintManifest extends TrainCommon {
      */
     public static void printReport(File file, String name, boolean isPreview, String fontName, String logoURL,
             String printerName, String orientation, int fontSize, boolean isPrintHeader, Sides sides) {
+        
         // obtain a CompatibleHardcopyWriter to do this
-
-        boolean isLandScape = false;
-        double margin = .5; // default for portrait
+        double margin = .5;
         Dimension pagesize = null; // HardcopyWritter provides default page
                                    // sizes for portrait and landscape
 
-        if (orientation.equals(Setup.LANDSCAPE)) {
-            margin = .65;
-            isLandScape = true;
-        }
         if (orientation.equals(Setup.HANDHELD) || orientation.equals(Setup.HALFPAGE)) {
             isPrintHeader = false;
             // add margins to page size
@@ -60,7 +55,7 @@ public class TrainPrintManifest extends TrainCommon {
                     getPageSize(orientation).height + PAPER_MARGINS.height);
         }
         try (CompatibleHardcopyWriter writer = new CompatibleHardcopyWriter(new Frame(), name, fontSize, margin,
-                margin, .5, .5, isPreview, printerName, isLandScape, isPrintHeader, sides, pagesize);
+                margin, margin, margin, isPreview, printerName, orientation.equals(Setup.LANDSCAPE), isPrintHeader, sides, pagesize);
                 BufferedReader in = new BufferedReader(new InputStreamReader(
                         new FileInputStream(file), StandardCharsets.UTF_8));) {
 
