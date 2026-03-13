@@ -83,6 +83,7 @@ public class HardcopyWriter extends Writer implements Printable {
     protected JButton previousButton;
     protected JButton closeButton;
     protected JLabel pageCount = new JLabel();
+    protected boolean showPreview = true;
 
     protected Column[] columns = {new Column(0, Integer.MAX_VALUE, Align.LEFT_WRAP)};
     protected int columnIndex = 0;
@@ -135,6 +136,29 @@ public class HardcopyWriter extends Writer implements Printable {
      *                                               cancelled.
      */
     public HardcopyWriter(Frame frame, String jobname, String fontName, Integer fontStyle, Integer fontsize,
+            double leftmargin, double rightmargin,
+            double topmargin, double bottommargin, boolean isPreview, String printerName, Boolean isLandscape,
+            Boolean isPrintHeader, Attribute sides, Dimension pagesize)
+            throws HardcopyWriter.PrintCanceledException {
+
+        initalize(frame, jobname, fontName, fontStyle, fontsize, leftmargin, rightmargin, topmargin, bottommargin,
+                isPreview, printerName, isLandscape, isPrintHeader, sides, pagesize);
+    }
+    
+    // this constructor is only used to determine number of character per line
+    public HardcopyWriter(String fontName, Integer fontStyle, Integer fontsize, double leftmargin, double rightmargin,
+            double topmargin, double bottommargin, Boolean isLandscape, Dimension pagesize)
+            throws HardcopyWriter.PrintCanceledException {
+        
+        // TODO this should be changed to only use the metrics for font and page size
+        showPreview = false;
+        
+        initalize(new Frame(), "", fontName, fontStyle, fontsize, leftmargin, rightmargin, topmargin, bottommargin,
+                true, null, isLandscape, false, null, pagesize);
+
+    }
+        
+    private void initalize(Frame frame, String jobname, String fontName, Integer fontStyle, Integer fontsize,
             double leftmargin, double rightmargin,
             double topmargin, double bottommargin, boolean isPreview, String printerName, Boolean isLandscape,
             Boolean isPrintHeader, Attribute sides, Dimension pagesize)
@@ -286,7 +310,7 @@ public class HardcopyWriter extends Writer implements Printable {
 
             previewFrame.setSize((int) (pagesizePixels.width / pixelScale) + 48,
                     (int) (pagesizePixels.height / pixelScale) + 100);
-            previewFrame.setVisible(true);
+            previewFrame.setVisible(showPreview);
         }
     }
 
@@ -381,34 +405,36 @@ public class HardcopyWriter extends Writer implements Printable {
      * Not part of the original HardcopyWriter class.
      */
     protected void displayPage() {
-        // limit the pages to the actual range
-        if (pagenum > pageImages.size()) {
-            pagenum = pageImages.size();
+        if (showPreview) {
+            // limit the pages to the actual range
+            if (pagenum > pageImages.size()) {
+                pagenum = pageImages.size();
+            }
+            if (pagenum < 1) {
+                pagenum = 1;
+            }
+            // enable/disable the previous/next buttons as appropriate
+            previousButton.setEnabled(true);
+            nextButton.setEnabled(true);
+            if (pagenum == pageImages.size()) {
+                nextButton.setEnabled(false);
+            }
+            if (pagenum == 1) {
+                previousButton.setEnabled(false);
+            }
+            previewImage = pageImages.elementAt(pagenum - 1);
+            previewFrame.setVisible(false);
+            // previewIcon.setImage(previewImage);
+            previewLabel.setIcon(new RetinaIcon(previewImage, pixelScale));
+            // put the label in the panel (already has a scroll pane)
+            previewPanel.add(previewLabel);
+            // set the page count info
+            pageCount.setText(Bundle.getMessage("HeaderPageNum", pagenum, pageImages.size()));
+            // repaint the frame but don't use pack() as we don't want resizing
+            previewFrame.invalidate();
+            previewFrame.revalidate();
+            previewFrame.setVisible(true);
         }
-        if (pagenum < 1) {
-            pagenum = 1;
-        }
-        // enable/disable the previous/next buttons as appropriate
-        previousButton.setEnabled(true);
-        nextButton.setEnabled(true);
-        if (pagenum == pageImages.size()) {
-            nextButton.setEnabled(false);
-        }
-        if (pagenum == 1) {
-            previousButton.setEnabled(false);
-        }
-        previewImage = pageImages.elementAt(pagenum - 1);
-        previewFrame.setVisible(false);
-        // previewIcon.setImage(previewImage);
-        previewLabel.setIcon(new RetinaIcon(previewImage, pixelScale));
-        // put the label in the panel (already has a scroll pane)
-        previewPanel.add(previewLabel);
-        // set the page count info
-        pageCount.setText(Bundle.getMessage("HeaderPageNum", pagenum, pageImages.size()));
-        // repaint the frame but don't use pack() as we don't want resizing
-        previewFrame.invalidate();
-        previewFrame.revalidate();
-        previewFrame.setVisible(true);
     }
 
     /**
@@ -986,17 +1012,19 @@ public class HardcopyWriter extends Writer implements Printable {
         page = getGraphics();
 
         if (isPreview) {
-            previewImage = previewPanel.createImage(pagesizePixels.width, pagesizePixels.height);
-            page = previewImage.getGraphics();
+            if (showPreview) {
+                previewImage = previewPanel.createImage(pagesizePixels.width, pagesizePixels.height);
+                page = previewImage.getGraphics();
 
-            if (page instanceof Graphics2D) {
-                setupGraphics(page, true);
+                if (page instanceof Graphics2D) {
+                    setupGraphics(page, true);
+                }
+
+                page.setColor(Color.white);
+                page.fillRect(0, 0, (int) (pagesizePixels.width * 72.0 / getScreenResolution()),
+                        (int) (pagesizePixels.height * 72.0 / getScreenResolution()));
+                page.setColor(color);
             }
-
-            page.setColor(Color.white);
-            page.fillRect(0, 0, (int) (pagesizePixels.width * 72.0 / getScreenResolution()),
-                    (int) (pagesizePixels.height * 72.0 / getScreenResolution()));
-            page.setColor(color);
         } else {
             // We only need this is non-preview mode. 
             pageCommands.add(currentPageCommands);

@@ -353,6 +353,9 @@ public class RosterTableModel extends DefaultTableModel implements PropertyChang
         if (associatedSorter == null || associatedTable == null ) {
             return; // because not initialized, can't act - useful for tests
         }
+        
+        if (heightInLines < 1) heightInLines = 1;       // always show at least one line
+        
         var viewRow = associatedSorter.convertRowIndexToView(modelRow);
         int height = heightInLines * (InstanceManager.getDefault(GuiLafPreferencesManager.class).getFontSize() + 4); // same line height as in RosterTable
         if (height != associatedTable.getRowHeight(viewRow)) {

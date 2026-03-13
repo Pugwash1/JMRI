@@ -26,17 +26,20 @@ public class CompatibleHardcopyWriter extends HardcopyWriter {
     }
 
     /**
-     * Get the current line number -- this is nasty since it makes the implicit assumption
-     * that the line height is constant over the whole page. Further, things like images
-     * can throw this off.
+     * Get the current line number -- this is nasty since it makes the implicit
+     * assumption that the line height is constant over the whole page. Further,
+     * things like images can throw this off.
      * <p>
-     * We may want to adjust the current v_pos to align it with an integer line number (when
-     * this is called).
+     * We may want to adjust the current v_pos to align it with an integer line
+     * number (when this is called).
      * 
      * @return the current line number
      */
     public int getCurrentLineNumber() {
-        return getCurrentVPos() / getLineHeight();
+        if (page != null) {
+            return getCurrentVPos() / getLineHeight();
+        }
+        return 0; // new page
     }
 
     /**

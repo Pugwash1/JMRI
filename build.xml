@@ -1244,7 +1244,7 @@
                          path=".:${arch.lib.path}:${libdir}"/>
             <sysproperty key="purejavacomm.loglevel" value="${purejavacomm.loglevel}"/>
             <jvmarg value="-Xms256m"/>
-            <jvmarg value="-Xmx640m"/>
+            <jvmarg value="-Xmx2640m"/>
             <!-- This next is for DarkLAF -->
             <jvmarg value="--add-exports"/>
             <jvmarg value="java.desktop/sun.awt=ALL-UNNAMED"/>
