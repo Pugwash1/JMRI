@@ -6,6 +6,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 import java.util.stream.Stream;
 
 import jmri.ConfigureManager;
@@ -117,7 +120,7 @@ public class LoadAndStoreTestBase {
             BufferedReader fileStream1 = new BufferedReader( new InputStreamReader(new FileInputStream(inFile1)));
             BufferedReader fileStream2 = new BufferedReader( new InputStreamReader(new FileInputStream(inFile2)));
         ) {
-            
+
             String line1 = fileStream1.readLine();
             String line2 = fileStream2.readLine();
             int lineNumber1 = 0, lineNumber2 = 0;
@@ -125,24 +128,24 @@ public class LoadAndStoreTestBase {
             while ((next1 = fileStream1.readLine()) != null && (next2 = fileStream2.readLine()) != null) {
                 lineNumber1++;
                 lineNumber2++;
-                
+
                 // Do we have a multi line comment? Comments in the xml file is used by LogixNG.
                 // This only happens in the first file since store() will not store comments
                 if  (next1.startsWith("<!--")) {
                     while ((next1 = fileStream1.readLine()) != null && !next1.endsWith("-->")) {
                         lineNumber1++;
                     }
-                    
+
                     // If here, we either have a line that ends with --> or we have reached end of file
                     String nullCheck = fileStream1.readLine();
                     if (nullCheck == null) {
                         break;
                     }
-                    
+
                     // If here, we have a line that ends with --> or we have reached end of file
                     continue;
                 }
-                
+
                 // where the (empty) entryexitpairs line ends up seems to be non-deterministic
                 // so if we see it in either file we just skip it
                 String entryexitpairs = "<entryexitpairs class=\"jmri.jmrit.signalling.configurexml.EntryExitPairsXml\" />";
@@ -160,18 +163,17 @@ public class LoadAndStoreTestBase {
                     }
                     lineNumber2++;
                 }
-                
+
                 // if we get to the file history...
                 String filehistory = "filehistory";
                 if (line1.contains(filehistory) && line2.contains(filehistory)) {
                     break;  // we're done!
                 }
-                
+
                 boolean match = false;  // assume failure (pessimist!)
-                
+
                 String[] startsWithStrings = {
                     "  <!--Written by JMRI version",
-                    "  <timebase",      // time changes from timezone to timezone
                     "    <test>",       // version changes over time
                     "    <modifier",    // version changes over time
                     "    <major",       // version changes over time
@@ -187,7 +189,44 @@ public class LoadAndStoreTestBase {
                         break;
                     }
                 }
-                
+
+                // Check the <timebase> tag. When the time is stored in the xml file, it's
+                // stored in the current timezone, which differs from user to user.
+                // This check accept two times in different timezones, as long as the
+                // actual time is the same. For example, "Sun May 17 08:12:43 PDT 2020"
+                // is the same time as "Sun May 17 17:12:43 CEST 2020" but in different
+                // timezones.
+                if (line1.startsWith("  <timebase") && line2.startsWith("  <timebase")) {
+                    SimpleDateFormat format = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.US);
+                    int beginning = "  <timebase class=\"jmri.jmrit.simpleclock.configurexml.SimpleTimebaseXml\" ".length();
+                    // Remove the beginning and the last four characters   "/ >
+                    String t1s = line1.substring(beginning, line1.length()-4);
+                    String t2s = line2.substring(beginning, line2.length()-4);
+                    // Split the attributes. There might be spaces in the values so
+                    // split using one double quote and a space.
+                    String[] t1sa = t1s.split("\" ");
+                    String[] t2sa = t2s.split("\" ");
+                    if (t1sa.length == t2sa.length) {
+                        for (int i=0; i < t1sa.length; i++) {
+                            if (t1sa[i].startsWith("time=")) {
+                                // Check time independent of timezone
+                                String d1s = t1sa[i].substring("time=\"".length());
+                                String d2s = t2sa[i].substring("time=\"".length());
+                                Date d1 = format.parse(d1s);
+                                Date d2 = format.parse(d2s);
+                                if (d1.equals(d2)) {
+                                    match = true;
+                                    break;
+                                }
+                            } else if (t1sa[i].equals(t2sa[i])) {
+                                // Other attributes in <timebase>
+                                match = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+
                 // Screen size will vary when written out
                 if (!match) {
                     if (line1.contains("  <LayoutEditor")) {
@@ -201,7 +240,7 @@ public class LoadAndStoreTestBase {
                         line2 = filterLineUsingRegEx(line2, windowwidth_regexe);
                     }
                 }
-                
+
                 // window positions will sometimes differ based on window decorations.
                 if (!match) {
                     if (line1.contains("  <LayoutEditor") ||
@@ -216,7 +255,7 @@ public class LoadAndStoreTestBase {
                         line2 = filterLineUsingRegEx(line2, xposition_regexe);
                     }
                 }
-                
+
                 // Time will vary when written out
                 if (!match) {
                     String memory_value = "<memory value";
@@ -227,13 +266,13 @@ public class LoadAndStoreTestBase {
                         }
                     }
                 }
-                
+
                 // Dates can vary when written out
                 String date_string = "<date>";
                 if (!match && line1.contains(date_string) && line2.contains(date_string)) {
                     match = true;
                 }
-                
+
                 if (!match) {
                     // remove fontname and fontFamily attributes
                     String fontname_regexe = "( fontname=\"[^\"]*\")";
@@ -243,7 +282,7 @@ public class LoadAndStoreTestBase {
                     line1 = filterLineUsingRegEx(line1, fontFamily_regexe);
                     line2 = filterLineUsingRegEx(line2, fontFamily_regexe);
                 }
-                
+
                 if (!match && !line1.equals(line2)) {
                     log.error("match failed in LoadAndStoreTest:");
                     log.error("    file1:line {}: \"{}\"", lineNumber1, line1);
