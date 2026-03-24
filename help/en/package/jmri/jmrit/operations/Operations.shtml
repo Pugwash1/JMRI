@@ -3577,11 +3577,19 @@ Command sequences should also be enclose in "strong" formatting.    jerryg2003 2
           href="#TrainLoadOptions">Train Load Options</a>.
       </p>
 
+      <p>When you add a ship load restriction to a track, the Edit Location window will add a column
+        named "Ship", and show how many loads are allowed (A) to depart or how many loads are
+        excluded (E) for that track.</p>
+
       <p>
         You can also control which loads your staging tracks will accept. Again use the <a
           href="#LoadOptions">Load Options</a> for a staging track, and adjust the "Select loads
         serviced by this track" to control which car loads are allowed into staging.
       </p>
+
+      <p>When you add a receive load restriction to a track, the Edit Location window will add a column
+        named "Load", and show how many loads are allowed (A) to be received or how many loads are
+        excluded (E) for that track.</p>
 
       <p>
         You can control which destinations are valid out of staging by using the <a

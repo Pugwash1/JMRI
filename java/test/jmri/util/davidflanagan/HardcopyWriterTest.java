@@ -1,25 +1,23 @@
 package jmri.util.davidflanagan;
 
-import javax.imageio.ImageIO;
-import javax.swing.JFrame;
-
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
+import java.awt.image.BufferedImage;
 import java.awt.print.PageFormat;
 import java.awt.print.Paper;
-import java.awt.image.BufferedImage;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
-import jmri.util.junit.annotations.DisabledIfHeadless;
+import javax.imageio.ImageIO;
+import javax.swing.JFrame;
+
 import org.junit.jupiter.api.*;
+
 import jmri.util.JUnitUtil;
 import jmri.util.davidflanagan.HardcopyWriter.PrintCanceledException;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import jmri.util.junit.annotations.DisabledIfHeadless;
 
 public class HardcopyWriterTest {
     @Test
@@ -311,42 +309,101 @@ public class HardcopyWriterTest {
         JFrame frame = new JFrame();
         HardcopyWriter hcwPreview = null;
         HardcopyWriter hcwPrint = null;
+        HardcopyWriter hcw = null;
 
         Dimension pagesize = new Dimension((int) (8.5 * 72), (int) (11.0 * 72));
 
-        // 1. Preview mode
-        hcwPreview = new HardcopyWriter(frame, "test-compare", null, null, 10, .5 * 72, .5 * 72, .5 * 72, .5 * 72,
-                true, null,
-                null, false, null, pagesize);
+        try {
 
-        hcwPrint = new HardcopyWriter(frame, "test-compare", null, null, 10, .5 * 72, .5 * 72, .5 * 72, .5 * 72,
-                false, HardcopyWriter.NO_PRINTING_PRINTER,
-                null, false, null, pagesize);
+            // 1. Preview mode
+            hcwPreview = new HardcopyWriter(frame, "test-compare", null, null, 10, .5 * 72, .5 * 72, .5 * 72, .5 * 72,
+                    true, null,
+                    null, false, null, pagesize);
 
-        HardcopyWriter hcw = new HardcopyWriter(null, null, 10, 36, 36,
-                36, 36, null, null);
+            hcwPrint = new HardcopyWriter(frame, "test-compare", null, null, 10, .5 * 72, .5 * 72, .5 * 72, .5 * 72,
+                    false, HardcopyWriter.NO_PRINTING_PRINTER,
+                    null, false, null, pagesize);
 
-        Assertions.assertEquals(hcwPreview.getCharactersPerLine(), hcwPrint.getCharactersPerLine(),
-                "Characters per line should match");
-        Assertions.assertEquals(hcwPreview.getCharactersPerLine(), hcw.getCharactersPerLine(),
-                "Characters per line should match");
+            hcw = new HardcopyWriter(null, null, 10, .5 * 72, .5 * 72, .5 * 72, .5 * 7, null, null);
 
-        // Test with a string containing a superscript character
-        String testString = "The cat waited on platform 9¾";
+            Assertions.assertEquals(hcwPreview.getCharactersPerLine(), hcwPrint.getCharactersPerLine(),
+                    "Characters per line should match");
+            Assertions.assertEquals(hcwPreview.getCharactersPerLine(), hcw.getCharactersPerLine(),
+                    "Characters per line should match");
 
-        Rectangle2D boundsPreview = hcwPreview.measure(testString);
-        Rectangle2D boundsPrint = hcwPrint.measure(testString);
-        Rectangle2D bounds = hcw.measure(testString);
+            // Test with a string containing a superscript character
+            String testString = "The cat waited on platform 9¾";
 
-        Assertions.assertEquals(boundsPreview.getWidth(), boundsPrint.getWidth(), 0.01, "Width should match");
-        Assertions.assertEquals(boundsPreview.getHeight(), boundsPrint.getHeight(), 0.01, "Height should match");
-        Assertions.assertEquals(boundsPreview.getWidth(), bounds.getWidth(), 0.01, "Width should match");
-        Assertions.assertEquals(boundsPreview.getHeight(), bounds.getHeight(), 0.01, "Height should match");
+            Rectangle2D boundsPreview = hcwPreview.measure(testString);
+            Rectangle2D boundsPrint = hcwPrint.measure(testString);
+            Rectangle2D bounds = hcw.measure(testString);
 
-        hcwPreview.dispose();
-        hcwPrint.dispose();
-        hcw.dispose();
+            Assertions.assertEquals(boundsPreview.getWidth(), boundsPrint.getWidth(), 0.01, "Width should match");
+            Assertions.assertEquals(boundsPreview.getHeight(), boundsPrint.getHeight(), 0.01, "Height should match");
+            Assertions.assertEquals(boundsPreview.getWidth(), bounds.getWidth(), 0.01, "Width should match");
+            Assertions.assertEquals(boundsPreview.getHeight(), bounds.getHeight(), 0.01, "Height should match");
+
+        } catch (HardcopyWriter.PrintCanceledException pce) {
+            // OK
+        } finally {
+            if (hcwPreview != null)
+                hcwPreview.dispose();
+            if (hcwPrint != null)
+                hcwPrint.dispose();
+        }
     }
+
+    // brute force test all fonts and sizes, can take a long time!  Disabled DAB
+    // @Test
+    //@DisabledIfHeadless
+//    public void testCharsPerLine() throws Exception {
+//        JFrame frame = new JFrame();
+//        HardcopyWriter hcwPreview = null;
+//        HardcopyWriter hcwPrint = null;
+//        HardcopyWriter hcw = null;
+//
+//        for (String fontName : FontComboUtil.getFonts(FontComboUtil.ALL)) {
+//            for (int fontSize = 6; fontSize < 16; fontSize++) {
+//                try {
+//                    // 1. Preview mode
+//                    hcwPreview = new HardcopyWriter(frame, "test-compare " + fontName + fontSize, fontName, null,
+//                            fontSize, .5 * 72, .5 * 72, .5 * 72, .5 * 72, true, null, null, false, null, null);
+//
+//                    hcwPrint = new HardcopyWriter(frame, "test-compare", fontName, null, fontSize, .5 * 72, .5 * 72,
+//                            .5 * 72, .5 * 72, false, HardcopyWriter.NO_PRINTING_PRINTER, null, false, null, null);
+//
+//                    hcw = new HardcopyWriter(fontName, null, fontSize, .5 * 72, .5 * 72, .5 * 72, .5 * 7, null, null);
+//
+//                    Assertions.assertEquals(hcwPreview.getCharactersPerLine(), hcwPrint.getCharactersPerLine(),
+//                            "Characters per line should match");
+//                    Assertions.assertEquals(hcwPreview.getCharactersPerLine(), hcw.getCharactersPerLine(),
+//                            "Characters per line should match");
+//
+//                    // Test with a string containing a superscript character
+//                    String testString = "The cat waited on platform 9¾";
+//
+//                    Rectangle2D boundsPreview = hcwPreview.measure(testString);
+//                    Rectangle2D boundsPrint = hcwPrint.measure(testString);
+//                    Rectangle2D bounds = hcw.measure(testString);
+//
+//                    Assertions.assertEquals(boundsPreview.getWidth(), boundsPrint.getWidth(), 0.01,
+//                            "Width should match");
+//                    Assertions.assertEquals(boundsPreview.getHeight(), boundsPrint.getHeight(), 0.01,
+//                            "Height should match");
+//                    Assertions.assertEquals(boundsPreview.getWidth(), bounds.getWidth(), 0.01, "Width should match");
+//                    Assertions.assertEquals(boundsPreview.getHeight(), bounds.getHeight(), 0.01, "Height should match");
+//
+//                } catch (HardcopyWriter.PrintCanceledException pce) {
+//                    // OK
+//                } finally {
+//                    if (hcwPreview != null)
+//                        hcwPreview.dispose();
+//                    if (hcwPrint != null)
+//                        hcwPrint.dispose();
+//                }
+//            }
+//        }
+//    }
 
     @Test
     @DisabledIfHeadless
@@ -410,14 +467,19 @@ public class HardcopyWriterTest {
 
     @Test
     public void testMeasurement() throws PrintCanceledException {
-        HardcopyWriter hcw = new HardcopyWriter(null, null, 10, 36, 36,
-                36, 36, null, null);
+        HardcopyWriter hcw = null;
         try {
+            hcw = new HardcopyWriter(null, null, 10, 36, 36,
+                    36, 36, null, null);
             Rectangle2D bounds = hcw.measure("Hello World");
             Assertions.assertTrue(bounds.getWidth() > 40, "measure width");
             Assertions.assertTrue(bounds.getHeight() > 5, "measure height");
+
+        } catch (HardcopyWriter.PrintCanceledException pce) {
+            Assertions.fail("Print job should not have been cancelled");
         } finally {
-            hcw.dispose();
+            if (hcw != null)
+                hcw.dispose();
         }
     }
 
@@ -481,7 +543,8 @@ public class HardcopyWriterTest {
         try {
             File file = new File("/tmp/image.png");
             // Copy the image so that we can overwrite it
-            BufferedImage copy = new BufferedImage(image.getWidth(null), image.getHeight(null), BufferedImage.TYPE_INT_RGB);
+            BufferedImage copy =
+                    new BufferedImage(image.getWidth(null), image.getHeight(null), BufferedImage.TYPE_INT_RGB);
             Graphics2D g2d = copy.createGraphics();
             g2d.drawImage(image, 0, 0, null);
             // Draw the boxes on the copy
