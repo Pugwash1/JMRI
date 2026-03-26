@@ -491,6 +491,12 @@
             <li></li>
         </ul>
 
+    <h3>PanelPro</h3>
+        <a id="PanelPro" name="PanelPro"></a>
+        <ul>
+        <li>Added a "Tables Settings" item to the Tables menu to allow the adding of the Tables menu to the Main Menu.</li>
+        </ul>
+
    <h3>Panel Editor</h3>
         <a id="PE" name="PE"></a>
         <ul>
