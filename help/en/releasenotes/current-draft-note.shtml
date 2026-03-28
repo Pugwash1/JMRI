@@ -396,7 +396,7 @@
 
         <h4>ZIMO</h4>
             <ul>
-                <li></li>
+                <li>Improved how some recent Zimo decoder types are detected.</li>
             </ul>
 
         <h4>Miscellaneous</h4>
