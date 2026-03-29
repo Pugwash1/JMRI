@@ -197,6 +197,7 @@ abstract public class PaneProgFrame extends JmriJFrame
         if (TcsDownloadAction.willBeEnabled()) {
             importSubMenu.add(new TcsDownloadAction(Bundle.getMessage("MenuImportTcsCS"), cvModel, variableModel, this, progStatus, _rosterEntry));
         }
+        importSubMenu.add(new CsvFunctionImportAction(Bundle.getMessage("MenuImportFunctions"), this));
 
         // add "Export" submenu; this is hierarchical because
         // some of the names are so long, and we expect more formats
@@ -211,6 +212,7 @@ abstract public class PaneProgFrame extends JmriJFrame
         if (TcsDownloadAction.willBeEnabled()) {
             exportSubMenu.add(new TcsUploadAction(Bundle.getMessage("MenuExportTcsCS"), cvModel, variableModel, _rosterEntry, this));
         }
+        exportSubMenu.add(new CsvFunctionExportAction(Bundle.getMessage("MenuExportFunctions"), this));
 
         // Speed table submenu in File menu
         ThreadingUtil.runOnGUIEventually( ()->{

@@ -429,7 +429,14 @@
     <h3>DecoderPro</h3>
         <a id="DecoderPro" name="DecoderPro"></a>
         <ul>
-            <li></li>
+            <li>When you have a roster entry open for editing,
+                there are new entries in the File menu Import 
+                and Export submenus to export
+                "All Function Labels to CSV file..."
+                and import a
+                "CSV file of Function Labels...".
+                They do what you'd expect.
+            </li>
         </ul>
 
    <h3>Dispatcher</h3>
@@ -488,7 +495,8 @@
     <h3>OperationsPro</h3>
         <a id="Operations" name="Operations"></a>
         <ul>
-            <li></li>
+            <li>The Yardmaster's window now allows you to add cars to the train at the yardmaster's location.</li>
+            <li>Fixed the departure time from a route location in the CSV Manifest file.</li>
         </ul>
 
     <h3>PanelPro</h3>
@@ -524,7 +532,8 @@
     <h3>Roster</h3>
         <a id="Roster" name="Roster"></a>
         <ul>
-            <li></li>
+            <li>Fixed a problem preventing the JMRI permissions from 
+                properly controlling access to added columns.</li>
         </ul>
 
     <h3>Routes</h3>

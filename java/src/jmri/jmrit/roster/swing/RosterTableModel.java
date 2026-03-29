@@ -18,7 +18,7 @@ import javax.swing.table.DefaultTableModel;
 import jmri.BooleanPermission;
 import jmri.InstanceManager;
 import jmri.PermissionManager;
-import jmri.PermissionsSystemAdmin;
+import jmri.PermissionsProgrammer;
 import jmri.jmrit.decoderdefn.DecoderIndexFile;
 import jmri.jmrit.roster.Roster;
 import jmri.jmrit.roster.RosterEntry;
@@ -245,7 +245,7 @@ public class RosterTableModel extends DefaultTableModel implements PropertyChang
         if (editable) {
             // permission to edit optional columns?
             if ( col >= NUMCOL && col < getColumnCount() ) {
-                if (! permissionManager.hasAtLeastPermission(PermissionsSystemAdmin.PERMISSION_EDIT_PREFERENCES,
+                if (! permissionManager.hasAtLeastPermission(PermissionsProgrammer.PERMISSION_ROSTER_ADDED_COLUMNS,
                                                     BooleanPermission.BooleanValue.TRUE)) {
                     return false;
                 }
@@ -428,7 +428,7 @@ public class RosterTableModel extends DefaultTableModel implements PropertyChang
                 break;
             default:
                 // permission to edit optional columns?
-                if (! permissionManager.ensureAtLeastPermission(PermissionsSystemAdmin.PERMISSION_EDIT_PREFERENCES,
+                if (! permissionManager.ensureAtLeastPermission(PermissionsProgrammer.PERMISSION_ROSTER_ADDED_COLUMNS,
                                                         BooleanPermission.BooleanValue.TRUE)) {
                     return;
                 }

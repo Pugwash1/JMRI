@@ -39,7 +39,7 @@ import javax.swing.table.TableRowSorter;
 import jmri.BooleanPermission;
 import jmri.InstanceManager;
 import jmri.PermissionManager;
-import jmri.PermissionsSystemAdmin;
+import jmri.PermissionsProgrammer;
 import jmri.jmrit.roster.Roster;
 import jmri.jmrit.roster.RosterEntry;
 import jmri.jmrit.roster.RosterEntrySelector;
@@ -111,7 +111,7 @@ public class RosterTable extends JmriPanel implements RosterEntrySelector, Roste
                         @Override
                         protected void customize() {
                             // permission to edit optional columns?
-                            if (! permissionManager.hasAtLeastPermission(PermissionsSystemAdmin.PERMISSION_EDIT_PREFERENCES,
+                            if (! permissionManager.hasAtLeastPermission(PermissionsProgrammer.PERMISSION_ROSTER_ADDED_COLUMNS,
                                                                 BooleanPermission.BooleanValue.TRUE)) {
                                 setToolTipText( Bundle.getMessage("EditRequiresPermission"));
                             } else {
