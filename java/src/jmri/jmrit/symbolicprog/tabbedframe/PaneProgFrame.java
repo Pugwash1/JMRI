@@ -123,8 +123,14 @@ abstract public class PaneProgFrame extends JmriJFrame
     @InvokeOnGuiThread
     protected void installComponents() {
 
-        tabPane = new jmri.util.org.mitre.jawb.swing.DetachableTabbedPane(" : "+_frameEntryId);
-
+        String title = " : "+_frameEntryId;
+        
+        if (checkDontDetachPanes()) {
+            tabPane = new JTabbedPane();
+        } else {
+            tabPane = new jmri.util.org.mitre.jawb.swing.DetachableTabbedPane(title);
+        }
+        
         // create ShutDownTasks
         if (decoderDirtyTask == null) {
             decoderDirtyTask = new SwingShutDownTask("DecoderPro Decoder Window Check",
@@ -2276,6 +2282,19 @@ abstract public class PaneProgFrame extends JmriJFrame
                 InstanceManager.getDefault(ProgrammerConfigManager.class).isShowEmptyPanes();
     }
 
+    public static boolean getDontDetachPanes() {
+        return InstanceManager.getNullableDefault(ProgrammerConfigManager.class) == null ||
+                InstanceManager.getDefault(ProgrammerConfigManager.class).isDontDetachPanes();
+    }
+    public static void setDontDetachPanes(boolean yes) {
+        if (InstanceManager.getNullableDefault(ProgrammerConfigManager.class) != null) {
+            InstanceManager.getDefault(ProgrammerConfigManager.class).setDontDetachPanes(yes);
+        }
+    }
+    // This method is here to allow override in testing
+    protected boolean checkDontDetachPanes() { return getDontDetachPanes(); }
+    
+    
     /**
      * Get value of whether current item should show empty panes.
      */
