@@ -36,10 +36,7 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableRowSorter;
 
-import jmri.BooleanPermission;
-import jmri.InstanceManager;
-import jmri.PermissionManager;
-import jmri.PermissionsProgrammer;
+import jmri.*;
 import jmri.jmrit.roster.Roster;
 import jmri.jmrit.roster.RosterEntry;
 import jmri.jmrit.roster.RosterEntrySelector;
@@ -73,7 +70,7 @@ public class RosterTable extends JmriPanel implements RosterEntrySelector, Roste
     private RosterEntry re = null;
 
     private static final String ATTRIBUTE_OPERATING_DURATION = Bundle.getMessage(RosterEntry.ATTRIBUTE_OPERATING_DURATION); //avoid lots of lookups
-    
+
     static final PermissionManager permissionManager = InstanceManager.getDefault(PermissionManager.class);
 
     public RosterTable() {
@@ -366,14 +363,14 @@ public class RosterTable extends JmriPanel implements RosterEntrySelector, Roste
                 re = entry;
                 int entries = dataTable.getRowCount();
                 for (int i = 0; i < entries; i++) {
-                                    
+
                     // skip over entry being deleted from the group
-                    if (dataModel.getValueAt(sorter.convertRowIndexToModel(i), 
+                    if (dataModel.getValueAt(sorter.convertRowIndexToModel(i),
                                                                 RosterTableModel.IDCOL) == null) {
                         continue;
                     }
 
-                    if (dataModel.getValueAt(sorter.convertRowIndexToModel(i), 
+                    if (dataModel.getValueAt(sorter.convertRowIndexToModel(i),
                                             RosterTableModel.IDCOL)
                                     .equals(re.getId())) {
                         dataTable.addRowSelectionInterval(i, i);

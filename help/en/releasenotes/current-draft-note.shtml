@@ -126,7 +126,8 @@
 
         <h4><a href="http://openlcb.org">OpenLCB</a> / LCC</h4>
             <ul>
-                <li></li>
+                <li>Updated the OpenLCB_Java library to include an 
+                    improvement in how unknown-MTI messages are displayed.</li>
             </ul>
 
         <h4>Powerline</h4>
@@ -438,8 +439,9 @@
                 "All Function Labels to CSV file..."
                 and import a
                 "CSV file of Function Labels...".
-                They do what you'd expect.
-            </li>
+                They do what you'd expect.</li>
+            <li>New permissions selection to allow/disallow adding/editing/removing
+                columns from the roster</li>
         </ul>
 
    <h3>Dispatcher</h3>
