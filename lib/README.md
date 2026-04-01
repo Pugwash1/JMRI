@@ -317,10 +317,13 @@ bluecove-gpl-2.1.1-SNAPSHOT.jar
 - from https://mvnrepository.com/artifact/net.java.dev.jna/jna-platform/5.13.0
 
 
-##### pi4j-core-1.2.jar, pi4j-device-1.2.jar, pi4j-gpio-extension-1.2.jar
-- Pi4j
+##### pi4j-core-2.8.0.jar, pi4j-plugin-raspberrypi-2.8.0.jar, pi4j-plugin-linuxfs-2.8.0.jar, pi4j-plugin-pigpio-2.8.0.jar
+- Pi4J V2 (latest 2.x release, Java 11+ compatible)
 - from https://pi4j.com/
-- Used for supporting GPIO pins on a raspberry pi. pi4j-core is required at compile time.  pi4j-device and pi4j-gpio-extension may be used at runtime (by scripts) to control devices attached to the raspberry pi.
+- Used for supporting GPIO pins on a Raspberry Pi. pi4j-core is required at compile time.
+  pi4j-plugin-raspberrypi, pi4j-plugin-linuxfs, and pi4j-plugin-pigpio are loaded at runtime
+  via ServiceLoader on Raspberry Pi hardware.
+- Pin addressing uses BCM (Broadcom) numbers; e.g. system name "PS4" → BCM GPIO 4.
 
 ##### thumbnailator-0.4.8.jar
 - Thumbnailator

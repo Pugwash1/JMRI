@@ -94,7 +94,7 @@ public class RaspberryPiConnectionConfig extends jmri.jmrix.AbstractConnectionCo
         if (adapter == null) {
             adapter = new RaspberryPiAdapter();
         }
-        if (adapter.getGPIOController() == null) {
+        if (adapter.getPi4JContext() == null) {
             // don't show more than once every 30 seconds
             if (!GraphicsEnvironment.isHeadless()
                     && (this.GPIOMessageShown == null || ((new Date().getTime() - this.GPIOMessageShown.getTime()) / 1000 % 60) > 30)) {
