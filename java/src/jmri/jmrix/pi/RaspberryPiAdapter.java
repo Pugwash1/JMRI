@@ -48,14 +48,42 @@ public class RaspberryPiAdapter extends jmri.jmrix.AbstractPortController {
         setIsSimulator(isSimulator);
         this.manufacturerName = RaspberryPiConnectionTypeList.PI;
         if (!isSimulator) {
-            try {
-                sharedPi4JContext = Pi4J.newAutoContext();
+            if (initSharedContext()) {
                 opened = true;
-            } catch (UnsatisfiedLinkError er) {
-                log.error("Expected to run on Raspberry PI, but does not appear to be.");
             }
         } else {
             opened = true;
+        }
+    }
+
+    /**
+     * Initialize the shared Pi4J context. Called from constructors only.
+     * Synchronized on the class to safely write the static field.
+     *
+     * @return true if the context was successfully created
+     */
+    private static synchronized boolean initSharedContext() {
+        try {
+            sharedPi4JContext = Pi4J.newAutoContext();
+            return true;
+        } catch (UnsatisfiedLinkError er) {
+            log.error("Expected to run on Raspberry PI, but does not appear to be.");
+            return false;
+        }
+    }
+
+    /**
+     * Shut down and clear the shared Pi4J context.
+     * Synchronized on the class to safely write the static field.
+     */
+    private static synchronized void shutdownSharedContext() {
+        if (sharedPi4JContext != null) {
+            try {
+                sharedPi4JContext.shutdown();
+            } catch (ShutdownException ex) {
+                log.error("Error shutting down Pi4J context", ex);
+            }
+            sharedPi4JContext = null;
         }
     }
 
@@ -97,14 +125,9 @@ public class RaspberryPiAdapter extends jmri.jmrix.AbstractPortController {
     @Override
     public void dispose() {
         super.dispose();
-        if (!_isSimulator && sharedPi4JContext != null) {
-            try {
-                sharedPi4JContext.shutdown();
-            } catch (ShutdownException ex) {
-                log.error("Error shutting down Pi4J context", ex);
-            }
-            sharedPi4JContext = null;
-        } else if (_isSimulator) {
+        if (!_isSimulator) {
+            shutdownSharedContext();
+        } else {
             GpioSimulator.getInstance().shutdown();
         }
     }
