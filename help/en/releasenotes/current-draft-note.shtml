@@ -101,7 +101,8 @@
 
         <h4>MERG</h4>
             <ul>
-                <li></li>
+                <li>Fixed a problem introduced in 5.15.4 where some RFID messages
+                    would be improperly decoded as RailCom reports.</li>
             </ul>
 
         <h4>MQTT</h4>
@@ -465,7 +466,13 @@
     <h3>Layout Editor</h3>
         <a id="LE" name="LE"></a>
         <ul>
-            <li></li>
+            <li>You can now add an "Output Indicator" to a 
+                Layout Editor panel.  This shows the status of a JMRI Turnout object.
+                Note that this is <em>not</em> a layout turnout; you can't
+                connect track to it or use it for signaling.
+                Rather, it's a way to represent a power switch, accessory
+                or other non-track thing that's driven by a JMRI output using
+                a Turnout object.</li>
         </ul>
 
         <h4>NX - Entry/Exit Tool</h4>
