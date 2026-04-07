@@ -2841,7 +2841,7 @@ Command sequences should also be enclose in "strong" formatting.    jerryg2003 2
       cars in the order you entered in the schedule table. Car types at the top of the table are
       requested first and once the last car type is delivered, the schedule resumes from the top. A
       pointer shows the next car type to be delivered. Select the "Sequential" radio button in the
-      top left corner and press "Save" if car type and load delivery order is as desired.
+      top right corner and press "Save" if car type and load delivery order is as desired.
 
       <p>Match mode eliminates the sequential aspects of a schedule. In match mode, the program
         when building a train will search the entire schedule to find a car type, delivery day, and
@@ -4630,9 +4630,10 @@ Command sequences should also be enclose in "strong" formatting.    jerryg2003 2
       You can remove a car that has been assigned to a train by simply pressing the "Save" button.
 
       <h4 id="SetCarAdd">Add car to train</h4>
-      To add a car to a train, select the train you want and press "Save". If the train is built,
-      the destination and track fields will become enabled. Now select the car's destination and
-      track and press "Save" to add the car to the train.
+      To manually add a car to a train, select the train you want and press "Save". If the train is
+      built, the destination and track fields will become enabled. Now select the car's destination
+      and track and press "Save" to add the car to the train. See
+      <a href="#OptionalNormallySet">Optional -- Normally Set by Program</a> for more information.
 
       <h4>Status</h4>
       In the upper right hand corner of the set car window is a checkbox labeled "Location Unknown".
@@ -4707,7 +4708,7 @@ Command sequences should also be enclose in "strong" formatting.    jerryg2003 2
       are moved as a single unit. Select the kernel you want the car to be in using the "Kernel"
       menu, and use the "Edit" button to create new ones.
 
-      <h4>Optional -- Normally Set by Program</h4>
+      <h4 id="OptionalNormallySet">Optional -- Normally Set by Program</h4>
       The next three set of fields are normally set by the program when building trains. We'll
       explain how they work in case you're interested in how the program works or if you want to
       manually override the program. The first is the "Destination and Track" set of pull down
