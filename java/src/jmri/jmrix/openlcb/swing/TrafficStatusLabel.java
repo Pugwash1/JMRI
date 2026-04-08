@@ -1,13 +1,13 @@
 package jmri.jmrix.openlcb.swing;
 
+import java.util.TimerTask;
 import javax.swing.JLabel;
-import javax.swing.Timer;
 
 import jmri.jmrix.can.CanListener;
 import jmri.jmrix.can.CanMessage;
 import jmri.jmrix.can.CanReply;
 import jmri.jmrix.can.CanSystemConnectionMemo;
-import jmri.util.ThreadingUtil;
+import jmri.util.TimerUtil;
 
 /**
  *
@@ -17,7 +17,7 @@ public class TrafficStatusLabel extends JLabel implements CanListener {
     
     private static final int INTERVAL = 200;
     CanSystemConnectionMemo memo;
-    Timer timer;
+    TimerTask timertask;
     boolean active;
     
     public TrafficStatusLabel(CanSystemConnectionMemo memo) {
@@ -34,16 +34,26 @@ public class TrafficStatusLabel extends JLabel implements CanListener {
     }
     
     void traffic() {
-        timer.stop();
+        if (timertask != null) { // only null at startup
+            timertask.cancel();
+        }
         active = true;
         displayActive();
     }
     
     void displayActive() {
         if (active != isEnabled()) setEnabled(active); // reduce redisplays 
-        timer = ThreadingUtil.runOnLayoutDelayed(() -> { active = false; displayActive(); }, INTERVAL);
+        timertask = new TimerTask() {
+            @Override
+            public void run() {
+                active = false; displayActive(); 
+            }
+        };
+        TimerUtil.scheduleOnGUIThread(timertask, INTERVAL);
+        
     }
 
+    @Override
     public synchronized void message(CanMessage l) {
         traffic();
     }

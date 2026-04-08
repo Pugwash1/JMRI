@@ -770,6 +770,63 @@ public class LayoutBlock extends AbstractNamedBean implements PropertyChangeList
                     }
                 }
             }
+
+            // Add turntable connectivity to the list
+            for (LayoutTurntable turntable : panel.getLayoutTurntables()) {
+                LayoutBlock turntableBlock = turntable.getLayoutBlock();
+                if (turntableBlock == null) continue;
+
+                if (this == turntableBlock) {
+                    // This is the turntable's block. Add connections to all valid ray blocks.
+                    for (int i = 0; i < turntable.getNumberRays(); i++) {
+                        TrackSegment rayConnect = turntable.getRayConnectOrdered(i);
+                        if (rayConnect != null) {
+                            LayoutBlock rayBlock = rayConnect.getLayoutBlock();
+                            if (rayBlock != null && rayBlock != this) {
+                                c.add(new LayoutConnectivity(this, rayBlock));
+                            }
+                        }
+                    }
+                } else {
+                    // This might be a ray block. Check if it connects to this turntable.
+                    for (int i = 0; i < turntable.getNumberRays(); i++) {
+                        TrackSegment rayConnect = turntable.getRayConnectOrdered(i);
+                        if (rayConnect != null && rayConnect.getLayoutBlock() == this) {
+                            // This is a ray block for this turntable. Add a connection to the turntable block.
+                            c.add(new LayoutConnectivity(this, turntableBlock));
+                            break; // Found our turntable, no need to check other rays
+                        }
+                    }
+                }
+            }
+            // Add traverser connectivity to the list
+            for (LayoutTraverser traverser : panel.getLayoutTraversers()) {
+                LayoutBlock traverserBlock = traverser.getLayoutBlock();
+                if (traverserBlock == null) continue;
+
+                if (this == traverserBlock) {
+                    // This is the traverser's block. Add connections to all valid slot blocks.
+                    for (int i = 0; i < traverser.getNumberSlots(); i++) {
+                        TrackSegment slotConnect = traverser.getSlotConnectOrdered(i);
+                        if (slotConnect != null) {
+                            LayoutBlock slotBlock = slotConnect.getLayoutBlock();
+                            if (slotBlock != null && slotBlock != this) {
+                                c.add(new LayoutConnectivity(this, slotBlock));
+                            }
+                        }
+                    }
+                } else {
+                    // This might be a slot block. Check if it connects to this traverser.
+                    for (int i = 0; i < traverser.getNumberSlots(); i++) {
+                        TrackSegment slotConnect = traverser.getSlotConnectOrdered(i);
+                        if (slotConnect != null && slotConnect.getLayoutBlock() == this) {
+                            // This is a slot block for this traverser. Add a connection to the traverser block.
+                            c.add(new LayoutConnectivity(this, traverserBlock));
+                            break; // Found our traverser, no need to check other slots
+                        }
+                    }
+                }
+            }
             // update block Paths to reflect connectivity as needed
             updateBlockPaths(c, panel);
         }
@@ -2168,6 +2225,46 @@ public class LayoutBlock extends AbstractNamedBean implements PropertyChangeList
     }
 
     private void addThroughPath( @Nonnull Adjacencies adj) {
+        // Check if this block is a turntable block on ANY panel it belongs to.
+        // If so, do not create through paths.
+        boolean isTurntableBlock = false;
+        for (LayoutEditor p : panels) {
+            for (LayoutTurntable turntable : p.getLayoutTurntables()) {
+                if (turntable.getLayoutBlock() == this) {
+                    isTurntableBlock = true;
+                    break;
+                }
+            }
+            if (isTurntableBlock) {
+                break;
+            }
+        }
+
+        if (isTurntableBlock) {
+            addRouteLog.debug("Block {} is a turntable block. Skipping through path generation in addThroughPath(Adjacencies).", getDisplayName());
+            return; // Do not create through paths for a turntable
+        }
+
+        // Check if this block is a traverser block on ANY panel it belongs to.
+        // If so, do not create through paths.
+        boolean isTraverserBlock = false;
+        for (LayoutEditor p : panels) {
+            for (LayoutTraverser traverser : p.getLayoutTraversers()) {
+                if (traverser.getLayoutBlock() == this) {
+                    isTraverserBlock = true;
+                    break;
+                }
+            }
+            if (isTraverserBlock) {
+                break;
+            }
+        }
+
+        if (isTraverserBlock) {
+            addRouteLog.debug("Block {} is a traverser block. Skipping through path generation in addThroughPath(Adjacencies).", getDisplayName());
+            return; // Do not create through paths for a traverser
+        }
+        
         Block newAdj = adj.getBlock();
         int packetFlow = adj.getPacketFlow();
 
@@ -3052,7 +3149,8 @@ public class LayoutBlock extends AbstractNamedBean implements PropertyChangeList
      */
     List<Routes> getDestRoutes(Block dstBlock) {
         List<Routes> rtr = new ArrayList<>();
-        for (Routes route : routes) {
+        var tempRouteList = new ArrayList<>(routes);
+        for (Routes route : tempRouteList) {
             if (route.getDestBlock() == dstBlock) {
                 rtr.add(route);
             }
@@ -4021,7 +4119,7 @@ public class LayoutBlock extends AbstractNamedBean implements PropertyChangeList
      *
      * @param destination final block
      * @param nextBlock   adjcent block
-     * @return lenght to final, -1 if not viable
+     * @return length to final, -1 if not viable
      */
     public float getBlockLength(Block destination, Block nextBlock) {
         if ((destination == nextBlock) && (isValidNeighbour(nextBlock))) {
@@ -4310,6 +4408,57 @@ public class LayoutBlock extends AbstractNamedBean implements PropertyChangeList
                 pathActive = allset;
             }
         }
+
+        // We keep a track of what is paths are active, only so that we can easily mark
+        // which routes are also potentially valid
+        private List<ThroughPaths> activePaths;
+
+        private void updateActiveThroughPaths(ThroughPaths tp, boolean active) {
+            updateRouteLog.debug("We have been notified that a through path has changed state");
+
+            if (activePaths == null) {
+                activePaths = new ArrayList<>();
+            }
+
+            if (active) {
+                activePaths.add(tp);
+                setRoutesValid(tp.getSourceBlock(), active);
+                setRoutesValid(tp.getDestinationBlock(), active);
+            } else {
+                // We need to check if either our source or des is in use by another path.
+                activePaths.remove(tp);
+                boolean sourceInUse = false;
+                boolean destinationInUse = false;
+
+                List<ThroughPaths> copyOfPaths = activePaths;
+                for (ThroughPaths activePath : copyOfPaths) {
+                    Block testSour = activePath.getSourceBlock();
+                    Block testDest = activePath.getDestinationBlock();
+                    if ((testSour == tp.getSourceBlock()) || (testDest == tp.getSourceBlock())) {
+                        sourceInUse = true;
+                    }
+                    if ((testSour == tp.getDestinationBlock()) || (testDest == tp.getDestinationBlock())) {
+                        destinationInUse = true;
+                    }
+                }
+
+                if (!sourceInUse) {
+                    setRoutesValid(tp.getSourceBlock(), active);
+                }
+
+                if (!destinationInUse) {
+                    setRoutesValid(tp.getDestinationBlock(), active);
+                }
+            }
+
+            for (int i = 0; i < throughPaths.size(); i++) {
+                // This is processed simply for the throughpath table.
+                if (tp == throughPaths.get(i)) {
+                    firePropertyChange(PROPERTY_PATH, null, i);
+                }
+            }
+        }
+
     }
 
     @Nonnull
@@ -4365,55 +4514,6 @@ public class LayoutBlock extends AbstractNamedBean implements PropertyChangeList
             setRoutesValid(t.getDestinationBlock(), t.isPathActive());
             setRoutesValid(t.getSourceBlock(), t.isPathActive());
             firePropertyChange(PROPERTY_PATH, null, i);
-        }
-    }
-
-    // We keep a track of what is paths are active, only so that we can easily mark
-    // which routes are also potentially valid
-    private List<ThroughPaths> activePaths;
-
-    void updateActiveThroughPaths(ThroughPaths tp, boolean active) {
-        updateRouteLog.debug("We have been notified that a through path has changed state");
-
-        if (activePaths == null) {
-            activePaths = new ArrayList<>();
-        }
-
-        if (active) {
-            activePaths.add(tp);
-            setRoutesValid(tp.getSourceBlock(), active);
-            setRoutesValid(tp.getDestinationBlock(), active);
-        } else {
-            // We need to check if either our source or des is in use by another path.
-            activePaths.remove(tp);
-            boolean sourceInUse = false;
-            boolean destinationInUse = false;
-
-            for (ThroughPaths activePath : activePaths) {
-                Block testSour = activePath.getSourceBlock();
-                Block testDest = activePath.getDestinationBlock();
-                if ((testSour == tp.getSourceBlock()) || (testDest == tp.getSourceBlock())) {
-                    sourceInUse = true;
-                }
-                if ((testSour == tp.getDestinationBlock()) || (testDest == tp.getDestinationBlock())) {
-                    destinationInUse = true;
-                }
-            }
-
-            if (!sourceInUse) {
-                setRoutesValid(tp.getSourceBlock(), active);
-            }
-
-            if (!destinationInUse) {
-                setRoutesValid(tp.getDestinationBlock(), active);
-            }
-        }
-
-        for (int i = 0; i < throughPaths.size(); i++) {
-            // This is processed simply for the throughpath table.
-            if (tp == throughPaths.get(i)) {
-                firePropertyChange(PROPERTY_PATH, null, i);
-            }
         }
     }
 

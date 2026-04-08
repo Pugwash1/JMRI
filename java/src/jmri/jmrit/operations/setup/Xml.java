@@ -51,6 +51,8 @@ public class Xml {
 
     static final String SPEED_HPT = "speedHpt";
     static final String MPH = "MPH";
+    
+    static final String SHOW_CLONES = "showClones";
 
     // Setup.java
     static final String OPERATIONS = "operations"; // NOI18N
@@ -100,6 +102,7 @@ public class Xml {
     static final String SORT_BY_TRACK = "sortByTrack"; // NOI18N
     static final String PRINT_PAGE_HEADER = "printPageHeader"; // NOI18N
     static final String PRINT_HEADERS = "printHeaders"; // NOI18N
+    static final String PRINT_NO_PAGE_BREAKS = "printNoPageBreaks"; // NOI18N
     static final String PRINT_CABOOSE_LOAD = "printCabooseLoad"; // NOI18N
     static final String PRINT_PASSENGER_LOAD = "printPassengerLoad"; // NOI18N
     static final String GROUP_MOVES = "groupCarMoves"; // NOI18N
@@ -166,6 +169,11 @@ public class Xml {
     static final String TWO_COLUMN = "1"; // NOI18N
     static final String TWO_COLUMN_TRACK = "2"; // NOI18N
 
+    static final String HEADER_LINES = "headerLines"; // NOI18N
+    static final String PRINT_HEADER_LINE1 = "printHeaderLine1"; // NOI18N
+    static final String PRINT_HEADER_LINE2 = "printHeaderLine2"; // NOI18N
+    static final String PRINT_HEADER_LINE3 = "printHeaderLine3"; // NOI18N
+
     static final String TRUNCATE = "truncate"; // NOI18N
     static final String USE_DEPARTURE_TIME = "useDepartureTime"; // NOI18N
     static final String USE_EDITOR = "useEditor"; // NOI18N
@@ -176,6 +184,8 @@ public class Xml {
     static final String BUILD_OPTIONS = "buildOptions"; // NOI18N
     static final String AGGRESSIVE = "aggressive"; // NOI18N
     static final String NUMBER_PASSES = "numberPasses";  // NOI18N
+    static final String ON_TIME = "onTime"; // NOI18N
+    static final String DWELL_TIME = "dwellTime";  // NOI18N
 
     static final String ALLOW_LOCAL_INTERCHANGE = "allowLocalInterchange"; // NOI18N
     static final String ALLOW_LOCAL_SPUR = "allowLocalSpur"; // NOI18N
@@ -220,5 +230,10 @@ public class Xml {
 
     static final String CATS = "CATS"; // NOI18N
     static final String EXACT_LOCATION_NAME = "exactLocationName"; // NOI18N
+    
+    static final String DAY_NAME_MAP = "dayNameMapping"; // NOI18N
+    static final String MAP = "map"; // NOI18N
+    static final String DAY = "day"; // NOI18N
+    static final String DAYS = "days"; // NOI18N
 
 }

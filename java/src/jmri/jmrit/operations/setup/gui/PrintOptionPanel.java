@@ -1,17 +1,18 @@
 package jmri.jmrit.operations.setup.gui;
 
 import java.awt.GridBagLayout;
-import java.awt.JobAttributes.SidesType;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.util.*;
 
+import javax.print.attribute.standard.Sides;
 import javax.swing.*;
 
 import jmri.InstanceManager;
+import jmri.jmrit.operations.OperationsPanel;
 import jmri.jmrit.operations.setup.*;
-import jmri.jmrit.operations.trains.TrainCommon;
 import jmri.jmrit.operations.trains.TrainManager;
+import jmri.jmrit.operations.trains.trainbuilder.TrainCommon;
 import jmri.util.FileUtil;
 import jmri.util.swing.FontComboUtil;
 import jmri.util.swing.JmriJOptionPane;
@@ -19,7 +20,7 @@ import jmri.util.swing.JmriJOptionPane;
 /**
  * Frame for user edit of manifest and switch list print options
  *
- * @author Dan Boudreau Copyright (C) 2008, 2010, 2011, 2012, 2013
+ * @author Dan Boudreau Copyright (C) 2008, 2010, 2011, 2012, 2013, 2025
  */
 public class PrintOptionPanel extends OperationsPreferencesPanel implements java.beans.PropertyChangeListener {
 
@@ -64,6 +65,7 @@ public class PrintOptionPanel extends OperationsPreferencesPanel implements java
     JCheckBox use12hrFormatCheckBox = new JCheckBox(Bundle.getMessage("12hrFormat"));
     JCheckBox printValidCheckBox = new JCheckBox(Bundle.getMessage("PrintValid"));
     JCheckBox sortByTrackCheckBox = new JCheckBox(Bundle.getMessage("SortByTrack"));
+    JCheckBox noPageBreaksCheckBox = new JCheckBox(Bundle.getMessage("NoPageBreaks"));
     JCheckBox printHeadersCheckBox = new JCheckBox(Bundle.getMessage("PrintHeaders"));
     JCheckBox printPageHeaderCheckBox = new JCheckBox(Bundle.getMessage("PrintPageHeader"));
     JCheckBox truncateCheckBox = new JCheckBox(Bundle.getMessage("Truncate"));
@@ -86,7 +88,7 @@ public class PrintOptionPanel extends OperationsPreferencesPanel implements java
     JTextField hazardousTextField = new JTextField(20);
 
     // text area
-    JTextArea commentTextArea = new JTextArea(2, 90);
+    JTextArea commentTextArea = new JTextArea(4, 90);
 
     JScrollPane commentScroller = new JScrollPane(commentTextArea, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
             JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
@@ -97,7 +99,7 @@ public class PrintOptionPanel extends OperationsPreferencesPanel implements java
     JComboBox<String> manifestOrientationComboBox = Setup.getOrientationComboBox();
     JComboBox<Integer> fontSizeComboBox = new JComboBox<>();
     JComboBox<String> switchListOrientationComboBox = Setup.getOrientationComboBox();
-    JComboBox<SidesType> printDuplexComboBox = new JComboBox<>();
+    JComboBox<Sides> printDuplexComboBox = new JComboBox<>();
     JColorChooser pickupEngineColorChooser = new JColorChooser();
     JColorChooser dropEngineColorChooser = new JColorChooser();
     JColorChooser pickupColorChooser = new JColorChooser();
@@ -145,6 +147,7 @@ public class PrintOptionPanel extends OperationsPreferencesPanel implements java
         use12hrFormatCheckBox.setToolTipText(Bundle.getMessage("Use12hrFormatTip"));
         printValidCheckBox.setToolTipText(Bundle.getMessage("PrintValidTip"));
         sortByTrackCheckBox.setToolTipText(Bundle.getMessage("SortByTrackTip"));
+        noPageBreaksCheckBox.setToolTipText(Bundle.getMessage("NoPageBreaksTip"));
         printHeadersCheckBox.setToolTipText(Bundle.getMessage("PrintHeadersTip"));
         printPageHeaderCheckBox.setToolTipText(Bundle.getMessage("PrintPageHeaderTip"));
         truncateCheckBox.setToolTipText(Bundle.getMessage("TruncateTip"));
@@ -206,9 +209,7 @@ public class PrintOptionPanel extends OperationsPreferencesPanel implements java
         pDuplex.setBorder(BorderFactory.createTitledBorder(Bundle.getMessage("BorderLayoutDuplex")));
         pDuplex.add(printDuplexComboBox);
 
-        printDuplexComboBox.addItem(SidesType.ONE_SIDED);
-        printDuplexComboBox.addItem(SidesType.TWO_SIDED_LONG_EDGE);
-        printDuplexComboBox.addItem(SidesType.TWO_SIDED_SHORT_EDGE);
+        loadDuplexSidesComboBox();
 
         p1.add(pFont);
         p1.add(pFontSize);
@@ -284,8 +285,9 @@ public class PrintOptionPanel extends OperationsPreferencesPanel implements java
         addItemLeft(pManifestSwtichListOptions, use12hrFormatCheckBox, 0, 1);
         addItemLeft(pManifestSwtichListOptions, printTrainScheduleNameCheckBox, 1, 1);
         addItemLeft(pManifestSwtichListOptions, sortByTrackCheckBox, 2, 1);
-        addItemLeft(pManifestSwtichListOptions, printHeadersCheckBox, 3, 1);
-        addItemLeft(pManifestSwtichListOptions, printPageHeaderCheckBox, 4, 1);
+        addItemLeft(pManifestSwtichListOptions, noPageBreaksCheckBox, 3, 1);
+        addItemLeft(pManifestSwtichListOptions, printHeadersCheckBox, 4, 1);
+        addItemLeft(pManifestSwtichListOptions, printPageHeaderCheckBox, 5, 1);
 
         JPanel p2 = new JPanel();
         p2.setLayout(new BoxLayout(p2, BoxLayout.X_AXIS));
@@ -360,6 +362,7 @@ public class PrintOptionPanel extends OperationsPreferencesPanel implements java
         use12hrFormatCheckBox.setSelected(Setup.is12hrFormatEnabled());
         printValidCheckBox.setSelected(Setup.isPrintValidEnabled());
         sortByTrackCheckBox.setSelected(Setup.isSortByTrackNameEnabled());
+        noPageBreaksCheckBox.setSelected(Setup.isPrintNoPageBreaksEnabled());
         printPageHeaderCheckBox.setSelected(Setup.isPrintPageHeaderEnabled());
         printHeadersCheckBox.setSelected(Setup.isPrintHeadersEnabled());
         truncateCheckBox.setSelected(Setup.isPrintTruncateManifestEnabled());
@@ -735,6 +738,13 @@ public class PrintOptionPanel extends OperationsPreferencesPanel implements java
         }
         fontComboBox.setSelectedItem(Setup.getFontName());
     }
+    
+    private void loadDuplexSidesComboBox() {
+        printDuplexComboBox.addItem(Sides.ONE_SIDED);
+        printDuplexComboBox.addItem(Sides.TWO_SIDED_LONG_EDGE);
+        printDuplexComboBox.addItem(Sides.TWO_SIDED_SHORT_EDGE);
+        OperationsPanel.padComboBox(printDuplexComboBox, Sides.TWO_SIDED_SHORT_EDGE.toString().length());
+    }
 
     @Override
     public String getTabbedPreferencesTitle() {
@@ -755,7 +765,7 @@ public class PrintOptionPanel extends OperationsPreferencesPanel implements java
         // page orientation
         Setup.setManifestOrientation((String) manifestOrientationComboBox.getSelectedItem());
         Setup.setSwitchListOrientation((String) switchListOrientationComboBox.getSelectedItem());
-        Setup.setPrintDuplexSides((SidesType) printDuplexComboBox.getSelectedItem());
+        Setup.setPrintDuplexSides((Sides) printDuplexComboBox.getSelectedItem());
         // format
         Setup.setManifestFormat((String) manifestFormatComboBox.getSelectedItem());
         // drop and pick up color option
@@ -842,6 +852,7 @@ public class PrintOptionPanel extends OperationsPreferencesPanel implements java
         Setup.set12hrFormatEnabled(use12hrFormatCheckBox.isSelected());
         Setup.setPrintValidEnabled(printValidCheckBox.isSelected());
         Setup.setSortByTrackNameEnabled(sortByTrackCheckBox.isSelected());
+        Setup.setPrintNoPageBreaksEnabled(noPageBreaksCheckBox.isSelected());
         Setup.setPrintPageHeaderEnabled(printPageHeaderCheckBox.isSelected());
         Setup.setPrintHeadersEnabled(printHeadersCheckBox.isSelected());
         Setup.setPrintTrainScheduleNameEnabled(printTrainScheduleNameCheckBox.isSelected());
@@ -892,6 +903,7 @@ public class PrintOptionPanel extends OperationsPreferencesPanel implements java
                 Setup.is12hrFormatEnabled() != use12hrFormatCheckBox.isSelected() ||
                 Setup.isPrintValidEnabled() != printValidCheckBox.isSelected() ||
                 Setup.isSortByTrackNameEnabled() != sortByTrackCheckBox.isSelected() ||
+                Setup.isPrintNoPageBreaksEnabled() != noPageBreaksCheckBox.isSelected() ||
                 Setup.isPrintHeadersEnabled() != printHeadersCheckBox.isSelected() ||
                 Setup.isPrintPageHeaderEnabled() != printPageHeaderCheckBox.isSelected() ||
                 Setup.isPrintTrainScheduleNameEnabled() != printTrainScheduleNameCheckBox.isSelected() ||

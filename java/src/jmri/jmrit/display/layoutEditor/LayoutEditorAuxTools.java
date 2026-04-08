@@ -446,7 +446,8 @@ final public class LayoutEditorAuxTools {
                                 p.addSetting(bs);
                             } else {
                                 log.error("No assigned turnout (J): LTO = {}, blk = {}", // NOI18N
-                                        ((LayoutTurnout) curConnection).getName(), ((LayoutTurnout) curConnection).getLayoutBlock().getDisplayName());
+                                    curConnection.getName(),
+                                    ((LayoutTurnout) curConnection).getLayoutBlock().getDisplayName());
                             }
                             prevConnection = curConnection;
                             if (typeCurConnection == HitPointType.TURNOUT_A) {
@@ -476,7 +477,8 @@ final public class LayoutEditorAuxTools {
                             p.addSetting(bs);
                         } else {
                             log.error("No assigned turnout (K): LTO = {}, blk = {}", // NOI18N
-                                    ((LayoutTurnout) curConnection).getName(), ((LayoutTurnout) curConnection).getLayoutBlock().getDisplayName());
+                                curConnection.getName(),
+                                ((LayoutTurnout) curConnection).getLayoutBlock().getDisplayName());
                         }
                         prevConnection = curConnection;
                         curConnection = ((LayoutTurnout) curConnection).getConnectA();
@@ -492,7 +494,8 @@ final public class LayoutEditorAuxTools {
                             p.addSetting(bs);
                         } else {
                             log.error("No assigned turnout (L): LTO = {}, blk = {}", // NOI18N
-                                    ((LayoutTurnout) curConnection).getName(), ((LayoutTurnout) curConnection).getLayoutBlock().getDisplayName());
+                                curConnection.getName(),
+                                ((LayoutTurnout) curConnection).getLayoutBlock().getDisplayName());
                         }
                         prevConnection = curConnection;
                         curConnection = ((LayoutTurnout) curConnection).getConnectA();
@@ -838,6 +841,16 @@ final public class LayoutEditorAuxTools {
                 if (log.isDebugEnabled()) {
                     log.debug("Layout Block: {}, found track type: {}, to " // NOI18N
                             + "Block: {}, is potentially assigned to turntable ray", // NOI18N
+                            layoutBlock.getDisplayName(),
+                            typeCurConnection,
+                            p.getBlock().getDisplayName()
+                    );
+                }
+                curConnection = null;
+            } else if (HitPointType.isTraverserSlotHitType(typeCurConnection)) {
+                if (log.isInfoEnabled()) {
+                    log.warn("Layout Block: {}, found track type: {}, to " // NOI18N
+                                    + "Block: {}, is potentially assigned to traverser slot", // NOI18N
                             layoutBlock.getDisplayName(),
                             typeCurConnection,
                             p.getBlock().getDisplayName()

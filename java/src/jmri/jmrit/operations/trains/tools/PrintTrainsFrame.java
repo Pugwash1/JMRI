@@ -17,10 +17,12 @@ import jmri.jmrit.operations.routes.Route;
 import jmri.jmrit.operations.routes.RouteLocation;
 import jmri.jmrit.operations.setup.Control;
 import jmri.jmrit.operations.setup.Setup;
-import jmri.jmrit.operations.trains.*;
+import jmri.jmrit.operations.trains.Train;
+import jmri.jmrit.operations.trains.TrainManager;
 import jmri.jmrit.operations.trains.gui.TrainsTableFrame;
 import jmri.jmrit.operations.trains.gui.TrainsTableModel;
-import jmri.util.davidflanagan.HardcopyWriter;
+import jmri.jmrit.operations.trains.trainbuilder.TrainCommon;
+import jmri.util.davidflanagan.CompatibleHardcopyWriter;
 
 /**
  * Prints a summary of a train or trains. The trains list is controlled by the
@@ -127,7 +129,7 @@ public class PrintTrainsFrame extends OperationsFrame {
             return;
         }
 
-        // obtain a HardcopyWriter to do this
+        // obtain a CompatibleHardcopyWriter to do this
         boolean isLandscape = false;
         if (manifestOrientationComboBox.getSelectedItem() != null &&
                 manifestOrientationComboBox.getSelectedItem().equals(Setup.LANDSCAPE)) {
@@ -135,7 +137,7 @@ public class PrintTrainsFrame extends OperationsFrame {
         }
 
         int fontSize = (int) fontSizeComboBox.getSelectedItem();
-        try (HardcopyWriter writer = new HardcopyWriter(new Frame(), Bundle.getMessage("TitleTrainsTable"),
+        try (CompatibleHardcopyWriter writer = new CompatibleHardcopyWriter(new Frame(), Bundle.getMessage("TitleTrainsTable"),
                 fontSize, .5, .5, .5, .5, _isPreview, "", isLandscape, true, null, null);) {
 
             List<Train> trains = _trainsTableFrame.getSortByList((String) sortByComboBox.getSelectedItem());
@@ -165,36 +167,37 @@ public class PrintTrainsFrame extends OperationsFrame {
                     }
                 }
             }
-        } catch (HardcopyWriter.PrintCanceledException ex) {
-            log.debug("Print cancelled");
+        } catch (CompatibleHardcopyWriter.PrintCanceledException ex) {
+            log.debug("Print canceled");
         } catch (IOException e1) {
             log.error("Exception in print train details: {}", e1.getLocalizedMessage());
         }
     }
 
-    private void printSummaryTrains(HardcopyWriter writer, List<Train> trains, TrainsTableFrame trainsTableFrame)
+    private void printSummaryTrains(CompatibleHardcopyWriter writer, List<Train> trains, TrainsTableFrame trainsTableFrame)
             throws IOException {
         int maxLineLength = writer.getCharactersPerLine() - 1;
         int maxTrainNameLength = InstanceManager.getDefault(TrainManager.class).getMaxTrainNameLength();
         int maxLocationNameLength = InstanceManager.getDefault(LocationManager.class).getMaxLocationNameLength();
-        String s = Bundle.getMessage("Time") +
-                "  " +
+        // print header, time = dd:hh:mm
+        String s = truncate(Bundle.getMessage("Time"), 8) +
                 truncate(Bundle.getMessage("Name"), maxTrainNameLength) +
                 truncate(Bundle.getMessage("Description")) +
                 truncate(Bundle.getMessage("Route")) +
                 truncate(Bundle.getMessage("Departs"), maxLocationNameLength) +
                 truncate(Bundle.getMessage("Terminates"), maxLocationNameLength);
         writer.write(truncate(s, maxLineLength) + NEW_LINE);
+        
         for (Train train : trains) {
             if (train.isBuildEnabled() || trainsTableFrame.showAllBox.isSelected()) {
+                String time = truncate(train.getDepartureTime(), 8);
                 String name = truncate(train.getName(), maxTrainNameLength);
                 String desc = truncate(train.getDescription());
                 String route = truncate(train.getTrainRouteName());
                 String departs = truncate(train.getTrainDepartsName(), maxLocationNameLength);
                 String terminates = truncate(train.getTrainTerminatesName(), maxLocationNameLength);
 
-                s = train.getDepartureTime() +
-                        " " +
+                s = time +
                         name +
                         desc +
                         route +
@@ -217,13 +220,13 @@ public class PrintTrainsFrame extends OperationsFrame {
         if (_train == null) {
             return;
         }
-        // obtain a HardcopyWriter to do this
-        try (HardcopyWriter writer = new HardcopyWriter(new Frame(), Bundle.getMessage("TitleTrain", _train.getName()),
+        // obtain a CompatibleHardcopyWriter to do this
+        try (CompatibleHardcopyWriter writer = new CompatibleHardcopyWriter(new Frame(), Bundle.getMessage("TitleTrain", _train.getName()),
                 Control.reportFontSize, .5, .5, .5, .5, _isPreview)) {
 
             printTrain(writer, _train);
-        } catch (HardcopyWriter.PrintCanceledException ex) {
-            log.debug("Print cancelled");
+        } catch (CompatibleHardcopyWriter.PrintCanceledException ex) {
+            log.debug("Print canceled");
         } catch (IOException ex) {
             log.error("Exception in print train: {}", ex.getLocalizedMessage());
         }
@@ -232,7 +235,7 @@ public class PrintTrainsFrame extends OperationsFrame {
     // 7 lines of header plus NEW_LINE at start
     private static final int NUMBER_OF_HEADER_LINES = 8;
 
-    private void printTrain(HardcopyWriter writer, Train train) throws IOException {
+    private void printTrain(CompatibleHardcopyWriter writer, Train train) throws IOException {
         String s = Bundle.getMessage("Name") + ": " + train.getName() + NEW_LINE;
         writer.write(s);
         s = Bundle.getMessage("Description") + ": " + train.getDescription() + NEW_LINE;
@@ -274,7 +277,7 @@ public class PrintTrainsFrame extends OperationsFrame {
         box.setSelectedItem(_trainsTableFrame.getSortBy());
     }
 
-    private int getNumberOfLines(HardcopyWriter writer, String string) {
+    private int getNumberOfLines(CompatibleHardcopyWriter writer, String string) {
         String[] lines = string.split(NEW_LINE);
         int count = lines.length;
         // any long lines that exceed the page width?

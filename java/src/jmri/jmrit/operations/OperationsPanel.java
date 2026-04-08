@@ -16,7 +16,7 @@ import org.slf4j.LoggerFactory;
 import jmri.InstanceManager;
 import jmri.jmrit.operations.rollingstock.cars.CarTypes;
 import jmri.jmrit.operations.setup.Control;
-import jmri.jmrit.operations.trains.TrainCommon;
+import jmri.jmrit.operations.trains.trainbuilder.TrainCommon;
 import jmri.swing.JTablePersistenceManager;
 import jmri.util.JmriJFrame;
 import jmri.util.swing.SplitButtonColorChooserPanel;
@@ -331,8 +331,8 @@ public class OperationsPanel extends JPanel {
     }
 
     public static void loadFontSizeComboBox(JComboBox<Integer> box) {
-        // load font sizes 7 through 18
-        for (int i = 7; i < 19; i++) {
+        // load font sizes 5 through 18
+        for (int i = 5; i < 19; i++) {
             box.addItem(i);
         }
         Dimension size = box.getPreferredSize();

@@ -73,7 +73,7 @@ public class AddressPanel extends JInternalFrame implements ThrottleListener, Pr
     @SuppressWarnings("rawtypes") // TBD: once JMRI consists vs NCE consists resolved, can be removed
     private JComboBox conRosterBox;
     private boolean isUpdatingUI = false;
-
+    private boolean disableRosterBoxActions = false;
     private RosterEntry rosterEntry;
 
     /**
@@ -148,17 +148,20 @@ public class AddressPanel extends JInternalFrame implements ThrottleListener, Pr
     }
 
     /**
-     * Sets the selected index of the roster combo box. Implemented to support
-     * xboxThrottle.py This method temporarily disables roster box actions so it
-     * can change the selected index without triggering a cascade of events.
+     * Sets the selected index of the roster combo box.
+     * This method temporarily disables roster box actions so it
+     * can change the selected index without triggering a cascade of events. 
+     * selectRosterEntry() as to be called afterward to actually select the roster entry
      *
      * @param index the index to select in the combo box
      */
     public void setRosterSelectedIndex(int index) {
         if (getRosterEntrySelector().isEnabled() && index >= 0 && index < getRosterEntrySelector().getRosterEntryComboBox().getItemCount()) {
+            disableRosterBoxActions = true; //Temporarily disable roster box actions
             getRosterEntrySelector().getRosterEntryComboBox().setSelectedIndex(index);
+            disableRosterBoxActions = false;
         }
-        if ((backgroundPanel != null) && (rosterBox.getSelectedRosterEntries().length == 0)) {
+        if ((backgroundPanel != null) && (rosterBox.getSelectedRosterEntries().length > 0)) {
             backgroundPanel.setImagePath(null);
             String rosterEntryTitle = getRosterEntrySelector().getSelectedRosterEntries()[0].titleString();
             RosterEntry re = Roster.getDefault().entryFromTitle(rosterEntryTitle);
@@ -179,7 +182,7 @@ public class AddressPanel extends JInternalFrame implements ThrottleListener, Pr
      * "Set" button. Implemented to support xboxThrottle.py
      */
     public void selectRosterEntry() {
-        if (isUpdatingUI) {
+        if (isUpdatingUI || disableRosterBoxActions) {
             return;
         }
         if (getRosterEntrySelector().getSelectedRosterEntries().length != 0) {
@@ -256,11 +259,14 @@ public class AddressPanel extends JInternalFrame implements ThrottleListener, Pr
         updateGUIOnThrottleFound(true);
         
         // send notification of new address
-        // work on a copy because some new listeners may be added while notifying the existing ones        
-        (new ArrayList<AddressListener>(listeners)).forEach((l) -> {
-            // log.debug("Notify address listener of address change {}", l.getClass());
-            l.notifyAddressThrottleFound(t);
-        });
+        // work on a copy because some new listeners may be added while notifying the existing ones 
+        // during testing listeners can be null
+        if (listeners != null) {
+            (new ArrayList<AddressListener>(listeners)).forEach((l) -> {
+                // log.debug("Notify address listener of address change {}", l.getClass());
+                l.notifyAddressThrottleFound(t);
+            });
+        }
     }
 
     @Override
@@ -510,6 +516,9 @@ public class AddressPanel extends JInternalFrame implements ThrottleListener, Pr
         topPanel.setLayout(new WrapLayout(FlowLayout.CENTER, 2, 2));
 
         rosterBox = new RosterEntrySelectorPanel();
+        if ((InstanceManager.getDefault(ThrottlesPreferences.class).isUsingExThrottle()) && (InstanceManager.getDefault(ThrottlesPreferences.class).isAddressSelectorShowingAllRosterGroup())) {
+            rosterBox.getRosterGroupComboBox().setAllEntriesEnabled(true);
+        }
         getRosterEntrySelector().setNonSelectedItem(Bundle.getMessage("NoLocoSelected"));
         getRosterEntrySelector().setToolTipText(Bundle.getMessage("SelectLocoFromRosterTT"));
         getRosterEntrySelector().addPropertyChangeListener("selectedRosterEntries", pce -> selectRosterEntry());
@@ -627,9 +636,12 @@ public class AddressPanel extends JInternalFrame implements ThrottleListener, Pr
             return; // no address
         }
         // send notification of new address
-        listeners.forEach((l) -> {
-            l.notifyAddressChosen(currentAddress);
-        });
+        // during testing listeners can be null
+        if (listeners != null) {
+            listeners.forEach((l) -> {
+                l.notifyAddressChosen(currentAddress);
+            });
+        }
         log.debug("Requesting new slot for address {} rosterEntry {}",currentAddress,rosterEntry);
         boolean requestOK;
         if (rosterEntry == null) {
@@ -884,6 +896,8 @@ public class AddressPanel extends JInternalFrame implements ThrottleListener, Pr
             if (((Boolean) evt.getOldValue()) && (!((Boolean) evt.getNewValue()))) {
                 log.debug("propertyChange: ThrottleConnected to false");
                 notifyThrottleDisposed();
+                // remove all listeners and destroy the throttle
+                destroy();
                 throttle = null;
                 consistThrottle = null;
             }
@@ -901,7 +915,9 @@ public class AddressPanel extends JInternalFrame implements ThrottleListener, Pr
     }
 
     void applyPreferences() {
-        // nothing to do, for now
+        if ((InstanceManager.getDefault(ThrottlesPreferences.class).isUsingExThrottle())) {
+            rosterBox.getRosterGroupComboBox().setAllEntriesEnabled(InstanceManager.getDefault(ThrottlesPreferences.class).isAddressSelectorShowingAllRosterGroup());
+        }
     }
 
     private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(AddressPanel.class);

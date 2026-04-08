@@ -18,7 +18,7 @@ import jmri.jmrit.operations.rollingstock.engines.*;
 import jmri.jmrit.operations.rollingstock.engines.gui.EnginesTableFrame;
 import jmri.jmrit.operations.setup.Control;
 import jmri.jmrit.operations.setup.Setup;
-import jmri.jmrit.operations.trains.TrainCommon;
+import jmri.jmrit.operations.trains.trainbuilder.TrainCommon;
 import jmri.util.davidflanagan.HardcopyWriter;
 
 /**
@@ -136,7 +136,8 @@ public class PrintEngineRosterFrame extends OperationsFrame {
 
         // obtain a HardcopyWriter to do this
         try (HardcopyWriter writer = new HardcopyWriter(new Frame(), Bundle.getMessage("TitleEngineRoster"),
-                fontSize, .5, .5, .5, .5, _isPreview, "", isLandscape, true, null, null);) {
+                null, null, fontSize, .5 * 72, .5 * 72, .5 * 72, .5 * 72, _isPreview, "", isLandscape, true, null,
+                null)) {
 
             numberCharPerLine = writer.getCharactersPerLine();
 
@@ -145,12 +146,10 @@ public class PrintEngineRosterFrame extends OperationsFrame {
 
             printRoster(writer);
 
-            // and force completion of the printing
-            writer.close();
         } catch (IOException we) {
             log.error("Error printing ConsistRosterEntry: {}", we.getLocalizedMessage());
         } catch (HardcopyWriter.PrintCanceledException ex) {
-            log.debug("Print cancelled");
+            log.debug("Print canceled");
         }
     }
 

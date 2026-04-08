@@ -2,6 +2,7 @@ package jmri.util;
 
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.JCheckBoxMenuItem;
@@ -21,12 +22,27 @@ public class WindowMenu extends JMenu implements javax.swing.event.MenuListener 
     private Frame parentFrame; // Keep note of the window containing the menu
     private List<JmriJFrame> framesList; // Keep the list of windows, in order to find out which window was selected
 
+    static private List<String> ignoredFrames = new ArrayList<String>();  // list of frames to not display
+    
     public WindowMenu(WindowInterface wi) {
         super(Bundle.getMessage("MenuWindow"));
         parentFrame = wi.getFrame();
         addMenuListener(this);
     }
 
+    /**
+     * Provide a list of JmriJFrame titles that will -not- appear
+     * in the Windows menu.  Those frames may or may not remain visible,
+     * but they won't be selectable from the menu.
+     */
+    static public void setIgnoredFrames(List<String> frames) {
+        ignoredFrames = new ArrayList<>(frames);
+    }
+    
+    static public List<String> getIgnoredFrames() {
+        return new ArrayList<>(ignoredFrames);
+    }
+    
     @Override
     public void menuSelected(MenuEvent e) {
         String windowName;
@@ -58,9 +74,15 @@ public class WindowMenu extends JMenu implements javax.swing.event.MenuListener 
         for (int i = 0; i < framesNumber; i++) {
             JmriJFrame iFrame = framesList.get(i);
             windowName = iFrame.getTitle();
+            
             if (windowName.equals("")) {
                 windowName = "Untitled";
             }
+            
+            if (ignoredFrames.contains(windowName)) {
+                continue;
+            }
+            
             JCheckBoxMenuItem newItem = new JCheckBoxMenuItem(new AbstractAction(windowName) {
                 @Override
                 public void actionPerformed(ActionEvent e) {

@@ -81,9 +81,11 @@ class SimulationMaster(jmri.jmrit.automat.AbstractAutomaton):
 
             for activeTrain in active_trains_list:
                 activeTrainName = activeTrain.getActiveTrainName()
-
                 # if train being dispatched not in train_being simulated, and train is RUNNING simulate it
-                if activeTrainName not in trains_being_simulated:   # do not want to suimulate a train already being simulated
+                if activeTrainName not in trains_being_simulated:   # do not want to simulate a train already being simulated
+                    while activeTrain.getModeText() != "AUTOMATIC":     # will be DISPATCHED if not enough time for the throttle to start
+                        # print "activeTrain.getMode()", activeTrain.getModeText()  #waiting to change to "AUTOMATIC"
+                        self.waitMsec(500)
                     if self.logLevel > 0: print "!!!!!!activeTrainName started simulation = " , activeTrain, "activeTrainName", activeTrainName,"trains_being_simulated", [train for train in trains_being_simulated]
 
                     if activeTrain.getStatus() == activeTrain.RUNNING:  #only simulate if the train is running
@@ -256,6 +258,8 @@ class Simulate_instance(jmri.jmrit.automat.AbstractAutomaton):
         block_list[self.start_position].getSensor().setState(INACTIVE)
         # print "waiting for sensor to change"
         self.wait_for_sensor_to_change(block_list[self.start_position].getSensor(), INACTIVE)
+        # print "waited making block unoccupied"
+        # print "self.start_position", self.start_position, "self.end_position", self.end_position
         # print "blocklist", [[str(block.getUserName()), block.getSensor().getState()] for block in self.block_list]
         if self.logLevel > 0: print "sensor set inactive", block_list[self.start_position].getSensor().getUserName()
         if self.logLevel > 0: print "Success", "Set block ", self.start_position, "inactive"
@@ -281,6 +285,7 @@ class Simulate_instance(jmri.jmrit.automat.AbstractAutomaton):
         if self.end_position == len(block_list)-1:
             # Stop if at end block
             if self.logLevel > 0: print "finished", "end position" , self.end_position, "len(block_list)-1", len(block_list)-1
+            # print "self.start_position", self.start_position, "self.end_position", self.end_position
             ret = "Finished"
         else:
 
@@ -301,6 +306,8 @@ class Simulate_instance(jmri.jmrit.automat.AbstractAutomaton):
                 # print "setting block ", block_list[self.end_position].getUserName() , "active"
                 block_list[self.end_position].getSensor().setState(ACTIVE)
                 self.wait_for_sensor_to_change(block_list[self.end_position].getSensor(), ACTIVE)
+                # print "waited making block occupied"
+                # print "self.start_position", self.start_position, "self.end_position", self.end_position
                 # print "blocklist", [[block.getUserName(), block.getSensor().getState()]  for block in self.block_list]
                 if self.logLevel > 0: print "Success", "Set block ", self.end_position
                 ret = "Success"

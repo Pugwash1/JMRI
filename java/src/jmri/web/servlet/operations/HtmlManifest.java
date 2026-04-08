@@ -18,8 +18,7 @@ import jmri.jmrit.operations.rollingstock.cars.Car;
 import jmri.jmrit.operations.rollingstock.cars.CarManager;
 import jmri.jmrit.operations.routes.RouteLocation;
 import jmri.jmrit.operations.setup.Setup;
-import jmri.jmrit.operations.trains.JsonManifest;
-import jmri.jmrit.operations.trains.Train;
+import jmri.jmrit.operations.trains.*;
 import jmri.jmrit.operations.trains.schedules.TrainScheduleManager;
 import jmri.server.json.JSON;
 import jmri.server.json.operations.JsonOperations;
@@ -66,7 +65,7 @@ public class HtmlManifest extends HtmlTrainCommon {
                 } else if (routeLocation == train.getTrainDepartsRouteLocation()) {
                     builder.append(String.format(locale, strings.getProperty("WorkDepartureTime"), routeLocationName,
                             train.getFormatedDepartureTime())); // NOI18N
-                } else if (!routeLocation.getDepartureTime().equals(RouteLocation.NONE)) {
+                } else if (!routeLocation.getDepartureTimeHourMinutes().equals(RouteLocation.NONE)) {
                     builder.append(String.format(locale, strings.getProperty("WorkDepartureTime"), routeLocationName,
                             routeLocation.getFormatedDepartureTime())); // NOI18N
                 } else if (Setup.isUseDepartureTimeEnabled()
@@ -167,7 +166,7 @@ public class HtmlManifest extends HtmlTrainCommon {
                                     builder.append(String.format(locale, strings
                                             .getProperty("NoScheduledWorkAtWithDepartureTime"), routeLocationName,
                                             train.getFormatedDepartureTime()));
-                                } else if (!routeLocation.getDepartureTime().isEmpty()) {
+                                } else if (!routeLocation.getDepartureTimeHourMinutes().isEmpty()) {
                                     builder.append(String.format(locale, strings
                                             .getProperty("NoScheduledWorkAtWithDepartureTime"), routeLocationName,
                                             routeLocation.getFormatedDepartureTime()));
@@ -197,7 +196,7 @@ public class HtmlManifest extends HtmlTrainCommon {
                                             .getProperty("CommentAtWithDepartureTime"), routeLocationName, train // NOI18N
                                             .getFormatedDepartureTime(), StringEscapeUtils
                                             .escapeHtml4(routeLocation.getComment())));
-                                } else if (!routeLocation.getDepartureTime().equals(RouteLocation.NONE)) {
+                                } else if (!routeLocation.getDepartureTimeHourMinutes().equals(RouteLocation.NONE)) {
                                     builder.append(String.format(locale, strings
                                             .getProperty("CommentAtWithDepartureTime"), routeLocationName, // NOI18N
                                             routeLocation.getFormatedDepartureTime(), StringEscapeUtils
@@ -491,6 +490,10 @@ public class HtmlManifest extends HtmlTrainCommon {
             return this.getFormattedLocation(rollingStock.path(JsonOperations.FINAL_DESTINATION), ShowLocation.location, "FinalDestination"); // NOI18N
         } else if (attribute.equals(JsonOperations.FINAL_DEST_TRACK)) {
             return this.getFormattedLocation(rollingStock.path(JsonOperations.FINAL_DESTINATION), ShowLocation.both, "FinalDestination"); // NOI18N
+        } else if (attribute.equals(JsonOperations.LAST_TRAIN)) {
+            return TrainManifestHeaderText.getStringHeader_Last_Train() +
+                    SPACE +
+                    getFormattedAttribute(attribute, rollingStock.path(attribute).asText());
         }
         return this.getFormattedAttribute(attribute, rollingStock.path(attribute).asText());
     }

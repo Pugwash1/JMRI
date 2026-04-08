@@ -20,6 +20,7 @@ import jmri.jmrit.operations.rollingstock.cars.Car;
 import jmri.jmrit.operations.rollingstock.engines.Engine;
 import jmri.jmrit.operations.routes.RouteLocation;
 import jmri.jmrit.operations.setup.Setup;
+import jmri.jmrit.operations.trains.trainbuilder.TrainCommon;
 import jmri.server.json.JSON;
 import jmri.server.json.operations.JsonOperations;
 import jmri.server.json.operations.JsonUtil;
@@ -92,7 +93,7 @@ public class JsonManifest extends TrainCommon {
             }
             if (routeLocation == train.getTrainDepartsRouteLocation()) {
                 jsonLocation.put(JSON.DEPARTURE_TIME, train.getDepartureTime());
-            } else if (!routeLocation.getDepartureTime().equals(RouteLocation.NONE)) {
+            } else if (!routeLocation.getDepartureTimeHourMinutes().equals(RouteLocation.NONE)) {
                 jsonLocation.put(JSON.DEPARTURE_TIME, routeLocation.getDepartureTime());
             } else {
                 jsonLocation.put(JSON.EXPECTED_DEPARTURE, train.getExpectedDepartureTime(routeLocation));

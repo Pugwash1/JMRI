@@ -18,8 +18,10 @@ import jmri.jmrit.operations.locations.LocationManager;
 import jmri.jmrit.operations.setup.Control;
 import jmri.jmrit.operations.setup.Setup;
 import jmri.jmrit.operations.trains.*;
+import jmri.jmrit.operations.trains.csv.TrainCsvSwitchLists;
 import jmri.jmrit.operations.trains.excel.SetupExcelProgramSwitchListFrameAction;
 import jmri.jmrit.operations.trains.excel.TrainCustomSwitchList;
+import jmri.jmrit.operations.trains.trainbuilder.TrainCommon;
 import jmri.util.swing.JmriJOptionPane;
 
 /**
@@ -434,7 +436,7 @@ public class TrainSwitchListEditFrame extends OperationsFrame implements java.be
             }
         }
         // Processes the CSV Manifest files using an external custom program.
-        if (!InstanceManager.getDefault(TrainCustomSwitchList.class).excelFileExists()) {
+        if (!InstanceManager.getDefault(TrainCustomSwitchList.class).doesExcelFileExist()) {
             log.warn("Manifest creator file not found!, directory path: {}, file name: {}",
                     InstanceManager.getDefault(TrainCustomSwitchList.class).getDirectoryPathName(),
                     InstanceManager.getDefault(TrainCustomSwitchList.class).getFileName());

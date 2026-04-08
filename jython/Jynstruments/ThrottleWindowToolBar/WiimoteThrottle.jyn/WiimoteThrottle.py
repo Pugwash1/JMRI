@@ -198,12 +198,14 @@ class WiimoteThrottle(Jynstrument, PropertyChangeListener, AddressListener, WiiD
 #Property listener part
     def propertyChange(self, event):
         self.speedTimer.stop()                     
-        if (event.propertyName == "ThrottleFrame") :  # Current throttle frame changed
-            event.oldValue.getAddressPanel().removeAddressListener(self)
-            self.addressPanel = event.newValue.getAddressPanel()
-            self.throttle = self.addressPanel.getThrottle()
-            self.speedAction.setThrottle( self.throttle )
-            self.addressPanel.addAddressListener(self)
+        if (event.propertyName.startswith("ThrottleFrame")) :  # Current throttle frame changed
+            if event.oldValue != None : 
+                event.oldValue.getAddressPanel().removeAddressListener(self)
+            if event.newValue != None : 
+                self.addressPanel = event.newValue.getAddressPanel()
+                self.throttle = self.addressPanel.getThrottle()
+                self.speedAction.setThrottle( self.throttle )
+                self.addressPanel.addAddressListener(self)
 
 #Jynstrument main and mandatory methods
     def getExpectedContextClassName(self):
@@ -260,13 +262,13 @@ class WiimoteThrottle(Jynstrument, PropertyChangeListener, AddressListener, WiiD
         self.throttle = None
         self.speedAction.setThrottle( self.throttle )
 
-    def notifyConsistAddressChosen(self, address, isLong):
+    def notifyConsistAddressChosen(self, address):
         self.notifyAddressChosen(address)
 
     def notifyConsistAddressThrottleFound(self, throttle):
         self.notifyAddressThrottleFound(throttle)
 
-    def notifyConsistAddressReleased(self, address, isLong):
+    def notifyConsistAddressReleased(self, address):
         self.notifyAddressReleased(address)
                 
 # Speed timer class, to increase speed regularly once button pushed, thread stopped on button release

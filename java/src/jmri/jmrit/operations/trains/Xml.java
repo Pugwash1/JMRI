@@ -24,6 +24,7 @@ public class Xml {
     // train.java
     static final String TRAIN = "train"; // NOI18N
     static final String DESCRIPTION = "description"; // NOI18N
+    static final String DEPART_DAY = "departDay"; // NOI18N
     static final String DEPART_HOUR = "departHour"; // NOI18N
     static final String DEPART_MINUTE = "departMinute"; // NOI18N
     static final String ROW_COLOR = "rowColor";  // NOI18N
@@ -220,5 +221,5 @@ public class Xml {
     static final String DROP_COMMENT = "setOut_msg"; // NOI18N
     static final String PICKUP_COMMENT = "pickUp_msg"; // NOI18N
     static final String HAZARDOUS = "hazardous"; // NOI18N
-
+    static final String LAST_TRAIN = "last_train"; // NOI18N
 }
