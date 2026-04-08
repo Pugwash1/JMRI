@@ -12,7 +12,7 @@
 <!-- for more details.                                                      -->
 <pane xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://jmri.org/xml/schema/decoder-4-15-2.xsd">
     <copyright xmlns="http://docbook.org/ns/docbook">
-        <year>2022</year>
+        <year>2026</year>
         <holder>JMRI</holder>
     </copyright>
     <authorgroup xmlns="http://docbook.org/ns/docbook">
@@ -26,51 +26,9 @@
     <revhistory xmlns="http://docbook.org/ns/docbook">
         <revision>
             <revnumber>1</revnumber>
-            <date>2022-11-11</date>
+            <date>2026-02-01</date>
             <authorinitials>UG</authorinitials>
             <revremark>Initial version for Piko SmartDecoder XP5.1</revremark>
-        </revision>
-        <revision>
-            <revnumber>2</revnumber>
-            <date>2023-05-01</date>
-            <authorinitials>UG</authorinitials>
-            <revremark>Add SUSI Light Controller BR 93 TT, add CV1018 for output test</revremark>
-        </revision>
-        <revision>
-            <revnumber>3</revnumber>
-            <date>2023-10-10</date>
-            <authorinitials>UG</authorinitials>
-            <revremark>Add PWM_A1 to PWM_A6</revremark>
-        </revision>
-        <revision>
-            <revnumber>4</revnumber>
-            <date>2023-10-20</date>
-            <authorinitials>UG</authorinitials>
-            <revremark>Add CV Fade-in-out</revremark>
-        </revision>
-        <revision>
-            <revnumber>5</revnumber>
-            <date>2023-11-10</date>
-            <authorinitials>UG</authorinitials>
-            <revremark>Add ZIMO Loco Decoder</revremark>
-        </revision>
-        <revision>
-            <revnumber>6</revnumber>
-            <date>2023-12-03</date>
-            <authorinitials>UG</authorinitials>
-            <revremark>Add English translations</revremark>
-        </revision>
-        <revision>
-            <revnumber>7</revnumber>
-            <date>2024-3-27</date>
-            <authorinitials>UG</authorinitials>
-            <revremark>Add CVs for PWM2 and change model naming conventions</revremark>
-        </revision>
-                <revision>
-            <revnumber>7</revnumber>
-            <date>2026-3-31</date>
-            <authorinitials>UG</authorinitials>
-            <revremark>Add more LC types</revremark>
         </revision>
     </revhistory>
     <name>Piko Light Controller</name>
@@ -82,14 +40,11 @@
             </text>
         </label>
     </row>
-    <group include="PIKO SUSI Lichtcontroller V0,PIKO SUSI Lichtcontroller (XP5.1),PIKO SmartDecoder XP5.1 (version 1.5+),PIKO SmartDecoder XP5.1 (version 1.8+)">
-        <!-- Piko SmartDecoder XP5.1 -->
-        <!-- PIKO SUSI Lichtcontroller V0 -->
-        <!-- PIKO allgemein - PIKO46505-18 : LC       -->
-        <!-- PIKO BR 150-TT - PIKO46548-18 : LC_BR150-TT -->
-        <!-- PIKO S 499-TT  - PIKO46549-18 : LC_S499-TT  -->
-        <!-- PIKO BR 83-TT  - PIKO46550-18 : LC_BR83-TT  -->
-        <!-- PIKO BR 93-TT  - PIKO46551-18 : LC_BR93-TT  -->
+    <group include="PIKO SUSI Lichtcontroller V4,PIKO SUSI Lichtcontroller V5,46554,46555">
+        <!-- Piko SmartDecoder XP5.1 mit LC4 & 5 -->
+        <!-- PIKO SUSI Lichtcontroller V4 & V5   -->
+        <!-- Piko BR 62-TT - 46554 : LC4_BR62-TT -->
+        <!-- Piko BR 243-TT - 46555 : LC5_BR243-TT -->
         <row>
             <column>
                 <display item="Decoder_Test" format="checkbox"/>
@@ -100,33 +55,19 @@
                 </label>
             </column>
         </row>
-        <group include="PIKO SUSI Lichtcontroller (XP5.1),PIKO46548-18,PIKO46549-18,PIKO46550-18,PIKO46551-18">
-            <label>
-                <text>Update Decoder Definitions is necessary for this decoder</text>
-                <text xml:lang="de">Für diesen Decoder ist eine Aktualisierung der Decoderdefinitionen erforderlich</text>
-                <text xml:lang="cs">Pro tento dekodér je nutná aktualizace definic dekodérů</text>
-            </label>
-            <label>
-                <text>
-                    <!--empty line-->
-                </text>
-            </label>
-        </group>
-        <group exclude="PIKO SUSI Lichtcontroller (XP5.1),PIKO46548-18,PIKO46549-18,PIKO46550-18,PIKO46551-18">
-            <label>
-                <text>External Piko light controller available</text>
-                <text xml:lang="de">Externer Piko Licht-Controller verfügbar</text>
-            </label>
-            <label>
-                <text>Setting that determines which bank 0 - 3 is programmed. Reset to "Bank 0" when done!</text>
-                <text xml:lang="de">Auswahl der zu programmierenden Bank 0 - 3: (Zurückstellen nach "Bank 0" wenn fertig!)</text>
-                <text xml:lang="cs">Nastavení programování banky 0 - 3. Po dokončení obnovte na Banka 0!</text>
-            </label>
-        </group>
         <label>
             <text>
                 <!--empty line-->
             </text>
+        </label>
+        <label>
+            <text>External Piko light controller available</text>
+            <text xml:lang="de">Externer Piko Licht-Controller verfügbar</text>
+        </label>
+        <label>
+            <text>Setting that determines which bank 0-5 is programmed. Reset to "Bank 0" when done!</text>
+            <text xml:lang="de">Auswahl der zu programmierenden Bank 0 - 5: (Zurückstellen nach "Bank 0" wenn fertig!)</text>
+            <text xml:lang="cs">Nastavení programování banky 0 - 5. Po dokončení obnovte na Banka 0!</text>
         </label>
         <label>
             <text>
@@ -168,34 +109,22 @@
                 </label>
             </row>
             <row>
-                <group include="PIKO46505-18,LC,PIKO SUSI Lichtcontroller (XP5.1)">
+                <group include="LC4,LC5">
                     <label>
                         <text>LC_A1 - Conditions: </text>
                         <text xml:lang="de">LC_A1 - Bedingungen: </text>
                     </label>
                 </group>
-                <group include="46550,PIKO46550-18,LC_BR83-TT">
+                <group include="46554,LC4_BR62-TT">
                     <label>
                         <text>LC_A1 (Cab Light) - Conditions: </text>
                         <text xml:lang="de">LC_A1 (Führerstandsbeleuchtung) - Bedingungen: </text>
                     </label>
                 </group>
-                <group include="46551,PIKO46551-18,LC_BR93-TT">
+                <group include="46555,LC5_BR243-TT">
                     <label>
-                        <text>LC_A1 (Chassis Light) - Conditions: </text>
-                        <text xml:lang="de">LC_A1 (Fahrwerk Beleuchtung) - Bedingungen: </text>
-                    </label>
-                </group>
-                <group include="46549,PIKO46549-18,LC_S499-TT">
-                    <label>
-                        <text>LC_A1 (Signal Light Front) - Conditions: </text>
-                        <text xml:lang="de">LC_A1 (Signallicht / Fernlicht vorn) - Bedingungen: </text>
-                    </label>
-                </group>
-                <group include="46548,PIKO46548-18,LC_BR150-TT">
-                    <label>
-                        <text>LC_A1 (Cab Light 1) - Conditions: </text>
-                        <text xml:lang="de">LC_A1 (Führerstandsbeleuchtung FS1) - Bedingungen: </text>
+                        <text>LC_A1 (Front destination display) - Conditions: </text>
+                        <text xml:lang="de">LC_A1 (Zugzielanzeige vorn) - Bedingungen: </text>
                     </label>
                 </group>
             </row>
@@ -807,34 +736,22 @@
                 </label>
             </row>
             <row>
-                <group include="PIKO46505-18,LC,PIKO SUSI Lichtcontroller (XP5.1)">
+                <group include="LC4,LC5">
                     <label>
                         <text>LC_A2 - Conditions: </text>
                         <text xml:lang="de">LC_A2 - Bedingungen: </text>
                     </label>
                 </group>
-                <group include="46550,PIKO46550-18,LC_BR83-TT">
+                <group include="46554,LC4_BR62-TT">
                     <label>
-                        <text>LC_A2 (not used) - Conditions: </text>
-                        <text xml:lang="de">LC_A2 (nicht belegt) - Bedingungen: </text>
+                        <text>LC_A2 (Chassis light) - Conditions: </text>
+                        <text xml:lang="de">LC_A2 (Fahrwerksbeleuchtung) - Bedingungen: </text>
                     </label>
                 </group>
-                <group include="46551,PIKO46551-18,LC_BR93-TT">
+                <group include="46555,LC5_BR243-TT">
                     <label>
-                        <text>LC_A2 (Taillight front right) - Conditions: </text>
-                        <text xml:lang="de">LC_A2 (Schlusslicht vorn rechts) - Bedingungen: </text>
-                    </label>
-                </group>
-                <group include="46549,PIKO46549-18,LC_S499-TT">
-                    <label>
-                        <text>LC_A2 (High Beam Top Front) - Conditions: </text>
-                        <text xml:lang="de">LC_A2 (Fernlicht oben vorn) - Bedingungen: </text>
-                    </label>
-                </group>
-                <group include="46548,PIKO46548-18,LC_BR150-TT">
-                    <label>
-                        <text>LC_A2 (Cab Light 2) - Conditions: </text>
-                        <text xml:lang="de">LC_A2 (Führerstandsbeleuchtung FS2) - Bedingungen: </text>
+                        <text>LC_A2 (Rear destination display) - Conditions: </text>
+                        <text xml:lang="de">LC_A2 (Zugzielanzeige hinten) - Bedingungen: </text>
                     </label>
                 </group>
             </row>
@@ -1449,34 +1366,22 @@
             </qualifier>
             <!--Bank 1 -->
             <row>
-                <group include="PIKO46505-18,LC,PIKO SUSI Lichtcontroller (XP5.1)">
+                <group include="LC4,LC5">
                     <label>
                         <text>LC_A3 - Conditions: </text>
                         <text xml:lang="de">LC_A3 - Bedingungen: </text>
                     </label>
                 </group>
-                <group include="46550,PIKO46550-18,LC_BR83-TT">
+                <group include="46554,LC4_BR62-TT">
                     <label>
-                        <text>LC_A3 (Chassis Light) - Conditions: </text>
-                        <text xml:lang="de">LC_A3 (Fahrwerk Beleuchtung) - Bedingungen: </text>
+                        <text>LC_A3 (Firebox) - Conditions: </text>
+                        <text xml:lang="de">LC_A3 (Feuerbüchse) - Bedingungen: </text>
                     </label>
                 </group>
-                <group include="46551,PIKO46551-18,LC_BR93-TT">
-                    <label>
-                        <text>LC_A3 (Taillight front left) - Conditions: </text>
-                        <text xml:lang="de">LC_A3 (Schlusslicht vorn links) - Bedingungen: </text>
-                    </label>
-                </group>
-                <group include="46549,PIKO46549-18,LC_S499-TT">
+                <group include="46555,LC5_BR243-TT">
                     <label>
                         <text>LC_A3 (Cab Light Rear) - Conditions: </text>
                         <text xml:lang="de">LC_A3 (Führerstandsbeleuchtung vorn) - Bedingungen: </text>
-                    </label>
-                </group>
-                <group include="46548,PIKO46548-18,LC_BR150-TT">
-                    <label>
-                        <text>LC_A3 (Engine Room Light) - Conditions: </text>
-                        <text xml:lang="de">LC_A3 (Maschinenraumbeleuchtung) - Bedingungen: </text>
                     </label>
                 </group>
             </row>
@@ -2088,34 +1993,22 @@
                 </label>
             </row>
             <row>
-                <group include="PIKO46505-18,LC,PIKO SUSI Lichtcontroller (XP5.1)">
+                <group include="LC4,LC5">
                     <label>
                         <text>LC_A4 - Conditions: </text>
                         <text xml:lang="de">LC_A4 - Bedingungen: </text>
                     </label>
                 </group>
-                <group include="46550,PIKO46550-18,LC_BR83-TT">
+                <group include="46554,LC4_BR62-TT">
                     <label>
                         <text>LC_A4 (not used) - Conditions: </text>
                         <text xml:lang="de">LC_A4 (nicht belegt) - Bedingungen: </text>
                     </label>
                 </group>
-                <group include="46551,PIKO46551-18,LC_BR93-TT">
+                <group include="46555,LC5_BR243-TT">
                     <label>
-                        <text>LC_A4 (Taillight rear right) - Conditions: </text>
-                        <text xml:lang="de">LC_A4 (Schlusslicht hinten rechts) - Bedingungen: </text>
-                    </label>
-                </group>
-                <group include="46549,PIKO46549-18,LC_S499-TT">
-                    <label>
-                        <text>LC_A4 (Signal Light Rear) - Conditions: </text>
-                        <text xml:lang="de">LC_A4 (Signallicht / Fernlicht hinten) - Bedingungen: </text>
-                    </label>
-                </group>
-                <group include="46548,PIKO46548-18,LC_BR150-TT">
-                    <label>
-                        <text>LC_A4 (not used) - Conditions: </text>
-                        <text xml:lang="de">LC_A4 (nicht belegt) - Bedingungen: </text>
+                        <text>LC_A4 (Cab Light Rear) - Conditions: </text>
+                        <text xml:lang="de">LC_A4 (Führerstandsbeleuchtung hinten) - Bedingungen: </text>
                     </label>
                 </group>
             </row>
@@ -2730,34 +2623,22 @@
             </qualifier>
             <!--Bank 2 -->
             <row>
-                <group include="PIKO46505-18,LC,PIKO SUSI Lichtcontroller (XP5.1)">
+                <group include="LC4,LC5">
                     <label>
                         <text>LC_A5 - Conditions: </text>
                         <text xml:lang="de">LC_A5 - Bedingungen: </text>
                     </label>
                 </group>
-                <group include="46550,PIKO46550-18,LC_BR83-TT">
+                <group include="46554,LC4_BR62-TT">
                     <label>
                         <text>LC_A5 (not used) - Conditions: </text>
                         <text xml:lang="de">LC_A5 (nicht belegt) - Bedingungen: </text>
                     </label>
                 </group>
-                <group include="46551,PIKO46551-18,LC_BR93-TT">
+                <group include="46555,LC5_BR243-TT">
                     <label>
-                        <text>LC_A5 (Cab Light) - Conditions: </text>
-                        <text xml:lang="de">LC_A5 (Führerstandsbeleuchtung) - Bedingungen: </text>
-                    </label>
-                </group>
-                <group include="46549,PIKO46549-18,LC_S499-TT">
-                    <label>
-                        <text>LC_A5 (High Beam Top Rear) - Conditions: </text>
-                        <text xml:lang="de">LC_A5 (Fernlicht oben hinten) - Bedingungen: </text>
-                    </label>
-                </group>
-                <group include="46548,PIKO46548-18,LC_BR150-TT">
-                    <label>
-                        <text>LC_A5 (not used) - Conditions: </text>
-                        <text xml:lang="de">LC_A5 (nicht belegt) - Bedingungen: </text>
+                        <text>LC_A5 (Speedometer light, front) - Conditions: </text>
+                        <text xml:lang="de">LC_A5 (Tacholicht vorn) - Bedingungen: </text>
                     </label>
                 </group>
             </row>
@@ -3369,34 +3250,22 @@
                 </label>
             </row>
             <row>
-                <group include="PIKO46505-18,LC,PIKO SUSI Lichtcontroller (XP5.1)">
+                <group include="LC4,LC5">
                     <label>
                         <text>LC_A6 - Conditions: </text>
                         <text xml:lang="de">LC_A6 - Bedingungen: </text>
                     </label>
                 </group>
-                <group include="46550,PIKO46550-18,LC_BR83-TT">
+                <group include="46554,LC4_BR62-TT">
                     <label>
                         <text>LC_A6 (not used) - Conditions: </text>
                         <text xml:lang="de">LC_A6 (nicht belegt) - Bedingungen: </text>
                     </label>
                 </group>
-                <group include="46551,PIKO46551-18,LC_BR93-TT">
+                <group include="46555,LC5_BR243-TT">
                     <label>
-                        <text>LC_A6 (Taillight rear left) - Conditions: </text>
-                        <text xml:lang="de">LC_A6 (Schlusslicht hinten links) - Bedingungen: </text>
-                    </label>
-                </group>
-                <group include="46549,PIKO46549-18,LC_S499-TT">
-                    <label>
-                        <text>LC_A6 (Cab Light Rear) - Conditions: </text>
-                        <text xml:lang="de">LC_A6 (Führerstandsbeleuchtung hinten) - Bedingungen: </text>
-                    </label>
-                </group>
-                <group include="46548,PIKO46548-18,LC_BR150-TT">
-                    <label>
-                        <text>LC_A6 (not used) - Conditions: </text>
-                        <text xml:lang="de">LC_A6 (nicht belegt) - Bedingungen: </text>
+                        <text>LC_A6 (Speedometer indicator light, rear) - Conditions: </text>
+                        <text xml:lang="de">LC_A6 (Tacholicht hinten) - Bedingungen: </text>
                     </label>
                 </group>
             </row>
@@ -4007,13 +3876,13 @@
             <qualifier>
                 <variableref>SUSI_Bank_Switch</variableref>
                 <relation>eq</relation>
-                <value>3</value>
+                <value>4</value>
             </qualifier>
-            <!--Bank 3 -->
+            <!--Bank 4 -->
             <row>
                 <label>
-                    <text>PWM LC_A1 - LC_A6 (Dimming 0 - 255): </text>
-                    <text xml:lang="de">PWM LC_A1 - LC_A6 (Programmierung der Dimmung 0 - 255): </text>
+                    <text>PWM LC_A1 - LC_A8 (Dimming 0 - 255): </text>
+                    <text xml:lang="de">PWM LC_A1 - LC_A8 (Programmierung der Dimmung 0 - 255): </text>
                 </label>
             </row>
             <row>
@@ -4027,6 +3896,8 @@
                     <display item="PWM1_A4"/>
                     <display item="PWM1_A5"/>
                     <display item="PWM1_A6"/>
+                    <display item="PWM1_A7"/>
+                    <display item="PWM1_A8"/>
                     <label>
                         <text>     </text>
                     </label>
@@ -4046,6 +3917,8 @@
                     <display item="PWM2_A4"/>
                     <display item="PWM2_A5"/>
                     <display item="PWM2_A6"/>
+                    <display item="PWM2_A7"/>
+                    <display item="PWM2_A8"/>
                     <label>
                         <text>     </text>
                     </label>
@@ -4053,8 +3926,8 @@
             </row>
             <row>
                 <label>
-                    <text>Time steps for fading LC_A1 to LC_A6 in and out  (0 - 15)</text>
-                    <text xml:lang="de">Zeitstufen zum Ein- und Ausblenden LC_A1 bis LC_A6  (0 - 15)</text>
+                    <text>Time steps for fading LC_A1 to LC_A8 in and out  (0 - 15)</text>
+                    <text xml:lang="de">Zeitstufen zum Ein- und Ausblenden LC_A1 bis LC_A8  (0 - 15)</text>
                 </label>
             </row>
             <row>
@@ -4066,28 +3939,6 @@
                     <display item="Fade_out_time"/>
                 </column>
             </row>
-            <group include="PIKO46505-18,LC,PIKO SUSI Lichtcontroller (XP5.1)">
-                <column>
-                    <label>
-                        <text>     </text>
-                    </label>
-                    <display item="A7_F_Key">
-                        <label>     LC_A7 (ON / OFF) - Function key: </label>
-                        <label xml:lang="de">     LC_A7 (ON / OFF) - Funktionstaste: </label>
-                    </display>
-                </column>
-            </group>
-            <group include="46549,PIKO46549-18,LC_S499-TT">
-                <column>
-                    <label>
-                        <text>     </text>
-                    </label>
-                    <display item="A7_F_Key">
-                        <label>LC_A7 (Engine room lighting) - Function key: </label>
-                        <label xml:lang="de">LC_A7 (Motorraumbeleuchtung) - Funktionstaste: </label>
-                    </display>
-                </column>
-            </group>
         </group>
     </group>
 </pane>

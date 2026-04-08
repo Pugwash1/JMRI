@@ -99,7 +99,6 @@ public class ThreadingUtil {
      * @param ta    what to run, usually as a lambda expression
      * @param delay interval in milliseconds
      */
-    @Nonnull 
     static public void runOnLayoutDelayed(@Nonnull ThreadAction ta, int delay) {
         runOnGUIDelayed(ta, delay);
     }
@@ -284,7 +283,6 @@ public class ThreadingUtil {
      * @param ta    What to run, usually as a lambda expression
      * @param delay interval in milliseconds
      */
-    @Nonnull 
     static public void runOnGUIDelayed(@Nonnull Runnable ta, int delay) {
         // dispatch to Swing via timer
         var task = new TimerTask(){

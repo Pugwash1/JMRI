@@ -1481,8 +1481,8 @@ Command sequences should also be enclose in "strong" formatting.    jerryg2003 2
       "logger" in the operations directory. For each day's session the program will create a new
       file (.csv) using the day's date and the file will include all of the rolling stock movements
       for that day. Use a program like Microsoft Excel to view the file. The program will also
-      create and maintain a separate file for each car's history and it can be also found in the
-      "logger" directory in a second directory called "rollingStock".
+      create and maintain a separate file for each locomotive and car, and it can be also found in
+      the "logger" directory in a second directory called "rollingStock".
 
       <h3 id="ManifestOptions">Custom Manifests and Switch Lists</h3>
 
@@ -1722,7 +1722,7 @@ Command sequences should also be enclose in "strong" formatting.    jerryg2003 2
         </tr>
       </table>
 
-      <p>Time uses the format Hour:Minute.</p>
+      <p>Time uses the format day:hour:minute.</p>
 
       <p>The car parameters for pick up car (PC) and set out car (SC) are: road, number, type,
         length, load, color, location name, track name, destination name, destination track name,
@@ -2841,7 +2841,7 @@ Command sequences should also be enclose in "strong" formatting.    jerryg2003 2
       cars in the order you entered in the schedule table. Car types at the top of the table are
       requested first and once the last car type is delivered, the schedule resumes from the top. A
       pointer shows the next car type to be delivered. Select the "Sequential" radio button in the
-      top left corner and press "Save" if car type and load delivery order is as desired.
+      top right corner and press "Save" if car type and load delivery order is as desired.
 
       <p>Match mode eliminates the sequential aspects of a schedule. In match mode, the program
         when building a train will search the entire schedule to find a car type, delivery day, and
@@ -4184,6 +4184,9 @@ Command sequences should also be enclose in "strong" formatting.    jerryg2003 2
       select the first sort by selecting one of the "Sort by" radio buttons, then click on the final
       sort by clicking on one of the column headings.
 
+      <p>Also note that clicking on the Number column heading provides an alphanumeric sort,
+        where as clicking on the Number radio button provides an ascending sort by car number.</p>
+
       <h4>Final Destination or FD</h4>
       A car when assigned to a train is given a destination or the location where the car is to be
       delivered. When a car is to be <a href="#CarRouting">routed</a>, it is given a final
@@ -4627,9 +4630,10 @@ Command sequences should also be enclose in "strong" formatting.    jerryg2003 2
       You can remove a car that has been assigned to a train by simply pressing the "Save" button.
 
       <h4 id="SetCarAdd">Add car to train</h4>
-      To add a car to a train, select the train you want and press "Save". If the train is built,
-      the destination and track fields will become enabled. Now select the car's destination and
-      track and press "Save" to add the car to the train.
+      To manually add a car to a train, select the train you want and press "Save". If the train is
+      built, the destination and track fields will become enabled. Now select the car's destination
+      and track and press "Save" to add the car to the train. See
+      <a href="#OptionalNormallySet">Optional -- Normally Set by Program</a> for more information.
 
       <h4>Status</h4>
       In the upper right hand corner of the set car window is a checkbox labeled "Location Unknown".
@@ -4704,7 +4708,7 @@ Command sequences should also be enclose in "strong" formatting.    jerryg2003 2
       are moved as a single unit. Select the kernel you want the car to be in using the "Kernel"
       menu, and use the "Edit" button to create new ones.
 
-      <h4>Optional -- Normally Set by Program</h4>
+      <h4 id="OptionalNormallySet">Optional -- Normally Set by Program</h4>
       The next three set of fields are normally set by the program when building trains. We'll
       explain how they work in case you're interested in how the program works or if you want to
       manually override the program. The first is the "Destination and Track" set of pull down

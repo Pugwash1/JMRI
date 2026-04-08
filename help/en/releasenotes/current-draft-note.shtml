@@ -127,8 +127,14 @@
 
         <h4><a href="http://openlcb.org">OpenLCB</a> / LCC</h4>
             <ul>
+                <li>Improved how special characters in filenames are
+                    handled by the ChangeDefaultBackupFileName.py script</li>
                 <li>Updated the OpenLCB_Java library to include an 
                     improvement in how unknown-MTI messages are displayed.</li>
+                <li>The event-entry field on the Send Frame panel will now 
+                    allow entry of event names.</li>
+                <li>The popup menu on event entry fields now lets you copy
+                    the numerical event ID even if a event name has been entered.</li>
             </ul>
 
         <h4>Powerline</h4>
@@ -313,7 +319,10 @@
 
         <h4>Piko decoders</h4>
             <ul>
-                <li></li>
+                <li>New: Piko Decoder Scale G support, more LC controller types definitionen 
+Changes: product-ID identification, new decoder firmware version, new CVs
+Bug fixes and various improvements
+Update Decoder Definitins is highly recommended</li>
             </ul>
 
         <h4>Public Domain and DIY decoders</h4>
@@ -663,7 +672,7 @@
    <h3>Virtual Sound Decoder</h3>
         <a id="VSD" name="VSD"></a>
         <ul>
-            <li></li>
+            <li>Added LayoutEditor Traverser support for VSD navigation through a panel.</li>
         </ul>
 
    <h3>Z21 Server</h3>
