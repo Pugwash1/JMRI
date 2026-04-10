@@ -261,7 +261,6 @@ This section describes in detail the process for creating the release note for a
 
 (edit the new release note accordingly)
  - change numbers throughout
- - move new warnings to old (see below)
  - remove old-version change notes
 
 ```
@@ -330,13 +329,13 @@ For each, if it doesn't have the right milestone set, add the current milestone 
 ```
         git checkout master
         git pull
-        sed -i.bak s/5.15.4-SNAPSHOT/5.15.6-SNAPSHOT/g pom.xml
+        sed -i.bak s/5.15.5-SNAPSHOT/5.15.6-SNAPSHOT/g pom.xml
         head -10 pom.xml
 ```
 
 - Update the release.build property in `release.properties` to this release (numbers have to be manually updated to the last field now, so check the numbers in the following line)
 ```
-        sed -i.bak s/release.build=4/release.build=5/g release.properties
+        sed -i.bak s/release.build=5/release.build=6/g release.properties
         head -10 release.properties
 ```
  - Check that both those edits left 5.15.6 defined in the two files
@@ -465,6 +464,12 @@ https://builds.jmri.org/jenkins/job/testreleases/job/5.15.6/
 
 The Jenkins machine is currently getting a heavy load of web-spider requests, and you may get errors accessing that page.  I'm sorry about that, but I don't know what else to do about that. Please try again in that case.
 
+If you want to pick the files up directly with curl, wget or another tool, the links are
+
+https://builds.jmri.org/jenkins/job/testreleases/job/5.15.6/lastSuccessfulBuild/artifact/dist/release/JMRI.5.15.6+Redb35646a6.dmg
+https://builds.jmri.org/jenkins/job/testreleases/job/5.15.6/lastSuccessfulBuild/artifact/dist/release/JMRI.5.15.6+Redb35646a6.exe
+https://builds.jmri.org/jenkins/job/testreleases/job/5.15.6/lastSuccessfulBuild/artifact/dist/release/JMRI.5.15.6+Redb35646a6.tgz
+
 Feedback appreciated! I would like to release this later today or tomorrow morning if the files are OK on macOS, Linux and Windows.
 
 Note that the purpose of this check is to make sure that the _files_ were built OK.  If you find any new problems in the code, great, let's fix those for the next test release.  (Or even better, let's learn to do better functional checking of the development releases leading up to the test release build)
@@ -583,9 +588,9 @@ Checksums:
 
 File | SHA256 checksum
 ---|---
-[JMRI.5.15.6+Rd7168b5b4e.dmg](https://github.com/JMRI/JMRI/releases/download/v5.15.6/JMRI.5.15.6+Rd7168b5b4e.dmg) | 3db9c22ae72fe890790fd34381594f0ae9f022e25badee196e81f27458545656
-[JMRI.5.15.6+Rd7168b5b4e.exe](https://github.com/JMRI/JMRI/releases/download/v5.15.6/JMRI.5.15.6+Rd7168b5b4e.exe) | b51efbfad5ef8793018213f376d80a05f246726b8df3aa9f70ee2c40766c304f
-[JMRI.5.15.6+Rd7168b5b4e.tgz](https://github.com/JMRI/JMRI/releases/download/v5.15.6/JMRI.5.15.6+Rd7168b5b4e.tgz) | 3f14443c422236d6eff65d15b3b7dfdd3795a3abff66ed9006ccdde0cc0184fb
+[JMRI.5.15.6+Redb35646a6.dmg](https://github.com/JMRI/JMRI/releases/download/v5.15.6/JMRI.5.15.6+Redb35646a6.dmg) | e1b81d70095040d78e2994258ecb5d931e9f005c311aea2e625e7988be573d11
+[JMRI.5.15.6+Redb35646a6.exe](https://github.com/JMRI/JMRI/releases/download/v5.15.6/JMRI.5.15.6+Redb35646a6.exe) | dc9aa8f164f0aaacc5ace28047711fcb581abc011799d0ad0953659624ca11a7
+[JMRI.5.15.6+Redb35646a6.tgz](https://github.com/JMRI/JMRI/releases/download/v5.15.6/JMRI.5.15.6+Redb35646a6.tgz) | ecc065f31c35d910dd6e90b87ede99f7b609dd2c3bcce5ee32c3ea24e2dbd42b
 
 ```
 
