@@ -2,7 +2,7 @@
 JMRI Jython script: WiThrottle Monitor Table
 
 Monitors connected WiThrottle devices and locomotives (address, speed).
-Run from JMRI: Scripting → Jython → Run Script (or place in jython folder).
+Run from JMRI: Scripting → Jython → Run Script (or include as a startup item).
 
 Requires the WiThrottle server to be running (open WiThrottle from the menu first,
 or this script will try to start it).
