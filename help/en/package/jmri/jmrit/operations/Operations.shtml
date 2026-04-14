@@ -2793,7 +2793,14 @@ Command sequences should also be enclose in "strong" formatting.    jerryg2003 2
       destination, and when the car is to be picked up. For example, if you wanted two SP boxcars to
       be delivered followed by a tank car loaded with "Oil", you can create a schedule that will do
       exactly that.
-      
+
+      <p>
+        The program updates a car with one of the schedule's line items when it arrives at a spur,
+        or is manually placed using the <a href="#CarsSet">Set Car</a> window. Modifying a schedule
+        will not change any of the cars currently sitting on the spur. Only new cars arriving will
+        use the modified schedule.
+      </p>
+
       <p>You should note that adding schedules and custom loads is an optional feature and isn't
         needed for good car movement, and in most cases will reduce car movement. So if you want the
         most car movement don't use schedules or custom loads. This feature is here for those that
@@ -2841,7 +2848,7 @@ Command sequences should also be enclose in "strong" formatting.    jerryg2003 2
       cars in the order you entered in the schedule table. Car types at the top of the table are
       requested first and once the last car type is delivered, the schedule resumes from the top. A
       pointer shows the next car type to be delivered. Select the "Sequential" radio button in the
-      top right corner and press "Save" if car type and load delivery order is as desired.
+      top right corner and press "Save" if car type and load delivery order is desired.
 
       <p>Match mode eliminates the sequential aspects of a schedule. In match mode, the program
         when building a train will search the entire schedule to find a car type, delivery day, and

@@ -487,7 +487,8 @@
     <h3>LccPro</h3>
         <a id="LccPro" name="LccPro"></a>
         <ul>
-          <li></li>
+            <li>Improved performance of Active display in lower right
+                on high-bandwidth links.</li>
         </ul>
 
     <h3>Logix</h3>
