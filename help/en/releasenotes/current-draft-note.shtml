@@ -150,8 +150,21 @@
                     For example, WiringPi GPIO 0 (BCM 17) becomes address 17 in the
                     new numbering scheme.
                 </li>
+                <li>Support has been added for the Pi4J GpioD plugin
+                    (<code>pi4j-plugin-gpiod</code>), which uses the modern Linux GPIO
+                    character-device interface (<code>/dev/gpiochip*</code>) introduced
+                    in kernel 5.10.
+                    This is the preferred GPIO interface on Raspberry Pi OS with kernel
+                    5.10 or later (including the 6.x kernels shipped with current
+                    Raspberry Pi OS releases).
+                    It requires the <code>libgpiod2</code> package:
+                    <code>sudo apt install libgpiod2</code>
+                    The plugin is discovered and activated automatically alongside the
+                    existing LinuxFS and PiGpio plugins via Java ServiceLoader; no
+                    configuration change is required.
+                </li>
                 <li>Hardware GPIO plugins (<code>pi4j-plugin-raspberrypi</code>,
-                    <code>pi4j-plugin-linuxfs</code>, <code>pi4j-plugin-pigpio</code>)
+                    <code>pi4j-plugin-linuxfs</code>, <code>pi4j-plugin-gpiod</code>)
                     are now loaded at runtime via Java ServiceLoader on Raspberry Pi
                     hardware and are no longer bundled as compile-time dependencies.
                 </li>

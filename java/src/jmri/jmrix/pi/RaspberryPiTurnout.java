@@ -26,11 +26,13 @@ import org.slf4j.LoggerFactory;
  */
 public class RaspberryPiTurnout extends AbstractTurnout implements java.io.Serializable {
 
+    private static final long serialVersionUID = 1L;
+
     /** Pi4J digital output — non-null only in production (non-simulator) mode. */
-    private DigitalOutput pi4jPin = null;
+    private transient DigitalOutput pi4jPin = null;
 
     /** JMRI simulator output pin — non-null only in simulator mode. */
-    private GpioPinDigitalOutputSimulator simPin = null;
+    private transient GpioPinDigitalOutputSimulator simPin = null;
 
     /** Pi4J registry key for this pin, used to shut it down individually. */
     private String pinId = null;

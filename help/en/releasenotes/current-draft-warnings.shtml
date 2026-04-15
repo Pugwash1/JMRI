@@ -9,4 +9,12 @@
         numbers before they will work correctly with this release.
     </li>
     <li>
+        <strong>Raspberry Pi: the libgpiod2 library is required for GpioD GPIO support.</strong>
+        This release adds support for the Pi4J GpioD plugin, which uses the modern Linux
+        GPIO character-device interface preferred on kernel 5.10 and later.
+        To enable it, install the native library before starting JMRI:
+        <code>sudo apt install libgpiod2</code>
+        (Raspberry Pi OS / Raspbian) or the equivalent for your distribution.
+        If libgpiod2 is absent, Pi4J will fall back to the LinuxFS provider
+        for digital I/O; all sensors and turnouts will still function.
     </li>

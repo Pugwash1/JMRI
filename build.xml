@@ -186,7 +186,8 @@
         <pathelement location="${libdir}/pi4j-core-2.8.0.jar"/>
         <pathelement location="${libdir}/pi4j-plugin-raspberrypi-2.8.0.jar"/>
         <pathelement location="${libdir}/pi4j-plugin-linuxfs-2.8.0.jar"/>
-        <pathelement location="${libdir}/pi4j-plugin-pigpio-2.8.0.jar"/>
+        <pathelement location="${libdir}/pi4j-plugin-gpiod-2.8.0.jar"/>
+        <pathelement location="${libdir}/pi4j-library-gpiod-2.8.0.jar"/>
         <pathelement location="${libdir}/commons-io-2.11.0.jar"/>
         <pathelement location="${libdir}/bluecove-2.1.1-SNAPSHOT.jar"/>
         <pathelement location="${libdir}/bluecove-bluez-2.1.1-SNAPSHOT.jar"/>

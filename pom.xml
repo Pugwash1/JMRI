@@ -1515,9 +1515,18 @@
         </dependency>
         <dependency>
             <groupId>com.pi4j</groupId>
-            <artifactId>pi4j-plugin-pigpio</artifactId>
+            <artifactId>pi4j-plugin-gpiod</artifactId>
             <version>2.8.0</version>
-            <!-- loaded at runtime via ServiceLoader on Raspberry Pi hardware -->
+            <!-- GpioD plugin: uses Linux /dev/gpiochip* character-device interface
+                 (preferred on kernel 5.10+); loaded at runtime via ServiceLoader -->
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>com.pi4j</groupId>
+            <artifactId>pi4j-library-gpiod</artifactId>
+            <version>2.8.0</version>
+            <!-- transitive runtime dependency of pi4j-plugin-gpiod; JNI wrapper for
+                 the native libgpiod C library (sudo apt install libgpiod2) -->
             <optional>true</optional>
         </dependency>
         <dependency>

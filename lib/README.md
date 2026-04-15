@@ -317,12 +317,19 @@ bluecove-gpl-2.1.1-SNAPSHOT.jar
 - from https://mvnrepository.com/artifact/net.java.dev.jna/jna-platform/5.13.0
 
 
-##### pi4j-core-2.8.0.jar, pi4j-plugin-raspberrypi-2.8.0.jar, pi4j-plugin-linuxfs-2.8.0.jar, pi4j-plugin-pigpio-2.8.0.jar
+##### pi4j-core-2.8.0.jar, pi4j-library-gpiod-2.8.0.jar, pi4j-plugin-raspberrypi-2.8.0.jar, pi4j-plugin-linuxfs-2.8.0.jar, pi4j-plugin-gpiod-2.8.0.jar
 - Pi4J V2 (latest 2.x release, Java 11+ compatible)
 - from https://pi4j.com/
-- Used for supporting GPIO pins on a Raspberry Pi. pi4j-core is required at compile time.
-  pi4j-plugin-raspberrypi, pi4j-plugin-linuxfs, and pi4j-plugin-pigpio are loaded at runtime
-  via ServiceLoader on Raspberry Pi hardware.
+- Used for supporting GPIO pins on a Raspberry Pi.
+  pi4j-core is required at compile time **and** at runtime (it must be on the application
+  classpath to avoid `NoClassDefFoundError`).
+- pi4j-library-gpiod is the JNI wrapper for the native libgpiod C library; transitive
+  runtime dependency of pi4j-plugin-gpiod. Requires `sudo apt install libgpiod2` on the Pi.
+- pi4j-plugin-gpiod uses the modern Linux GPIO character-device interface (`/dev/gpiochip*`)
+  and is preferred on kernel 5.10+; pi4j-plugin-linuxfs uses the legacy sysfs interface
+  (`/sys/class/gpio`).
+- All hardware plugins are loaded at runtime via Java ServiceLoader on Raspberry Pi hardware;
+  they are optional on non-Pi systems.
 - Pin addressing uses BCM (Broadcom) numbers; e.g. system name "PS4" → BCM GPIO 4.
 
 ##### thumbnailator-0.4.8.jar

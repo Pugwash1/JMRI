@@ -59,6 +59,13 @@ public class RaspberryPiAdapter extends jmri.jmrix.AbstractPortController {
     /**
      * Initialize the shared Pi4J context. Called from constructors only.
      * Synchronized on the class to safely write the static field.
+     * <p>
+     * Catches {@link LinkageError} (covers {@code UnsatisfiedLinkError} when a
+     * native pigpio library is missing <em>and</em> {@code NoClassDefFoundError}
+     * when pi4j-core is absent from the runtime classpath) as well as
+     * {@link RuntimeException} (covers Pi4J's own
+     * {@code Pi4JInitializationException} when no platform provider is
+     * available on non-Raspberry-Pi hardware).
      *
      * @return true if the context was successfully created
      */
@@ -66,8 +73,9 @@ public class RaspberryPiAdapter extends jmri.jmrix.AbstractPortController {
         try {
             sharedPi4JContext = Pi4J.newAutoContext();
             return true;
-        } catch (UnsatisfiedLinkError er) {
-            log.error("Expected to run on Raspberry PI, but does not appear to be.");
+        } catch (LinkageError | RuntimeException er) {
+            log.error("Pi4J context could not be initialised — not running on Raspberry Pi hardware, "
+                    + "or pi4j-core is not on the runtime classpath. Detail: {}", er.toString());
             return false;
         }
     }
@@ -101,7 +109,9 @@ public class RaspberryPiAdapter extends jmri.jmrix.AbstractPortController {
 
     /**
      * Return the shared Pi4J context, creating it lazily if needed.
-     * Returns {@code null} in simulator mode.
+     * Returns {@code null} in simulator mode or when Pi4J cannot be
+     * initialised (e.g. not running on Raspberry Pi hardware, or the
+     * pi4j-core jar is absent from the runtime classpath).
      *
      * @return the Pi4J context, or {@code null}
      */
@@ -110,8 +120,9 @@ public class RaspberryPiAdapter extends jmri.jmrix.AbstractPortController {
         if (sharedPi4JContext == null && !_isSimulator) {
             try {
                 sharedPi4JContext = Pi4J.newAutoContext();
-            } catch (UnsatisfiedLinkError er) {
-                log.error("Expected to run on Raspberry PI, but does not appear to be.");
+            } catch (LinkageError | RuntimeException er) {
+                log.error("Pi4J context could not be initialised — not running on Raspberry Pi hardware, "
+                        + "or pi4j-core is not on the runtime classpath. Detail: {}", er.toString());
             }
         }
         return sharedPi4JContext;
