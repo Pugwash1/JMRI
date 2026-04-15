@@ -453,7 +453,12 @@
     <h3>Layout Editor</h3>
         <a id="LE" name="LE"></a>
         <ul>
-            <li></li>
+            <li>Added a new "Make Layout Editor XML output more reproducible" option
+                to the Load and Store preference pane.  The default is off.  When
+                on, this option will result in positions of Layout Editor objects
+                being stored in a form that's more reproducible.  This will result
+                in fewer spurious changes if you're e.g. storing panel files in a
+                tracking system like Git.</li>
         </ul>
 
         <h4>NX - Entry/Exit Tool</h4>
