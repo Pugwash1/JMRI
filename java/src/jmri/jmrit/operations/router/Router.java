@@ -9,7 +9,8 @@ import org.slf4j.LoggerFactory;
 
 import jmri.InstanceManager;
 import jmri.InstanceManagerAutoDefault;
-import jmri.jmrit.operations.locations.*;
+import jmri.jmrit.operations.locations.Location;
+import jmri.jmrit.operations.locations.Track;
 import jmri.jmrit.operations.rollingstock.RollingStock;
 import jmri.jmrit.operations.rollingstock.cars.Car;
 import jmri.jmrit.operations.setup.Setup;
@@ -34,7 +35,6 @@ import jmri.jmrit.operations.trains.trainbuilder.TrainCommon;
 public class Router extends TrainCommon implements InstanceManagerAutoDefault {
 
     TrainManager trainManager = InstanceManager.getDefault(TrainManager.class);
-    LocationManager locationManager = InstanceManager.getDefault(LocationManager.class);
 
     protected final List<Track> _nextLocationTracks = new ArrayList<>();
     protected final List<Track> _lastLocationTracks = new ArrayList<>();
