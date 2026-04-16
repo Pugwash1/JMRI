@@ -32,12 +32,12 @@
 
       <p>When a turntable is added, it has four ray tracks located in up, down, left, and
       right directions. The turntable's popup menu has two items. Selecting
-      <strong>Edit...</strong> brings up an Edit Turntable dialog, and selecting
-      <strong>Delete</strong> deletes the turntable and any track segments connected to it. Before
-      a turntable is actually deleted, the program asks for verification of that action.</p>
+      <strong>Edit&hellip;</strong> brings up an Edit Turntable dialog, and selecting
+      <strong>Delete</strong> deletes the turntable. Before a turntable is actually deleted, the
+      program asks for verification of that action.</p>
 
       <p><img src="images/EditTurntable.png" class="floatRight" alt="turnout dialog"> The Edit
-      Turntable dialog allows the following</p>
+      Turntable dialog allows the following:</p>
 
       <ul>
         <li>Changing the Radius of the turntable circle</li>
@@ -75,7 +75,7 @@
 
       <p>When this is selected it allows for control of turntables (and drivers) that use DCC turnout
       addresses to set the turntable to various positions. Such examples are the LDT TT-DEC or
-      Heljan DCC Turntable. For each Ray, select or create the DCC turnout address and the position
+      Heljan DCC Turntable. For each Ray, select the DCC turnout address and the position
       required to set it.<br>
       To set the turntable to the desired position, simply click on the ray that you wish the
       turntable to be aligned with.</p>
