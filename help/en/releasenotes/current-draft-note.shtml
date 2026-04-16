@@ -435,7 +435,7 @@
    <h3>Dispatcher</h3>
         <a id="Dispatcher" name="Dispatcher"></a>
         <ul>
-             <li></li>
+             <li>Save dispatcher usestrict option correctly.</li>
         </ul>
 
     <h3>Dispatcher System</h3>
@@ -464,7 +464,8 @@
     <h3>LccPro</h3>
         <a id="LccPro" name="LccPro"></a>
         <ul>
-          <li></li>
+            <li>Improved performance of Active display in lower right
+                on high-bandwidth links.</li>
         </ul>
 
     <h3>Logix</h3>
@@ -530,7 +531,9 @@
     <h3>Scripting</h3>
         <a id="Scripting" name="Scripting"></a>
         <ul>
-            <li></li>
+            <li>There's a new "WiThrottleMonitorTableSpeedRed.py" script that opens a window displaying
+                connected WiThrottle devices and locomotives (address, speed)
+                </li>
         </ul>
 
     <h3>Signals</h3>

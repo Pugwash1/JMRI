@@ -15,6 +15,8 @@ import java.util.*;
 import java.util.List;
 
 import javax.print.attribute.*;
+import javax.print.attribute.standard.MediaPrintableArea;
+import javax.print.attribute.standard.OrientationRequested;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
@@ -97,6 +99,7 @@ public class HardcopyWriter extends Writer implements Printable {
     // save state between invocations of write()
     private boolean last_char_was_return = false;
 
+    public static int DPI = 72;
     public static String NO_PRINTING_PRINTER = "skipDialog";
 
     // Job and Page attributes
@@ -111,8 +114,8 @@ public class HardcopyWriter extends Writer implements Printable {
     /**
      * Constructor for HardcopyWriter
      * 
-     * @param frame         The AWT Frame (only required for preview mode) -- this is used
-     *                      to get the screen resolution.
+     * @param frame         The AWT Frame (only required for preview mode) --
+     *                      this is used to get the screen resolution.
      * @param jobname       The name to print in the title of the page
      * @param fontName      The name of the font to use (if null, default is
      *                      used)
@@ -198,13 +201,13 @@ public class HardcopyWriter extends Writer implements Printable {
             // Assume 100 DPI scale factor. This is used for testing only. If !isPreview, then things
             // are set according to the printer's capabilities.
             screenResolution = 100;
-            pagesizePixels = new Dimension(pagesizePoints.width * screenResolution / 72,
-                    pagesizePoints.height * screenResolution / 72);
+            pagesizePixels = new Dimension(pagesizePoints.width * screenResolution / DPI,
+                    pagesizePoints.height * screenResolution / DPI);
         }
 
         // Save this so that if we print, then we can keep printed stuff out of
         // the left margin.
-        leftMargin = leftmargin;
+        this.leftMargin = leftmargin;
 
         // skip printer selection if preview
         if (!isPreview) {
@@ -216,23 +219,27 @@ public class HardcopyWriter extends Writer implements Printable {
 
             if (isLandscape != null) {
                 pageFormat.setOrientation(isLandscape ? PageFormat.LANDSCAPE : PageFormat.PORTRAIT);
+                attributes.add(isLandscape ? OrientationRequested.LANDSCAPE : OrientationRequested.PORTRAIT);
             }
 
             if (sides != null) {
                 attributes.add(sides);
             }
 
+            Paper paper = new Paper();
             if (pagesize != null) {
-                Paper paper = new Paper();
                 paper.setSize(pagesize.width, pagesize.height);
                 paper.setImageableArea(0, 0, pagesize.width, pagesize.height);
                 pageFormat.setPaper(paper);
             } else {
                 // Use the default page size but set the imageable area to the full page size
-                Paper paper = pageFormat.getPaper();
+                paper = pageFormat.getPaper();
                 paper.setImageableArea(0, 0, paper.getWidth(), paper.getHeight());
                 pageFormat.setPaper(paper);
             }
+
+            attributes.add(new MediaPrintableArea(0.0f, 0.0f, (float) paper.getWidth(), (float) paper.getHeight(),
+                    MediaPrintableArea.INCH));
 
             printerJob.setPrintable(this, pageFormat);
 
@@ -298,7 +305,7 @@ public class HardcopyWriter extends Writer implements Printable {
         // header font info
         headerfont = new Font("SansSerif", Font.ITALIC, useFontSize);
         headermetrics = g.getFontMetrics(headerfont);
-        headery = y0 - (int) (0.125 * 72) - headermetrics.getHeight() + headermetrics.getAscent();
+        headery = y0 - (int) (0.125 * DPI) - headermetrics.getHeight() + headermetrics.getAscent();
         titleTop = headery - headermetrics.getAscent();
 
         // compute date/time for header
@@ -524,7 +531,7 @@ public class HardcopyWriter extends Writer implements Printable {
     private Dimension getPagesizePixels() {
         int dpi = getScreenResolution();
         Dimension pagesizePoints = getPagesizePoints();
-        return new Dimension(pagesizePoints.width * dpi / 72, pagesizePoints.height * dpi / 72);
+        return new Dimension(pagesizePoints.width * dpi / DPI, pagesizePoints.height * dpi / DPI);
     }
 
     /**
@@ -846,7 +853,7 @@ public class HardcopyWriter extends Writer implements Printable {
         // compute lines and columns within margins
         double widthI = font.getStringBounds("i", neutralFRC).getWidth();
         double widthM = font.getStringBounds("m", neutralFRC).getWidth();
-        
+
         // Using a tiny epsilon check for double precision stability
         isMonospacedFont = Math.abs(widthI - widthM) < 0.0001;
     }
@@ -876,10 +883,10 @@ public class HardcopyWriter extends Writer implements Printable {
      * @return the width of a character, or null if the font is not monospaced
      */
     public Float getCharWidth() {
-// TODO DAB temp fix to prevent NPE when printing non-monospaced fonts
-//        if (!isMonospaced()) {
-//            return null;
-//        }
+        // TODO DAB temp fix to prevent NPE when printing non-monospaced fonts
+        //        if (!isMonospaced()) {
+        //            return null;
+        //        }
         return this.charwidth;
     }
 
@@ -929,10 +936,10 @@ public class HardcopyWriter extends Writer implements Printable {
      *         monospaced
      */
     public Integer getCharactersPerLine() {
-     // TODO DAB temp fix to prevent NPE when printing non-monospaced fonts
-//        if (!isMonospaced()) {
-//            return null;
-//        }
+        // TODO DAB temp fix to prevent NPE when printing non-monospaced fonts
+        //        if (!isMonospaced()) {
+        //            return null;
+        //        }
         int chars_per_line = (int) (width / charwidth);
         return chars_per_line;
     }
@@ -1060,14 +1067,14 @@ public class HardcopyWriter extends Writer implements Printable {
 
     /**
      * Setup the graphics context for preview. We want the subpixel positioning
-     * for text. 
+     * for text.
      * 
-     * @param g2d the graphics context to setup
+     * @param g2d        the graphics context to setup
      * @param applyScale whether to apply the scale factor
      */
     private void setupGraphics(Graphics2D g2d, boolean applyScale) {
         if (applyScale) {
-            double scale = getScreenResolution() / 72.0;
+            double scale = getScreenResolution() / (float) DPI;
             g2d.scale(scale, scale);
         }
 
@@ -1169,7 +1176,7 @@ public class HardcopyWriter extends Writer implements Printable {
         int y = (int) (y0 + v_pos + lineascent);
 
         if (isPreview) {
-            float pixelsPerPoint = getScreenResolution() / 72.0f;
+            float pixelsPerPoint = getScreenResolution() / (float) DPI;
             Image c = ImageUtils.getScaledInstance(icon.getImage(), (int) (requiredSize.width * pixelsPerPoint),
                     (int) (requiredSize.height * pixelsPerPoint));
 
@@ -1209,7 +1216,7 @@ public class HardcopyWriter extends Writer implements Printable {
         Dimension d = new Dimension(Math.round(c.getWidth(null) * scale), Math.round(c.getHeight(null) * scale));
 
         if (isPreview) {
-            float pixelsPerPoint = getScreenResolution() / 72.0f;
+            float pixelsPerPoint = getScreenResolution() / (float) DPI;
             c = ImageUtils.getScaledInstance(c, (int) (requiredSize.width * pixelsPerPoint),
                     (int) (requiredSize.height * pixelsPerPoint));
             d = new Dimension((int) (c.getWidth(null) / pixelsPerPoint), (int) (c.getHeight(null) / pixelsPerPoint));
@@ -1625,12 +1632,19 @@ public class HardcopyWriter extends Writer implements Printable {
     @Override
     public String toString() {
         return "HardcopyWriter(" +
-            ", page=" + page +
-            ", lineheight=" + lineheight +
-            ", lineascent=" + lineascent +
-            ", Msize=" + measure("M") +
-            ", pagesizePoints=" + pagesizePoints + 
-            ", pagesizePixels=" + pagesizePixels + ")";
+                ", page=" +
+                page +
+                ", lineheight=" +
+                lineheight +
+                ", lineascent=" +
+                lineascent +
+                ", Msize=" +
+                measure("M") +
+                ", pagesizePoints=" +
+                pagesizePoints +
+                ", pagesizePixels=" +
+                pagesizePixels +
+                ")";
     }
 
     protected interface PrintCommand {
