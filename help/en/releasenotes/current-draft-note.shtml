@@ -134,6 +134,42 @@
                 <li></li>
             </ul>
 
+        <h4>Raspberry Pi</h4>
+            <ul>
+                <li>The Pi4J library used for Raspberry Pi GPIO support has been updated
+                    from version 1.2 to version 2.8.0 (the current 2.x release).
+                    Pi4J 2.x uses a new API and a plugin-based architecture replacing
+                    the older <code>GpioFactory</code> / <code>GpioController</code> model.
+                </li>
+                <li><strong>Pin numbering has changed.</strong>
+                    Pi4J 1.x addressed GPIO pins using WiringPi numbers.
+                    Pi4J 2.x uses BCM (Broadcom) numbers directly.
+                    Existing panel files and scripts that reference Raspberry Pi sensors
+                    or turnouts will need their GPIO address numbers updated to use
+                    the corresponding BCM pin numbers.
+                    For example, WiringPi GPIO 0 (BCM 17) becomes address 17 in the
+                    new numbering scheme.
+                </li>
+                <li>Support has been added for the Pi4J GpioD plugin
+                    (<code>pi4j-plugin-gpiod</code>), which uses the modern Linux GPIO
+                    character-device interface (<code>/dev/gpiochip*</code>) introduced
+                    in kernel 5.10.
+                    This is the preferred GPIO interface on Raspberry Pi OS with kernel
+                    5.10 or later (including the 6.x kernels shipped with current
+                    Raspberry Pi OS releases).
+                    It requires the <code>libgpiod2</code> package:
+                    <code>sudo apt install libgpiod2</code>
+                    The plugin is discovered and activated automatically alongside the
+                    existing LinuxFS and PiGpio plugins via Java ServiceLoader; no
+                    configuration change is required.
+                </li>
+                <li>Hardware GPIO plugins (<code>pi4j-plugin-raspberrypi</code>,
+                    <code>pi4j-plugin-linuxfs</code>, <code>pi4j-plugin-gpiod</code>)
+                    are now loaded at runtime via Java ServiceLoader on Raspberry Pi
+                    hardware and are no longer bundled as compile-time dependencies.
+                </li>
+            </ul>
+
         <h4>RFID</h4>
             <ul>
                 <li></li>
