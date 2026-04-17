@@ -495,7 +495,7 @@
                 being stored in a form that's more reproducible.  This will result
                 in fewer spurious changes if you're e.g. storing panel files in a
                 tracking system like Git.</li>
-            <li>Fixed a problem when persisting the new Output Indicator icons</li>
+            <li>Fixed a problem when storing and loading the new Output Indicator icons</li>
         </ul>
 
         <h4>NX - Entry/Exit Tool</h4>
