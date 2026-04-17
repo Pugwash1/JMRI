@@ -472,6 +472,7 @@
         <a id="Dispatcher" name="Dispatcher"></a>
         <ul>
              <li>Save dispatcher usestrict option correctly.</li>
+			 <li>Continue tracking blocks thru stopping at end.</li>
         </ul>
 
     <h3>Dispatcher System</h3>
