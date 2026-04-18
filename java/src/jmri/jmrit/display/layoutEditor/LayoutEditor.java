@@ -3240,7 +3240,7 @@ final public class LayoutEditor extends PanelEditor implements MouseWheelListene
                                 }
                             }
                         }
-                        
+
                         if (selectedObject != null) {
                             selectedHitPointType = HitPointType.LAYOUT_POS_LABEL;
                             startDelta = MathUtil.subtract(((PositionableLabel) selectedObject).getLocation(), dLoc);
@@ -4464,7 +4464,7 @@ final public class LayoutEditor extends PanelEditor implements MouseWheelListene
                     PositionableLabel t = checkTurnoutIconPopUps(dLoc);
                     if (t != null) {
                         amendSelectionGroup(t);
-                    } else {   
+                    } else {
                         PositionableLabel sh = checkSignalHeadIconPopUps(dLoc);
                         if (sh != null) {
                             amendSelectionGroup(sh);
@@ -7147,6 +7147,10 @@ final public class LayoutEditor extends PanelEditor implements MouseWheelListene
                 break;
             }
             default: {
+                if (HitPointType.isTurntableRayHitType(type) ||
+                        HitPointType.isTraverserSlotHitType(type)) {
+                    break;
+                }
                 log.warn("Unhandled track type: {}", type);
                 break;
             }
@@ -7244,7 +7248,7 @@ final public class LayoutEditor extends PanelEditor implements MouseWheelListene
             log.error("Editor.putItem() with null id has thrown DuplicateIdException", e);
         }
     }
-    
+
     /**
      * Add a signal head to the Panel
      */
