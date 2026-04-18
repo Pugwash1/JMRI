@@ -9990,12 +9990,3 @@ final public class LayoutEditor extends PanelEditor implements MouseWheelListene
     // initialize logging
     private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(LayoutEditor.class);
 }
-
-// This just exists to change the class name that's being
-// created for an Output Indicator so that it will show up
-// in the contextual menu.
-class OutputIndicator extends TurnoutIcon {
-    OutputIndicator(NamedIcon ni, Editor editor) {
-        super(ni, editor);
-    }
-}
