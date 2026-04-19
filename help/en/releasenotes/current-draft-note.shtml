@@ -187,7 +187,15 @@
                 <li></li>
             </ul>
 
-        <h4>SPROG</h4>
+                <li>Fixed spurious command station slot thread timeouts that could
+                    shut down track power when the GUI was busy. Reply notifications
+                    from the traffic controller to the command station are now
+                    delivered synchronously instead of being queued on the Swing EDT,
+                    so the slot thread is woken immediately when the hardware replies.</li>
+                <li>Added a consecutive-timeout retry counter to the command station
+                    slot thread. A single missed reply now triggers a retry with an
+                    idle packet instead of immediately removing track power.
+                    Track power is only removed after three consecutive timeouts.</li>
             <ul>
                 <li></li>
             </ul>
