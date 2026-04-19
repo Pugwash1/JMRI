@@ -499,6 +499,8 @@
                 in fewer spurious changes if you're e.g. storing panel files in a
                 tracking system like Git.</li>
             <li>Fixed a problem when storing and loading the new Output Indicator icons</li>
+            <li>When changing icon images for turnouts, sensors and signal heads, the
+                resource files are now listed in alpha order by name.</li>
         </ul>
 
         <h4>NX - Entry/Exit Tool</h4>
