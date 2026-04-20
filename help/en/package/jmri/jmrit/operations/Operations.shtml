@@ -1416,20 +1416,22 @@ Command sequences should also be enclose in "strong" formatting.    jerryg2003 2
       <a href="#Schedules">Schedule</a> to deliver a car to a specific location using the car's
       final destination fields. The car routing algorithm will search for the most efficient route
       for the car to travel. The router will attempt to use classification/interchange tracks and
-      then optionally by yards to move cars. If you don't want to use yards when routing, you can
-      deselect the
-      <a href="#EnableRoutingYards">Enable Car Routing via Yards</a> checkbox. The program will try
-      and find a route using a maximum of seven trains to complete the car move. Note that the
-      program never gives up trying to route a car. If a car has been assigned a
+      then optionally by yards to move cars. The default is to only route through
+      classification/interchange tracks, but you can select the
+      <a href="#EnableRoutingYards">Enable Car Routing via Yards</a> checkbox if you wish to route
+      through yard tracks. The program will try and find a route using a maximum of seven trains to
+      complete the car move. Note that the program never gives up trying to route a car. If a car
+      has been assigned a
       <a href="#CarsSet">Final Destination</a> or <a href="#EditCarLoads">custom load</a> the
       program will try and route the car during every train build that has access to the car. It is
       recommended that you leave car routing enabled.
 
       <h4 id="EnableRoutingYards">Enable Car Routing via Yards</h4>
-      The program when routing a car will first try to find classification/interchange tracks to
-      move the car to its final destination. If you want the program to also consider using yard
-      tracks when routing, select this option. It is recommended that you only use
-      classification/interchange tracks when routing cars, and leave this option disabled.
+      Routing through yards is disabled by default. The program when routing a car will first try to
+      find classification/interchange tracks to move the car to its final destination. If you want
+      the program to also consider using yard tracks when routing, select this option. It is
+      recommended that you only use classification/interchange tracks when routing cars, and leave
+      this option disabled.
 
       <h4 id="EnableRoutingStaging">Enable Car Routing through Staging</h4>
       Routing through staging is disabled by default. This is considered to be an advanced feature
@@ -6338,10 +6340,11 @@ Command sequences should also be enclose in "strong" formatting.    jerryg2003 2
         Lists by Location</a> window. There has to be new work at one of the locations selected in the <a
         href="#SwitchListByLocation">Switch Lists by Location</a> window for this action to succeed.
 
-      <h5>Run Automation</h5>
+      <h5 id="RunAutomation">Run Automation</h5>
       This action can start an automation from the beginning. You must select an automation from the
-      "Automation" menu. Note that automations run in parallel. So if you need an automation to complete
-      before starting another one, use the action "Wait Automation".
+      "Automation" menu. Note that automations run concurrently. So if you need an automation to
+      complete before starting another one, use the action
+      <a href="#WaitAutomation">Wait Automation</a>.
 
       <h5>Resume Automation</h5>
       This action can resume an automation that has been stopped or halted. The current pointer for
@@ -6352,7 +6355,7 @@ Command sequences should also be enclose in "strong" formatting.    jerryg2003 2
       This action can stop an automation that is running. You must select an automation from the
       "Automation" menu.
       
-      <h5>Wait Automation</h5>
+      <h5 id="WaitAutomation">Wait Automation</h5>
       This action will wait until an automation completes. You must select an automation from the
       "Automation" menu. The status of the waited automation is provided allowing the HIAF feature
       to stop the automation sequence.
@@ -6416,7 +6419,11 @@ Command sequences should also be enclose in "strong" formatting.    jerryg2003 2
       by the needed "Wait for" action.
 
       <h5>Select Start Automation</h5>
-      This tool will allow you to select an automation to run when OperationsPro&trade; starts.
+      This tool will allow you to select an automation to run when OperationsPro&trade; starts. If
+      you need to start more than one automation, create a new automation that runs all of the
+      automations you need, and use that one to start the automations. See
+      <a href="#RunAutomation">Run Automation</a>.
+
       <p>This is the end of the automation section.</p>
 
       <h4 id="SetupExcelProgram">Setup Excel Program (Manifest Creator)</h4>
