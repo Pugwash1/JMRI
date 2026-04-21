@@ -130,7 +130,7 @@ public class TestingLoggerConfiguration {
      *
      * @see jmri.util.FileUtil#getPreferencesPath()
      */
-    static private void configureLogging(@Nonnull String configFile) {
+    private static void configureLogging(@Nonnull String configFile) {
         // System.out.println("TestingLoggerConfiguration configureLogging " + configFile);
 
         // set the log4j config file location programatically

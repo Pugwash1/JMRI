@@ -421,7 +421,7 @@ public class WarrantPreferencesPanel extends JPanel implements PreferencesPanel,
         return panel;
     }
 
-    static private JPanel tablePanel(JTable table, String toolTip, ActionListener insertAction, ActionListener removeAction) {
+    private static JPanel tablePanel(JTable table, String toolTip, ActionListener insertAction, ActionListener removeAction) {
         JPanel tablePanel = new JPanel();
         tablePanel.setLayout(new BoxLayout(tablePanel, BoxLayout.LINE_AXIS));
         JScrollPane scrollPane = new JScrollPane(table);

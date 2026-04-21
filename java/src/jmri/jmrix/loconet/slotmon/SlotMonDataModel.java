@@ -875,7 +875,7 @@ public class SlotMonDataModel extends javax.swing.table.AbstractTableModel imple
         javax.swing.SwingUtilities.invokeLater(new Notify(slotNum, this));
     }
 
-    static private class Notify implements Runnable {
+    private static class Notify implements Runnable {
 
         private final int _row;
         javax.swing.table.AbstractTableModel _model;

@@ -27,7 +27,7 @@ public class TamsThrottleManager extends AbstractThrottleManager implements Tams
         super(memo);
     }
 
-    static private TamsThrottleManager mInstance = null;
+    private static TamsThrottleManager mInstance = null;
 
     public static TamsThrottleManager instance() {
         return mInstance;

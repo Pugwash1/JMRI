@@ -75,7 +75,7 @@ public class SamplePane extends jmri.util.swing.JmriPanel {
         staticIndexCount = 1;
     }
 
-    static private void incrementStaticInstanceNumber() {
+    private static void incrementStaticInstanceNumber() {
         staticIndexCount++;
     }
 
@@ -85,7 +85,7 @@ public class SamplePane extends jmri.util.swing.JmriPanel {
 
     private int thisInstanceNumber;
 
-    static private ArrayList<Integer> disposed;
-    static private int staticIndexCount = 1;
+    private static ArrayList<Integer> disposed;
+    private static int staticIndexCount = 1;
 
 }

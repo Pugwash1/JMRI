@@ -129,7 +129,7 @@ public class StoreAndCompareDialog {
         return cancelShutdown.get();
     }
 
-    static private void performStore() {
+    private static void performStore() {
         new jmri.configurexml.StoreXmlUserAction("").actionPerformed(null);
     }
 }

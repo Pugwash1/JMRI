@@ -628,7 +628,7 @@ public class ItemPalette extends DisplayFrame implements ChangeListener {
     /*
      * Look for duplicate name of family in the iterated set.
      */
-    static private boolean familyNameOK(String type, String family, Iterator<String> it) {
+    private static boolean familyNameOK(String type, String family, Iterator<String> it) {
         if (family == null || family.length() == 0) {
             JmriJOptionPane.showMessageDialog(null,
                     Bundle.getMessage("EnterFamilyName"),

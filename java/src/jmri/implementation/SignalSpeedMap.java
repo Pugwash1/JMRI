@@ -329,5 +329,5 @@ public class SignalSpeedMap extends Bean implements InstanceManagerAutoDefault, 
         return _scale;
     }
 
-    static private final Logger log = LoggerFactory.getLogger(SignalSpeedMap.class);
+    private static final Logger log = LoggerFactory.getLogger(SignalSpeedMap.class);
 }

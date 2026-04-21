@@ -20,7 +20,7 @@ public class ProjectsCommonSubs {
 
     public static ArrayList<String> getArrayListFromCSV(String csvString) { return helper1(csvString, CSVFormat.DEFAULT.getDelimiterString());}
     public static ArrayList<String> getArrayListFromSSV(String ssvString) { return helper1(ssvString, SSV_SEPARATOR); }
-    static private ArrayList<String> helper1(String ssvString, String separator) {
+    private static ArrayList<String> helper1(String ssvString, String separator) {
         ArrayList<String> list = new ArrayList<>();
         try (CSVParser parser = new CSVParser(new StringReader(ssvString),
                 CSVFormat.Builder.create(CSVFormat.DEFAULT)

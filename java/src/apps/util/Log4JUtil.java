@@ -186,7 +186,7 @@ public class Log4JUtil {
      *
      * @see jmri.util.FileUtil#getPreferencesPath()
      */
-    static private void configureLogging(@Nonnull String configFile) {
+    private static void configureLogging(@Nonnull String configFile) {
         // System.out.println("Log4JUtil configureLogging " + configFile);
 
         // set the log4j config file location programatically

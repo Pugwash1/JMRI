@@ -23,7 +23,7 @@ public class WindowMenu extends JMenu implements javax.swing.event.MenuListener 
     
     private List<JmriJFrame> framesList; // Keep the list of windows, in order to find out which window was selected
 
-    static private List<String> ignoredFrames = new ArrayList<String>();  // list of frames to not display
+    private static List<String> ignoredFrames = new ArrayList<String>();  // list of frames to not display
     
     public WindowMenu(WindowInterface wi) {
         super(Bundle.getMessage("MenuWindow"));

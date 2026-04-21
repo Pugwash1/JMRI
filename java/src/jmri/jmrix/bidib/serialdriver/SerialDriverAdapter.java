@@ -240,7 +240,7 @@ public class SerialDriverAdapter extends BiDiBSerialPortController {
      * 
      * @return a BiDiB object from jbidibc
      */
-    static private BidibInterface createSerialBidib(Context context) {
+    private static BidibInterface createSerialBidib(Context context) {
         if (useScm) {
 //            return BidibFactory.createBidib(ScmSerialBidib.class.getName());
         }
@@ -371,7 +371,7 @@ public class SerialDriverAdapter extends BiDiBSerialPortController {
      * @param portNameFilter a port name filter (e.g. /dev/ttyUSB* for Linux)
      * @return found port name (e.g. /dev/ttyUSB0) or null of not found
      */
-    //static private String scanPorts(BidibInterface bidib, Long requid, String portNameFilter) {
+    //private static String scanPorts(BidibInterface bidib, Long requid, String portNameFilter) {
     private String scanPorts(Long requid, String portNameFilter) {
         //String portPrefix = portNameFilter.replaceAll("\\*", "");
         log.trace("scanPorts for UID {}, filter: {}", ByteUtils.formatHexUniqueId(requid), portNameFilter);

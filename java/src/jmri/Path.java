@@ -322,7 +322,7 @@ public class Path implements Comparable<Path> {
         return (_length / 25.4f);
     }
 
-    static private void appendOne(StringBuffer b, String t) {
+    private static void appendOne(StringBuffer b, String t) {
         if (b.length() != 0) {
             b.append(", ");
         }

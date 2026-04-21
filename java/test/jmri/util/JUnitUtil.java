@@ -203,18 +203,18 @@ public class JUnitUtil {
 
     static long    checkTestDurationStartTime = 0;  // working value
 
-    static private boolean didSetUp = false;    // If true, last saw setUp, waiting tearDown normally
-    static private boolean didTearDown = true;  // If true, last saw tearDown, waiting setUp normally
+    private static boolean didSetUp = false;    // If true, last saw setUp, waiting tearDown normally
+    private static boolean didTearDown = true;  // If true, last saw tearDown, waiting setUp normally
 
-    static private String lastSetUpClassName = "<unknown>";
-    static private String lastSetUpThreadName = "<unknown>";
-    static private StackTraceElement[] lastSetUpStackTrace = new StackTraceElement[0];
-    static private String lastTearDownClassName = "<unknown>";
-    static private String lastTearDownThreadName = "<unknown>";
-    static private StackTraceElement[] lastTearDownStackTrace = new StackTraceElement[0];
+    private static String lastSetUpClassName = "<unknown>";
+    private static String lastSetUpThreadName = "<unknown>";
+    private static StackTraceElement[] lastSetUpStackTrace = new StackTraceElement[0];
+    private static String lastTearDownClassName = "<unknown>";
+    private static String lastTearDownThreadName = "<unknown>";
+    private static StackTraceElement[] lastTearDownStackTrace = new StackTraceElement[0];
 
-    static private boolean isLoggingInitialized = false;
-    static private String initPrefsDir = null;
+    private static boolean isLoggingInitialized = false;
+    private static String initPrefsDir = null;
 
     /**
      * JMRI standard setUp for tests that mock the InstanceManager.

@@ -24,8 +24,8 @@ public class JmriColorChooser {
      * The XML loading process creates the initial list and
      * subsequent activity will add new colors.
      */
-    static private ArrayList<Color> recentColors = new ArrayList<>();
-    static private boolean _suppressAdd = false;
+    private static ArrayList<Color> recentColors = new ArrayList<>();
+    private static boolean _suppressAdd = false;
 
     /**
      * Add a new color to the recent list.

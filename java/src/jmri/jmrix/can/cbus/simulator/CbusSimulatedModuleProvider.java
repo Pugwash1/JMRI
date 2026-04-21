@@ -134,7 +134,7 @@ public abstract class CbusSimulatedModuleProvider implements JmriServiceProvider
      * Load all the available instances. Note this only runs
      * once; there's no reloading once the program is running.
      */
-    static private void loadInstances() {
+    private static void loadInstances() {
         if (instanceMap != null) return;
 
         instanceMap = new TreeMap<>();  // sorted map, in string order on key

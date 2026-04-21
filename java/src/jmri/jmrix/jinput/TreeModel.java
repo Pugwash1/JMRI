@@ -117,7 +117,7 @@ public final class TreeModel extends DefaultTreeModel {
         runner.join();
     }
 
-    static private TreeModel instanceValue = null;
+    private static TreeModel instanceValue = null;
 
     class Runner extends Thread {
 
