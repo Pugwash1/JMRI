@@ -504,7 +504,7 @@ public abstract class ItemPanel extends JPanel  {
         return new Dimension(23, 48);
     }
 
-    static public GridBagConstraints itemGridBagConstraint() {
+    public static GridBagConstraints itemGridBagConstraint() {
         GridBagConstraints c = new GridBagConstraints();
         c.fill = GridBagConstraints.NONE;
         c.anchor = GridBagConstraints.CENTER;

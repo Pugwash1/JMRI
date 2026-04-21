@@ -156,7 +156,7 @@ public class ImportCodeButtonHandlerData implements Serializable {
 
 //  Regarding "@SuppressFBWarnings": My attitude is that if the input file is screwed up, do nothing!:
     @SuppressFBWarnings(value = "NP_IMMEDIATE_DEREFERENCE_OF_READLINE", justification = "I'm already catching 'NullPointerException', it's ok!")
-    static public void preprocessingUpgradeSelf(String filename) {
+    public static void preprocessingUpgradeSelf(String filename) {
 //  First, get the existing _mFileVersion from the file to see if we need to work on it:
         int fileVersion = -1;       // Indicate none found.
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(filename))) {

@@ -22,7 +22,7 @@ public class ReferenceUtil {
      * @param value the string to check
      * @return true if value has a reference. falsw otherwise
      */
-    static public boolean isReference(String value) {
+    public static boolean isReference(String value) {
         if (value == null) return false;
         // A reference starts with { and ends with }
         return value.startsWith("{")
@@ -251,7 +251,7 @@ public class ReferenceUtil {
     
     @CheckReturnValue
     @Nonnull
-    static public String getReference(SymbolTable symbolTable, String reference) {
+    public static String getReference(SymbolTable symbolTable, String reference) {
         if (!isReference(reference)) {
             throw new IllegalArgumentException("Reference '"+reference+"' is not a valid reference");
         }

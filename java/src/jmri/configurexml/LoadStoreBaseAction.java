@@ -62,7 +62,7 @@ abstract public class LoadStoreBaseAction extends AbstractAction {
 
     // Made public so JmriConfigurationManager.java can set the
     // "Store Panels..." default file (to the panel file being loaded)
-    static public JFileChooser getUserFileChooser() {
+    public static JFileChooser getUserFileChooser() {
         if (userFileChooser == null) {
             userFileChooser = getXmlFileChooser(FileUtil.getUserFilesPath());
         }

@@ -29,7 +29,7 @@ public class TamsThrottleManager extends AbstractThrottleManager implements Tams
 
     static private TamsThrottleManager mInstance = null;
 
-    static public TamsThrottleManager instance() {
+    public static TamsThrottleManager instance() {
         return mInstance;
     }
 

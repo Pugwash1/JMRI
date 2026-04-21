@@ -262,7 +262,7 @@ public abstract class AppsLaunchPane extends JPanel implements PropertyChangeLis
      * @see apps.startup.CreateButtonModelFactory
      * @return null if no such space exists
      */
-    static public JComponent buttonSpace() {
+    public static JComponent buttonSpace() {
         return _buttonSpace;
     }
     static JComponent _buttonSpace = null;
@@ -308,7 +308,7 @@ public abstract class AppsLaunchPane extends JPanel implements PropertyChangeLis
         setJmriSystemProperty("configFilename", def);
     }
 
-    static public String getConfigFileName() {
+    public static String getConfigFileName() {
         log.debug("getConfigFileName() called, shouldn't have been", new Exception("bad call traceback"));
         return null;
         // was hopefully set by setJmriSystemProperty("configFilename", def) earlier, recover

@@ -460,7 +460,7 @@ public class LocoNetMessage extends AbstractMessage implements Serializable {
      * @param code The instruction code placed in the pcxt1 pcxt2 bytes
      * @return The formatted message
      */
-    static public LocoNetMessage makePeerXfr(int src, int dst, int[] d, int code) {
+    public static LocoNetMessage makePeerXfr(int src, int dst, int[] d, int code) {
         log.debug("makePeerXfr for src={}, dst={} subAddr={} data[]={} code={}", src, dst, d[4], d, code);
         LocoNetMessage msg = new LocoNetMessage(16);
         msg.setOpCode(LnConstants.OPC_PEER_XFER);

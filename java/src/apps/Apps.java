@@ -679,7 +679,7 @@ public class Apps extends JPanel implements PropertyChangeListener, WindowListen
      * @see apps.startup.CreateButtonModelFactory
      * @return null if no such space exists
      */
-    static public JComponent buttonSpace() {
+    public static JComponent buttonSpace() {
         return _buttonSpace;
     }
     static JComponent _buttonSpace = null;
@@ -778,7 +778,7 @@ public class Apps extends JPanel implements PropertyChangeListener, WindowListen
      *
      * @return always returns false
      */
-    static public boolean handleQuit() {
+    public static boolean handleQuit() {
         AppsBase.handleQuit();
         return false;
     }
@@ -786,7 +786,7 @@ public class Apps extends JPanel implements PropertyChangeListener, WindowListen
     /**
      * The application decided to restart, handle that.
      */
-    static public void handleRestart() {
+    public static void handleRestart() {
         AppsBase.handleRestart();
     }
 
@@ -831,7 +831,7 @@ public class Apps extends JPanel implements PropertyChangeListener, WindowListen
         setJmriSystemProperty("configFilename", def);
     }
 
-    static public String getConfigFileName() {
+    public static String getConfigFileName() {
         return configFilename;
     }
 

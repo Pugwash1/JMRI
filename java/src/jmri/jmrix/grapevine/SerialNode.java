@@ -48,7 +48,7 @@ public class SerialNode extends AbstractNode {
             Bundle.getMessage("BoardName2"),
             Bundle.getMessage("BoardName3")};
 
-    static public String[] getBoardNames() {
+    public static String[] getBoardNames() {
         return boardNames.clone();
     }
 

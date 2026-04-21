@@ -54,7 +54,7 @@ public class SampleMinimalProgram {
      * @param program the name of the program
      * @return the logging statement including JMRI and Java versions
      */
-    static public String startupInfo(String program) {
+    public static String startupInfo(String program) {
         return (program + " version " + jmri.Version.name()
                 + " starts under Java " + System.getProperty("java.version", "<unknown>"));
     }

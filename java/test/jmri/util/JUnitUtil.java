@@ -116,7 +116,7 @@ public class JUnitUtil {
      */
     @edu.umd.cs.findbugs.annotations.SuppressFBWarnings( value = "MS_CANNOT_BE_FINAL",
         justification = "value reset during setUp() ")
-    static public int WAITFOR_DELAY_STEP = DEFAULT_WAITFOR_DELAY_STEP;
+    public static int WAITFOR_DELAY_STEP = DEFAULT_WAITFOR_DELAY_STEP;
 
     /**
      * Default maximum time to wait before failing a waitFor operation.
@@ -136,7 +136,7 @@ public class JUnitUtil {
      */
     @edu.umd.cs.findbugs.annotations.SuppressFBWarnings( value = "MS_CANNOT_BE_FINAL",
         justification = "value reset during setUp() ")
-    static public int WAITFOR_MAX_DELAY = DEFAULT_WAITFOR_MAX_DELAY;
+    public static int WAITFOR_MAX_DELAY = DEFAULT_WAITFOR_MAX_DELAY;
 
     /**
      * When true, prints each setUp method to help identify which tests include a failure.
@@ -555,7 +555,7 @@ public class JUnitUtil {
      *         otherwise
      */
     @CheckReturnValue
-    static public boolean waitFor(ReleaseUntil condition) {
+    public static boolean waitFor(ReleaseUntil condition) {
         if (javax.swing.SwingUtilities.isEventDispatchThread()) {
             log.error("Cannot use waitFor on Swing thread", new Exception());
             return false;
@@ -593,7 +593,7 @@ public class JUnitUtil {
      *
      * @param msec Delay in milliseconds
      */
-    static public void waitFor(int msec) {
+    public static void waitFor(int msec) {
         if (javax.swing.SwingUtilities.isEventDispatchThread()) {
             log.error("Cannot use waitFor on Swing thread", new Exception());
             return;
@@ -631,7 +631,7 @@ public class JUnitUtil {
      *                  Assertions.fail if condition not true fast enough
      */
     @SuppressFBWarnings("REC_CATCH_EXCEPTION")
-    static public void fasterWaitFor(ReleaseUntil condition, String name) {
+    public static void fasterWaitFor(ReleaseUntil condition, String name) {
         if (javax.swing.SwingUtilities.isEventDispatchThread()) {
             log.error("Cannot use waitFor on Swing thread", new Exception());
             return;
@@ -677,7 +677,7 @@ public class JUnitUtil {
      *         otherwise
      */
     @CheckReturnValue
-    static public boolean fasterWaitFor(ReleaseUntil condition) {
+    public static boolean fasterWaitFor(ReleaseUntil condition) {
         if (javax.swing.SwingUtilities.isEventDispatchThread()) {
             log.error("Cannot use waitFor on Swing thread", new Exception());
             return false;
@@ -718,7 +718,7 @@ public class JUnitUtil {
             ProfileManager.getDefault().getActiveProfile(), FileUtil.getPreferencesPath());
     }
 
-    static public interface ReleaseUntil {
+    public static interface ReleaseUntil {
 
         public boolean ready() throws Exception;
     }
@@ -734,7 +734,7 @@ public class JUnitUtil {
      * @param bean  the bean
      * @param state the desired state
      */
-    static public void setBeanState(NamedBean bean, int state) {
+    public static void setBeanState(NamedBean bean, int state) {
         try {
             javax.swing.SwingUtilities.invokeAndWait(
                     () -> {
@@ -763,7 +763,7 @@ public class JUnitUtil {
      * @param bean  the bean
      * @param state the desired state
      */
-    static public void setBeanStateAndWait(NamedBean bean, int state) {
+    public static void setBeanStateAndWait(NamedBean bean, int state) {
         setBeanState(bean, state);
         JUnitUtil.waitFor(() -> {
             return state == bean.getState();

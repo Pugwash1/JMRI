@@ -211,7 +211,7 @@ public class Path implements Comparable<Path> {
      * @param d the direction
      * @return the direction description
      */
-    static public String decodeDirection(int d) {
+    public static String decodeDirection(int d) {
         if (d == NONE) {
             return Bundle.getMessage("None"); // UI strings i18n using NamedBeanBundle.properties
         }

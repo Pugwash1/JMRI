@@ -134,7 +134,7 @@ public class SerialDriverAdapter extends BiDiBSerialPortController {
      * @param portName human-readable name
      * @return canonical path
      */
-    static public String getCanonicalPortName(String portName) {
+    public static String getCanonicalPortName(String portName) {
         File file = new File(portName);
         if (file.exists()) {
             try {
@@ -152,7 +152,7 @@ public class SerialDriverAdapter extends BiDiBSerialPortController {
      * @param portName displayed port name
      * @return real port name
      */
-    static public String getRealPortName(String portName) {
+    public static String getRealPortName(String portName) {
         if (SystemType.isLinux()) {
             portName = "/dev/" + portName;
         }

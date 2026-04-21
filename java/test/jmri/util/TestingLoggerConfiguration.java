@@ -37,7 +37,7 @@ public class TestingLoggerConfiguration {
      *
      * @param configFile the Logging Configuration file
      */
-    static public void initLogging(@Nonnull String configFile) {
+    public static void initLogging(@Nonnull String configFile) {
         // System.out.println("TestingLoggerConfiguration initLogging " + configFile);
         initLog4J(configFile);
     }
@@ -103,7 +103,7 @@ public class TestingLoggerConfiguration {
 
     @SuppressWarnings("unchecked")
     @Nonnull
-    static public String startupInfo(@Nonnull String program) {
+    public static String startupInfo(@Nonnull String program) {
         log.info(LOG_HEADER);
         Logger logger = LogManager.getLogger();
         Map<String, Appender  > appenderMap = ((org.apache.logging.log4j.core.Logger) logger).getAppenders();

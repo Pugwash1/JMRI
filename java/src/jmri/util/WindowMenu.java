@@ -36,11 +36,11 @@ public class WindowMenu extends JMenu implements javax.swing.event.MenuListener 
      * in the Windows menu.  Those frames may or may not remain visible,
      * but they won't be selectable from the menu.
      */
-    static public void setIgnoredFrames(List<String> frames) {
+    public static void setIgnoredFrames(List<String> frames) {
         ignoredFrames = new ArrayList<>(frames);
     }
     
-    static public List<String> getIgnoredFrames() {
+    public static List<String> getIgnoredFrames() {
         return new ArrayList<>(ignoredFrames);
     }
     

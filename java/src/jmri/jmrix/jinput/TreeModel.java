@@ -101,7 +101,7 @@ public final class TreeModel extends DefaultTreeModel {
      *
      * @return the default instance of the TreeModel; creating it if necessary
      */
-    static public TreeModel instance() {
+    public static TreeModel instance() {
         if (instanceValue == null) {
             instanceValue = new TreeModel();
         }

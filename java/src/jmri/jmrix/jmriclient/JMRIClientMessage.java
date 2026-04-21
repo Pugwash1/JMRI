@@ -43,23 +43,23 @@ public class JMRIClientMessage extends jmri.jmrix.AbstractMRMessage {
     }
 
     // static methods to return a formatted message
-    static public JMRIClientMessage getEnableMain() {
+    public static JMRIClientMessage getEnableMain() {
         JMRIClientMessage m = new JMRIClientMessage("POWER ON\n");
         m.setBinary(false);
         return m;
     }
 
-    static public JMRIClientMessage getKillMain() {
+    public static JMRIClientMessage getKillMain() {
         JMRIClientMessage m = new JMRIClientMessage("POWER OFF\n");
         m.setBinary(false);
         return m;
     }
 
-    static public JMRIClientMessage getProgMode() {
+    public static JMRIClientMessage getProgMode() {
         return null;
     }
 
-    static public JMRIClientMessage getExitProgMode() {
+    public static JMRIClientMessage getExitProgMode() {
         return null;
     }
 

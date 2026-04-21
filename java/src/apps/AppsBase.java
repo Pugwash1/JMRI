@@ -56,7 +56,7 @@ public abstract class AppsBase {
      */
     @edu.umd.cs.findbugs.annotations.SuppressFBWarnings( value="SLF4J_FORMAT_SHOULD_BE_CONST",
         justification="Info String always needs to be evaluated")
-    static public void preInit(String applicationName) {
+    public static void preInit(String applicationName) {
         Log4JUtil.initLogging();
 
         try {
@@ -377,7 +377,7 @@ public abstract class AppsBase {
     }
 
     // We will use the value stored in the system property
-    static public String getConfigFileName() {
+    public static String getConfigFileName() {
         if (System.getProperty("org.jmri.Apps.configFilename") != null) {
             return System.getProperty("org.jmri.Apps.configFilename");
         }
@@ -402,7 +402,7 @@ public abstract class AppsBase {
      *
      * @return always returns false
      */
-    static public boolean handleQuit() {
+    public static boolean handleQuit() {
         log.debug("Start handleQuit");
         try {
             InstanceManager.getDefault(jmri.ShutDownManager.class).shutdown();
@@ -415,7 +415,7 @@ public abstract class AppsBase {
     /**
      * The application decided to restart, handle that.
      */
-    static public void handleRestart() {
+    public static void handleRestart() {
         log.debug("Start handleRestart");
         try {
             InstanceManager.getDefault(jmri.ShutDownManager.class).restart();

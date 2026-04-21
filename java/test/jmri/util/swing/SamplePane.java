@@ -70,7 +70,7 @@ public class SamplePane extends jmri.util.swing.JmriPanel {
         super.dispose();
     }
 
-    static public void resetCounts() {
+    public static void resetCounts() {
         disposed = new ArrayList<>();
         staticIndexCount = 1;
     }
@@ -79,7 +79,7 @@ public class SamplePane extends jmri.util.swing.JmriPanel {
         staticIndexCount++;
     }
 
-    static public List<Integer> getDisposedList() {
+    public static List<Integer> getDisposedList() {
         return Collections.unmodifiableList(disposed);
     }
 

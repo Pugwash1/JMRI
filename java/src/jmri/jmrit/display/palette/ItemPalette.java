@@ -328,7 +328,7 @@ public class ItemPalette extends DisplayFrame implements ChangeListener {
     }
 
     @SuppressFBWarnings(value="DLS_DEAD_LOCAL_STORE",justification="Stores are not dead. Both statements APPEND additional items into their maps")
-    static public void loadMissingItemType(String itemType) {
+    public static void loadMissingItemType(String itemType) {
         try {
             Element thisType = null;
             List<Element> typeList = getDefaultIconItemTypes();
@@ -671,7 +671,7 @@ public class ItemPalette extends DisplayFrame implements ChangeListener {
      * @param type type
      * @return map of families
      */
-    static public @Nonnull HashMap<String, HashMap<String, NamedIcon>> getFamilyMaps(String type) {
+    public static @Nonnull HashMap<String, HashMap<String, NamedIcon>> getFamilyMaps(String type) {
         return _iconMaps.computeIfAbsent(type, k -> new HashMap<>());
     }
 
@@ -698,7 +698,7 @@ public class ItemPalette extends DisplayFrame implements ChangeListener {
     /*
      * Get a clone of the Family of icons for a given device type and family.
      */
-    static public HashMap<String, NamedIcon> getIconMap(String type, String family) {
+    public static HashMap<String, NamedIcon> getIconMap(String type, String family) {
         HashMap<String, HashMap<String, NamedIcon>> itemMap = _iconMaps.get(type);
         if (itemMap == null) {
             log.error("getIconMap failed. item type \"{}\" not found.", type);
@@ -790,7 +790,7 @@ public class ItemPalette extends DisplayFrame implements ChangeListener {
      * @param name key name
      * @return usable UI display name
      */
-    static public String convertText(String name) {
+    public static String convertText(String name) {
         String cName;
         try {
             // NOI18N

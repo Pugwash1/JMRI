@@ -47,7 +47,7 @@ public abstract class Apps3 extends AppsBase {
      *
      * @param applicationName application name
      */
-    static public void preInit(String applicationName) {
+    public static void preInit(String applicationName) {
         AppsBase.preInit(applicationName);
 
         // Initialise system console
@@ -118,7 +118,7 @@ public abstract class Apps3 extends AppsBase {
      * @see apps.startup.CreateButtonModelFactory
      * @return null if no such space exists
      */
-    static public JComponent buttonSpace() {
+    public static JComponent buttonSpace() {
         return _buttonSpace;
     }
     static JComponent _buttonSpace = null;

@@ -114,7 +114,7 @@ public abstract class CbusSimulatedModuleProvider implements JmriServiceProvider
      * @return the module provider, null if not known
      */
     @CheckForNull
-    final static public CbusSimulatedModuleProvider getProviderByName(String name) {
+    final public static CbusSimulatedModuleProvider getProviderByName(String name) {
         loadInstances();
         return instanceMap.get(name);
     }
@@ -125,7 +125,7 @@ public abstract class CbusSimulatedModuleProvider implements JmriServiceProvider
      * @return unmodifiable collection.
      */
     @Nonnull
-    final static public Collection<CbusSimulatedModuleProvider> getInstancesCollection() {
+    final public static Collection<CbusSimulatedModuleProvider> getInstancesCollection() {
         loadInstances();
         return Collections.unmodifiableCollection(instanceMap.values());
     }
