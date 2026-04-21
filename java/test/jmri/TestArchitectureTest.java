@@ -42,7 +42,7 @@ public class TestArchitectureTest {
 
     // want these statics first in class, to initialize
     // logging before various static items are constructed
-    @BeforeAll  // tests are static
+    @BeforeAll  // tests are static.
     public static void setUp() {
         jmri.util.JUnitUtil.setUp();
     }
