@@ -655,7 +655,7 @@ public class ItemPalette extends DisplayFrame implements ChangeListener {
      * @param iconMap icon HashMap providing the images
      * @return result
      */
-    static protected boolean addFamily(String type, String family, HashMap<String, NamedIcon> iconMap) {
+    protected static boolean addFamily(String type, String family, HashMap<String, NamedIcon> iconMap) {
         if (family == null) {
             return false;
         }
@@ -681,7 +681,7 @@ public class ItemPalette extends DisplayFrame implements ChangeListener {
      * @param type type
      * @param family family
      */
-    static protected void removeIconMap(String type, String family) {
+    protected static void removeIconMap(String type, String family) {
         if (log.isDebugEnabled()) {
             log.debug("removeIconMap for family \"{}\" in type \"{}\"", family, type);
         }
@@ -720,7 +720,7 @@ public class ItemPalette extends DisplayFrame implements ChangeListener {
      * @return result
      */
     // add entire family
-    static protected boolean addLevel4Family(String type, String family,
+    protected static boolean addLevel4Family(String type, String family,
             HashMap<String, HashMap<String, NamedIcon>> iconMap) {
         Iterator<String> iter = getLevel4FamilyMaps(type).keySet().iterator();
         if (familyNameOK(type, family, iter)) {
@@ -732,7 +732,7 @@ public class ItemPalette extends DisplayFrame implements ChangeListener {
     }
 
     // add entire family
-    static protected void addLevel4FamilyMap(String type, String family,
+    protected static void addLevel4FamilyMap(String type, String family,
             String key, HashMap<String, NamedIcon> iconMap) {
         HashMap<String, HashMap<String, NamedIcon>> familyMap = getLevel4Family(type, family);
         familyMap.put(key, iconMap);
@@ -740,20 +740,20 @@ public class ItemPalette extends DisplayFrame implements ChangeListener {
     }
 
     // Currently only needed for IndicatorTO type
-    static protected HashMap<String, HashMap<String, HashMap<String, NamedIcon>>>
+    protected static HashMap<String, HashMap<String, HashMap<String, NamedIcon>>>
             getLevel4FamilyMaps(String type) {
         return _indicatorTOMaps.get(type);
     }
 
     // Currently only needed for IndicatorTO type
-    static protected HashMap<String, HashMap<String, NamedIcon>>
+    protected static HashMap<String, HashMap<String, NamedIcon>>
             getLevel4Family(String type, String family) {
         HashMap<String, HashMap<String, HashMap<String, NamedIcon>>> map = _indicatorTOMaps.get(type);
         return map.get(family);
     }
 
     // Currently only needed for IndicatorTO type
-    static protected void removeLevel4IconMap(String type, String family, String key) {
+    protected static void removeLevel4IconMap(String type, String family, String key) {
         if (log.isDebugEnabled()) {
             log.debug("removeLevel4IconMap for indicator family \"{}\" in type \"{}\" with key \"{}\"",
                     family, type, key);
@@ -768,7 +768,7 @@ public class ItemPalette extends DisplayFrame implements ChangeListener {
 
     ///////////////////////////////////////////////////////////////////////////////
 
-    static protected HashMap<String, NamedIcon> cloneMap(HashMap<String, NamedIcon> map) {
+    protected static HashMap<String, NamedIcon> cloneMap(HashMap<String, NamedIcon> map) {
         HashMap<String, NamedIcon> clone = new HashMap<>();
         if (map != null) {
             for (Entry<String, NamedIcon> entry : map.entrySet()) {

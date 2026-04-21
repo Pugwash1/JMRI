@@ -50,7 +50,7 @@ public class AppsMainMenu {
     * @param pane    The JPanel to associate actions in menus with
     * @param windowHelpID The the help id to be assigned to Help / Window Help...
     */
-    static protected void createMenus(JMenuBar menuBar, WindowInterface wi, JPanel pane, String windowHelpID) {
+    protected static void createMenus(JMenuBar menuBar, WindowInterface wi, JPanel pane, String windowHelpID) {
         fileMenu(menuBar, wi);
         editMenu(menuBar, wi);
         toolsMenu(menuBar, wi);

@@ -30,7 +30,7 @@ public class ReferenceUtil {
                 && value.length() > 2;
     }
     
-    static protected String unescapeString(String value, int startIndex, int endIndex) {
+    protected static String unescapeString(String value, int startIndex, int endIndex) {
         boolean escaped = false;
         
         StringBuilder sb = new StringBuilder();
@@ -55,7 +55,7 @@ public class ReferenceUtil {
      * @param endIndex index of the end of the value. This is an output parameter.
      * @return the value
      */
-    static protected String getValue(String reference, int startIndex, IntRef endIndex) {
+    protected static String getValue(String reference, int startIndex, IntRef endIndex) {
         boolean escapeFound = false;
         boolean escaped = false;
         int end = startIndex;
@@ -94,7 +94,7 @@ public class ReferenceUtil {
      * @param endIndex index of the end of the value. This is an output parameter.
      * @return the value
      */
-    static protected String getReferenceOrValue(SymbolTable symbolTable, String reference, int startIndex, IntRef endIndex) {
+    protected static String getReferenceOrValue(SymbolTable symbolTable, String reference, int startIndex, IntRef endIndex) {
         
         while ((startIndex < reference.length()-1)
                 && (Character.isSpaceChar(reference.charAt(startIndex)))) {
@@ -127,7 +127,7 @@ public class ReferenceUtil {
      * @param endIndex index of the end of the reference. This is an output parameter.
      * @return the value of the reference
      */
-    static protected String getReference(
+    protected static String getReference(
             SymbolTable symbolTable, String reference, int startIndex, IntRef endIndex) {
         
         // A reference must start with the char {

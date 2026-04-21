@@ -242,7 +242,7 @@ public abstract class AppsLaunchPane extends JPanel implements PropertyChangeLis
     //int[] connection = {-1,-1,-1,-1};
     ConnectionConfig[] connection = {null, null, null, null};
 
-    static protected void setJmriSystemProperty(String key, String value) {
+    protected static void setJmriSystemProperty(String key, String value) {
         try {
             String current = System.getProperty("org.jmri.Apps." + key);
             if (current == null) {
@@ -287,7 +287,7 @@ public abstract class AppsLaunchPane extends JPanel implements PropertyChangeLis
      * @param def  Default value if no other is provided
      * @param args Argument array from the main routine
      */
-    static protected void setConfigFilename(String def, String[] args) {
+    protected static void setConfigFilename(String def, String[] args) {
         // if the property org.jmri.Apps.configFilename was set, skip
         if (System.getProperty("org.jmri.Apps.configFilename") != null) {
             return;

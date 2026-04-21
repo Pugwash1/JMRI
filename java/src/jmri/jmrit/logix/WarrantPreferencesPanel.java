@@ -254,7 +254,7 @@ public class WarrantPreferencesPanel extends JPanel implements PreferencesPanel,
         return p;
     }
 
-    static protected JPanel timeIncrementPanel(boolean vertical, JSpinner timeIncre) {
+    protected static JPanel timeIncrementPanel(boolean vertical, JSpinner timeIncre) {
         int timeIncrePrefs = WarrantPreferences.getDefault().getTimeIncrement();
         if (timeIncrePrefs >= 200 && timeIncrePrefs <= 10000) {
             timeIncre.setValue(timeIncrePrefs);
@@ -268,7 +268,7 @@ public class WarrantPreferencesPanel extends JPanel implements PreferencesPanel,
         return p;
     }
 
-    static protected JPanel throttleIncrementPanel(boolean vertical, JTextField rampIncre) {
+    protected static JPanel throttleIncrementPanel(boolean vertical, JTextField rampIncre) {
         rampIncre.setText(NumberFormat.getNumberInstance().format(WarrantPreferences.getDefault().getThrottleIncrement()*100));
         JPanel incrPanel = new JPanel();
         incrPanel.add(rampIncre);

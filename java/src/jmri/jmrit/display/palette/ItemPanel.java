@@ -161,7 +161,7 @@ public abstract class ItemPanel extends JPanel  {
         return newMap;
     }
 
-    static protected void checkIconMap(String type, HashMap<String, NamedIcon> map) {
+    protected static void checkIconMap(String type, HashMap<String, NamedIcon> map) {
         for (String name : STATE_MAP.get(type)) {
             if (map.get(name) == null) {
                 NamedIcon icon = new NamedIcon(ItemPalette.RED_X, ItemPalette.RED_X);

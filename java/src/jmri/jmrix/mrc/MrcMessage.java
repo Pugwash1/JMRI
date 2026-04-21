@@ -271,7 +271,7 @@ public class MrcMessage {
         return m;
     }
 
-    static protected final int LONG_TIMEOUT = 65000;  // e.g. for programming options
+    protected static final int LONG_TIMEOUT = 65000;  // e.g. for programming options
 
     public boolean validCheckSum() {
         if (getNumDataElements() > 6) {

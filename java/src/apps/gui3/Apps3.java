@@ -190,7 +190,7 @@ public abstract class Apps3 extends AppsBase {
         splash(false);
     }
 
-    static protected void splash(boolean show) {
+    protected static void splash(boolean show) {
         splash(show, false);
     }
 
@@ -199,7 +199,7 @@ public abstract class Apps3 extends AppsBase {
     static boolean debugFired = false;
     static boolean debugmsg = false;
 
-    static protected void splash(boolean show, boolean debug) {
+    protected static void splash(boolean show, boolean debug) {
         if (debugListener == null && debug) {
             // set a global listener for debug options
             debugFired = false;
@@ -240,7 +240,7 @@ public abstract class Apps3 extends AppsBase {
         }
     }
 
-    static protected JPanel splashDebugMsg() {
+    protected static JPanel splashDebugMsg() {
         JLabel panelLabelDisableLogix = new JLabel(Bundle.getMessage("PressF8ToDebug"));
         panelLabelDisableLogix.setFont(panelLabelDisableLogix.getFont().deriveFont(9f));
         JLabel panelLabelDisableLogixNG = new JLabel(Bundle.getMessage("PressF9ToDisableLogixNG"));
@@ -252,7 +252,7 @@ public abstract class Apps3 extends AppsBase {
         return panel;
     }
 
-    static protected void startupDebug() {
+    protected static void startupDebug() {
         debugFired = true;
         debugmsg = true;
 

@@ -46,14 +46,14 @@ abstract public class LoadStoreBaseAction extends AbstractAction {
         return chooser;
     }
 
-    static protected JFileChooser getAllFileChooser() {
+    protected static JFileChooser getAllFileChooser() {
         if (allFileChooser == null) {
             allFileChooser = getXmlFileChooser(FileUtil.getUserFilesPath());
         }
         return allFileChooser;
     }
 
-    static protected JFileChooser getConfigFileChooser() {
+    protected static JFileChooser getConfigFileChooser() {
         if (configFileChooser == null) {
             configFileChooser = getXmlFileChooser(FileUtil.getUserFilesPath());
         }

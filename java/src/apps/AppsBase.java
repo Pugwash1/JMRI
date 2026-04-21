@@ -353,7 +353,7 @@ public abstract class AppsBase {
      * @param def  Default value if no other is provided
      * @param args Argument array from the main routine
      */
-    static protected void setConfigFilename(String def, String[] args) {
+    protected static void setConfigFilename(String def, String[] args) {
         // skip if org.jmri.Apps.configFilename is set
         if (System.getProperty("org.jmri.Apps.configFilename") != null) {
             return;
@@ -384,7 +384,7 @@ public abstract class AppsBase {
         return CONFIG_FILENAME;
     }
 
-    static protected void setJmriSystemProperty(String key, String value) {
+    protected static void setJmriSystemProperty(String key, String value) {
         try {
             String current = System.getProperty("org.jmri.Apps." + key);
             if (current == null) {
