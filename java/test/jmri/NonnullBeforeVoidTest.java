@@ -78,12 +78,12 @@ public class NonnullBeforeVoidTest {
         checkFile(file);
     }
 
-    private static int total = 0;
-    private static int fails = 0;
+//    private static int total = 0;
+//    private static int fails = 0;
 
     private void checkFile(File file) throws IOException {
 
-        total++;
+//        total++;
 
 //        System.out.format("File: %s%n", file);
 //        log.warn("File: {}", file);
@@ -92,7 +92,7 @@ public class NonnullBeforeVoidTest {
 //            Assertions.fail(String.format("File %s has @Nonnull annotation for a void declaration", file));
         }
         if (PATTERN_STATIC_BEFORE_PUBLIC.matcher(data).matches()) {
-            fails++;
+//            fails++;
 //            System.out.format("File has static before public/protected/private: %s%n", file);
 //            System.out.format("%d, %d: File has static before public/protected/private: %s%n", total, fails, file);
             Assertions.fail(String.format("File %s has static before public/protected/private", file));
@@ -124,5 +124,5 @@ public class NonnullBeforeVoidTest {
         JUnitUtil.tearDown();
     }
 
-    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(NonnullBeforeVoidTest.class);
+//    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(NonnullBeforeVoidTest.class);
 }
