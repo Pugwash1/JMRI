@@ -24,7 +24,7 @@ import org.junit.jupiter.params.provider.MethodSource;
  */
 public class NonnullBeforeVoidTest {
 
-    private static final Pattern PATTERN_NULL_BEFORE_VOID = Pattern.compile(".*\\@Nonnull\\s+(|public\\s+|protected\\s+|private\\s+)void.*", Pattern.MULTILINE | Pattern.DOTALL);
+    private static final Pattern PATTERN_NULL_BEFORE_VOID = Pattern.compile(".*\\@Nonnull\\s+(\\@\\w+(\\(.*?\\))\\s+)*(|public\\s+|protected\\s+|private\\s+)void.*", Pattern.MULTILINE | Pattern.DOTALL);
     private static final Pattern PATTERN_STATIC_BEFORE_PUBLIC = Pattern.compile(".*static\\s+(public|protected|private).*", Pattern.MULTILINE | Pattern.DOTALL);
 //    private static final Pattern PATTERN_FINAL_BEFORE_PUBLIC_OR_STATIC = Pattern.compile(".*final\\s+(public|protected|private|static).*", Pattern.MULTILINE | Pattern.DOTALL);
 //    private static final Pattern PATTERN_FINAL_BEFORE_STATIC = Pattern.compile(".*final\\s+static.*", Pattern.MULTILINE | Pattern.DOTALL);
@@ -89,7 +89,7 @@ public class NonnullBeforeVoidTest {
 //        log.warn("File: {}", file);
         String data = new String(Files.readAllBytes(file.toPath()));
         if (PATTERN_NULL_BEFORE_VOID.matcher(data).matches()) {
-//            Assertions.fail(String.format("File %s has @Nonnull annotation for a void declaration", file));
+            Assertions.fail(String.format("File %s has @Nonnull annotation for a void declaration", file));
         }
         if (PATTERN_STATIC_BEFORE_PUBLIC.matcher(data).matches()) {
 //            fails++;
