@@ -241,7 +241,7 @@ public class SprogTrafficController implements SprogInterface,
     }
 
     // A class to remember the message and who sent it
-    static private class MessageTuple {
+    private static class MessageTuple {
         private final SprogMessage message;
         private final SprogListener listener;
 
