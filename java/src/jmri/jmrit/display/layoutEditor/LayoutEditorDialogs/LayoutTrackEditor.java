@@ -78,7 +78,7 @@ abstract public class LayoutTrackEditor {
      */
     abstract public void editLayoutTrack(@Nonnull LayoutTrackView layoutTrackView);
 
-    final protected LayoutEditor layoutEditor;
+    protected final LayoutEditor layoutEditor;
 
     List<String> sensorList = new ArrayList<>();
 

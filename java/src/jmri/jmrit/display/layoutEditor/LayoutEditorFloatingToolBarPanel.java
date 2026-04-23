@@ -39,7 +39,7 @@ public class LayoutEditorFloatingToolBarPanel extends LayoutEditorToolBarPanel {
      * method.
      */
     @Override
-    final protected void layoutComponents() {
+    protected final void layoutComponents() {
     }
 
     /**

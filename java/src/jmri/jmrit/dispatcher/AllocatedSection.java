@@ -247,7 +247,7 @@ public class AllocatedSection {
     /**
      * Methods
      */
-    final protected void setStoppingSensors() {
+    protected final void setStoppingSensors() {
         if (mSection.getState() == Section.FORWARD) {
             mForwardStoppingSensor = mSection.getForwardStoppingSensor();
             mReverseStoppingSensor = mSection.getReverseStoppingSensor();

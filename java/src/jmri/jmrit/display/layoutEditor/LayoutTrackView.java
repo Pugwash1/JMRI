@@ -64,7 +64,7 @@ abstract public class LayoutTrackView implements InlineLogixNG {
 
     final private LayoutTrack layoutTrack;
 
-    final protected LayoutEditor layoutEditor;
+    protected final LayoutEditor layoutEditor;
 
     private LogixNG _logixNG;
     private String _logixNG_SystemName;
@@ -90,7 +90,7 @@ abstract public class LayoutTrackView implements InlineLogixNG {
         return layoutEditor;
     }
 
-    final protected void setIdent(@Nonnull String ident) {
+    protected final void setIdent(@Nonnull String ident) {
         layoutTrack.setIdent(ident);
     }
 
@@ -185,7 +185,7 @@ abstract public class LayoutTrackView implements InlineLogixNG {
                 layoutEditor.circleDiameter, layoutEditor.circleDiameter);
     }
 
-    final protected Color getColorForTrackBlock(
+    protected final Color getColorForTrackBlock(
             @CheckForNull LayoutBlock layoutBlock, boolean forceBlockTrackColor) {
         Color result = ColorUtil.CLEAR;  // transparent
         if (layoutBlock != null) {
@@ -199,11 +199,11 @@ abstract public class LayoutTrackView implements InlineLogixNG {
     }
 
     // optional parameter forceTrack = false
-    final protected Color getColorForTrackBlock(@CheckForNull LayoutBlock lb) {
+    protected final Color getColorForTrackBlock(@CheckForNull LayoutBlock lb) {
         return getColorForTrackBlock(lb, false);
     }
 
-    final protected Color setColorForTrackBlock(Graphics2D g2,
+    protected final Color setColorForTrackBlock(Graphics2D g2,
             @CheckForNull LayoutBlock layoutBlock, boolean forceBlockTrackColor) {
         Color result = getColorForTrackBlock(layoutBlock, forceBlockTrackColor);
         g2.setColor(result);
@@ -211,7 +211,7 @@ abstract public class LayoutTrackView implements InlineLogixNG {
     }
 
     // optional parameter forceTrack = false
-    final protected Color setColorForTrackBlock(Graphics2D g2, @CheckForNull LayoutBlock lb) {
+    protected final Color setColorForTrackBlock(Graphics2D g2, @CheckForNull LayoutBlock lb) {
         return setColorForTrackBlock(g2, lb, false);
     }
 
@@ -241,7 +241,7 @@ abstract public class LayoutTrackView implements InlineLogixNG {
     // abstract protected void drawHidden(Graphics2D g2);
     // note: placeholder until I get this implemented in all sub-classes
     // TODO: replace with abstract declaration (above)
-    final protected void drawHidden(Graphics2D g2) {
+    protected final void drawHidden(Graphics2D g2) {
         // nothing to do here... move along...
     }
 
@@ -250,7 +250,7 @@ abstract public class LayoutTrackView implements InlineLogixNG {
      * @param g
      * note: currently can't override (final); change this if you need to
      */
-    final protected void drawLayoutTrackText(Graphics2D g) {
+    protected final void drawLayoutTrackText(Graphics2D g) {
         // get the center coordinates
         int x = (int) center.getX(), y = (int) center.getY();
 
@@ -299,7 +299,7 @@ abstract public class LayoutTrackView implements InlineLogixNG {
     abstract protected void highlightUnconnected(Graphics2D g2, HitPointType specificType);
 
     // optional parameter specificType = NONE
-    final protected void highlightUnconnected(Graphics2D g2) {
+    protected final void highlightUnconnected(Graphics2D g2) {
         highlightUnconnected(g2, HitPointType.NONE);
     }
 
@@ -418,7 +418,7 @@ abstract public class LayoutTrackView implements InlineLogixNG {
      */
     abstract public void rotateCoords(double angleDEG);
 
-    final protected Point2D rotatePoint(@Nonnull Point2D p, double sineRot, double cosineRot) {
+    protected final Point2D rotatePoint(@Nonnull Point2D p, double sineRot, double cosineRot) {
         double cX = center.getX();
         double cY = center.getY();
 
@@ -447,12 +447,12 @@ abstract public class LayoutTrackView implements InlineLogixNG {
                                                     boolean requireUnconnected);
 
     // optional useRectangles & requireUnconnected parameters default to false
-    final protected HitPointType findHitPointType(@Nonnull Point2D p) {
+    protected final HitPointType findHitPointType(@Nonnull Point2D p) {
         return findHitPointType(p, false, false);
     }
 
     // optional requireUnconnected parameter defaults to false
-    final protected HitPointType findHitPointType(@Nonnull Point2D p, boolean useRectangles) {
+    protected final HitPointType findHitPointType(@Nonnull Point2D p, boolean useRectangles) {
         return findHitPointType(p, useRectangles, false);
     }
 
@@ -645,7 +645,7 @@ abstract public class LayoutTrackView implements InlineLogixNG {
      * @return the popup menu for this layout track
      */
     @Nonnull
-    final protected JPopupMenu showPopup(Point2D where) {
+    protected final JPopupMenu showPopup(Point2D where) {
         return this.showPopup(new JmriMouseEvent(
                 layoutEditor.getTargetPanel(), // source
                 JmriMouseEvent.MOUSE_CLICKED, // id
@@ -663,7 +663,7 @@ abstract public class LayoutTrackView implements InlineLogixNG {
      * @return the popup menu for this layout track
      */
     @Nonnull
-    final protected JPopupMenu showPopup() {
+    protected final JPopupMenu showPopup() {
         Point2D where = MathUtil.multiply(getCoordsCenter(),
                 layoutEditor.getZoom());
         return this.showPopup(where);

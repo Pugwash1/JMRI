@@ -105,7 +105,7 @@ public class JUnitUtil {
     /**
      * Default standard time step (in mSec) when looping in a waitFor operation.
      */
-    static final protected int DEFAULT_WAITFOR_DELAY_STEP = 5;
+    static protected final int DEFAULT_WAITFOR_DELAY_STEP = 5;
 
     /**
      * Standard time step (in mSec) when looping in a waitFor operation.
@@ -126,7 +126,7 @@ public class JUnitUtil {
      * are slow. But too long will cause CI jobs to time out before this logs
      * the error....
      */
-    static final protected int DEFAULT_WAITFOR_MAX_DELAY = 10000;
+    static protected final int DEFAULT_WAITFOR_MAX_DELAY = 10000;
 
     /**
      * Maximum time to wait before failing a waitFor operation.

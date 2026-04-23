@@ -31,8 +31,8 @@ import jmri.Turnout;
  */
 abstract public class LayoutTrack {
 
-    // final protected LayoutModels models;  // preferred
-    final protected LayoutEditor models; // temporary type
+    // protected final LayoutModels models;  // preferred
+    protected final LayoutEditor models; // temporary type
 
     /**
      * Constructor method.
@@ -67,7 +67,7 @@ abstract public class LayoutTrack {
 
     private String ident = "";
 
-    final protected void setIdent(@Nonnull String ident) {
+    protected final void setIdent(@Nonnull String ident) {
         this.ident = ident;
     }
 
