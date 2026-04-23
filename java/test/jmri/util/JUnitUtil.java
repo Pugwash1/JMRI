@@ -1746,13 +1746,13 @@ public class JUnitUtil {
         return button;
     }
 
-    final private static Random random = new Random();
+    private static final Random random = new Random();
 
     public static Random getRandom(){
         return random;
     }
 
-    final private static Random randomConstantSeed = new Random(0);
+    private static final Random randomConstantSeed = new Random(0);
 
     public static Random getRandomConstantSeed(){
         return randomConstantSeed;
