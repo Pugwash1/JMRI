@@ -73,7 +73,7 @@ public abstract class CbusConfigPaneProvider extends jmri.jmrix.can.swing.CanPan
      * @return name of object
      */
     @Override
-    final public String toString() {
+    public final String toString() {
         return getModuleType();
     }
     

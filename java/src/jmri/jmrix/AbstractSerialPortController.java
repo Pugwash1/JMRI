@@ -414,7 +414,7 @@ abstract public class AbstractSerialPortController extends AbstractPortControlle
      * {@inheritDoc}
      */
     @Override
-    final public void configureBaudRate(String rate) {
+    public final void configureBaudRate(String rate) {
         mBaudRate = rate;
     }
 
@@ -422,7 +422,7 @@ abstract public class AbstractSerialPortController extends AbstractPortControlle
      * {@inheritDoc}
      */
     @Override
-    final public void configureBaudRateFromNumber(String indexString) {
+    public final void configureBaudRateFromNumber(String indexString) {
         int baudNum;
         int index = 0;
         final String[] rates = validBaudRates();
@@ -490,7 +490,7 @@ abstract public class AbstractSerialPortController extends AbstractPortControlle
      * Invalid indexes are ignored.
      */
     @Override
-    final public void configureBaudRateFromIndex(int index) {
+    public final void configureBaudRateFromIndex(int index) {
         if (validBaudRates().length > index && index > -1 ) {
             mBaudRate = validBaudRates()[index];
             log.debug("mBaudRate set by index to: {}", mBaudRate);
@@ -522,7 +522,7 @@ abstract public class AbstractSerialPortController extends AbstractPortControlle
      * {@inheritDoc}
      */
     @Override
-    final public String getCurrentBaudNumber() {
+    public final String getCurrentBaudNumber() {
         int[] numbers = validBaudNumbers();
         String[] rates = validBaudRates();
         if (numbers == null || rates == null || numbers.length != rates.length) { // entries in arrays should correspond
@@ -547,7 +547,7 @@ abstract public class AbstractSerialPortController extends AbstractPortControlle
     }
 
     @Override
-    final public int getCurrentBaudIndex() {
+    public final int getCurrentBaudIndex() {
         if (mBaudRate != null) {
             String[] rates = validBaudRates();
             // find the configured baud rate value
@@ -592,7 +592,7 @@ abstract public class AbstractSerialPortController extends AbstractPortControlle
      *         0 if baudrate not supported by this adapter,
      *         -1 if no match (configuration system should prevent this)
      */
-    final public int currentBaudNumber(String currentBaudRate) {
+    public final int currentBaudNumber(String currentBaudRate) {
         String[] rates = validBaudRates();
         int[] numbers = validBaudNumbers();
 

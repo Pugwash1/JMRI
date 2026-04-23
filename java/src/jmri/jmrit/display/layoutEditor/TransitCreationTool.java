@@ -27,7 +27,7 @@ import jmri.NamedBean.BadNameException;
  * @author Kevin Dickerson Copyright (C) 2011
  * @author George Warner Copyright (c) 2017-2018
  */
-final public class TransitCreationTool {
+public final class TransitCreationTool {
 
     public TransitCreationTool() {
     }

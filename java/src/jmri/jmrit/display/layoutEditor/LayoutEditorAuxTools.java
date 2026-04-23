@@ -25,7 +25,7 @@ import org.slf4j.LoggerFactory;
  * @author Dave Duchamp Copyright (c) 2008
  * @author George Warner Copyright (c) 2017-2018
  */
-final public class LayoutEditorAuxTools {
+public final class LayoutEditorAuxTools {
     // constants
 
     // operational instance variables

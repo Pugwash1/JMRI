@@ -44,7 +44,7 @@ import jmri.jmrit.blockboss.BlockBossLogicProvider;
  * @author Dave Duchamp Copyright (c) 2009
  * @author George Warner Copyright (c) 2017-2018
  */
-final public class ConnectivityUtil {
+public final class ConnectivityUtil {
 
     // constants
     // operational instance variables

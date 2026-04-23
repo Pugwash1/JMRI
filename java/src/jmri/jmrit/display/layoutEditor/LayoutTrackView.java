@@ -75,12 +75,12 @@ abstract public class LayoutTrackView implements InlineLogixNG {
     // Accessor Methods
 
     @Nonnull
-    final public String getId() {  // temporary Id vs name; is one for the View?
+    public final String getId() {  // temporary Id vs name; is one for the View?
         return layoutTrack.getId();
     }
 
     @Nonnull
-    final public String getName() {
+    public final String getName() {
         return layoutTrack.getName();
     }
 
@@ -160,26 +160,26 @@ abstract public class LayoutTrackView implements InlineLogixNG {
      * @return the layout editor's toolbar panel
      */
     @Nonnull
-    final public LayoutEditorToolBarPanel getLayoutEditorToolBarPanel() {
+    public final LayoutEditorToolBarPanel getLayoutEditorToolBarPanel() {
         return layoutEditor.getLayoutEditorToolBarPanel();
     }
 
     // these are convenience methods to return circles & rectangle used to draw onscreen
     //
     // compute the control point rect at inPoint; use the turnout circle size
-    final public Ellipse2D trackEditControlCircleAt(@Nonnull Point2D inPoint) {
+    public final Ellipse2D trackEditControlCircleAt(@Nonnull Point2D inPoint) {
         return trackControlCircleAt(inPoint);
     }
 
     // compute the turnout circle at inPoint (used for drawing)
-    final public Ellipse2D trackControlCircleAt(@Nonnull Point2D inPoint) {
+    public final Ellipse2D trackControlCircleAt(@Nonnull Point2D inPoint) {
         return new Ellipse2D.Double(inPoint.getX() - layoutEditor.circleRadius,
                 inPoint.getY() - layoutEditor.circleRadius,
                 layoutEditor.circleDiameter, layoutEditor.circleDiameter);
     }
 
     // compute the turnout circle control rect at inPoint
-    final public Rectangle2D trackControlCircleRectAt(@Nonnull Point2D inPoint) {
+    public final Rectangle2D trackControlCircleRectAt(@Nonnull Point2D inPoint) {
         return new Rectangle2D.Double(inPoint.getX() - layoutEditor.circleRadius,
                 inPoint.getY() - layoutEditor.circleRadius,
                 layoutEditor.circleDiameter, layoutEditor.circleDiameter);
@@ -329,11 +329,11 @@ abstract public class LayoutTrackView implements InlineLogixNG {
      *
      * @return true if hidden; false otherwise
      */
-    final public boolean isHidden() {
+    public final boolean isHidden() {
         return hidden;
     }
 
-    final public void setHidden(boolean hide) {
+    public final void setHidden(boolean hide) {
         if (hidden != hide) {
             hidden = hide;
             if (layoutEditor != null) {
@@ -353,7 +353,7 @@ abstract public class LayoutTrackView implements InlineLogixNG {
      * @param turnoutState of the turnout
      * @return the turnout state string
      */
-    final public String getTurnoutStateString(int turnoutState) {
+    public final String getTurnoutStateString(int turnoutState) {
         String result = "";
         if (turnoutState == Turnout.CLOSED) {
             result = Bundle.getMessage("TurnoutStateClosed");
@@ -382,7 +382,7 @@ abstract public class LayoutTrackView implements InlineLogixNG {
      * @param itemList A list of the attached heads, masts and/or sensors.
      * @param typeKey  The object type such as Turnout, Level Crossing, etc.
      */
-    final public void displayRemoveWarningDialog(List<String> itemList, String typeKey) {
+    public final void displayRemoveWarningDialog(List<String> itemList, String typeKey) {
         itemList.sort(null);
         StringBuilder msg = new StringBuilder(Bundle.getMessage("MakeLabel", // NOI18N
                 Bundle.getMessage("DeleteTrackItem", Bundle.getMessage(typeKey))));  // NOI18N

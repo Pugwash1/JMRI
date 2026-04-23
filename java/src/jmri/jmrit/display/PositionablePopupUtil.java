@@ -92,10 +92,10 @@ public class PositionablePopupUtil {
     /**
      * *************************************************************************************
      */
-    static final public int FONT_COLOR = 0x00;
-    static final public int BACKGROUND_COLOR = 0x01;
-    static final public int BORDER_COLOR = 0x02;
-    static final public int MIN_SIZE = 5;
+    static public final int FONT_COLOR = 0x00;
+    static public final int BACKGROUND_COLOR = 0x01;
+    static public final int BORDER_COLOR = 0x02;
+    static public final int MIN_SIZE = 5;
 
     private int fixedWidth = 0;
     private int fixedHeight = 0;

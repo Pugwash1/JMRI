@@ -412,7 +412,7 @@ public class DefaultConditionalNG extends AbstractBase
 
     /** {@inheritDoc} */
     @Override
-    final public void setup() {
+    public final void setup() {
         if (!_femaleSocket.isConnected()
                 || !_femaleSocket.getConnectedSocket().getSystemName()
                         .equals(_socketSystemName)) {
@@ -442,7 +442,7 @@ public class DefaultConditionalNG extends AbstractBase
 
     /** {@inheritDoc} */
     @Override
-    final public void disposeMe() {
+    public final void disposeMe() {
         _femaleSocket.dispose();
     }
 

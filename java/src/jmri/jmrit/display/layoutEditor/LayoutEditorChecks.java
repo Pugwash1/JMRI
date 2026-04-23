@@ -17,7 +17,7 @@ import jmri.util.MathUtil;
  *
  * @author George Warner Copyright (c) 2017-2018
  */
-final public class LayoutEditorChecks {
+public final class LayoutEditorChecks {
 
     private final LayoutEditor layoutEditor;
     private final JMenu checkMenu = new JMenu(Bundle.getMessage("CheckMenuTitle"));

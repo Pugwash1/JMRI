@@ -100,7 +100,7 @@ public class JUnitUtil {
      * <p>
      * Public in case modification is needed from a test or script.
      */
-    static final public int WAITFOR_DEFAULT_DELAY = 50;
+    static public final int WAITFOR_DEFAULT_DELAY = 50;
 
     /**
      * Default standard time step (in mSec) when looping in a waitFor operation.

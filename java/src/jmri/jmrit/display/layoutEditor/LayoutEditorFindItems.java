@@ -21,7 +21,7 @@ import jmri.Turnout;
  * @author George Warner Copyright (c) 2017-2018
  * @author Bob Jacobsen Copyright (c) 2019-2020
  */
-final public class LayoutEditorFindItems {
+public final class LayoutEditorFindItems {
 
     private final LayoutModels layoutModels;
 

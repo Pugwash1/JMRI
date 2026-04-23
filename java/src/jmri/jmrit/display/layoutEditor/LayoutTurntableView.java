@@ -46,7 +46,7 @@ public class LayoutTurntableView extends LayoutTrackView {
 
     final private LayoutTurntable turntable;
 
-    final public LayoutTurntable getTurntable() { return turntable; }
+    public final LayoutTurntable getTurntable() { return turntable; }
 
     /**
      * Get a string that represents this object. This should only be used for

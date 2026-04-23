@@ -46,7 +46,7 @@ public class LayoutTraverserView extends LayoutTrackView {
 
     final private LayoutTraverser traverser;
 
-    final public LayoutTraverser getTraverser() { return traverser; }
+    public final LayoutTraverser getTraverser() { return traverser; }
 
     /**
      * Get a string that represents this object. This should only be used for

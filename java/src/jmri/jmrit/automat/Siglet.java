@@ -49,12 +49,12 @@ abstract public class Siglet {
      */
     abstract public void setOutput();
 
-    final public String getName() {
+    public final String getName() {
         return name;
     }
     private String name;
 
-    final public void setName(String name) {
+    public final void setName(String name) {
         this.name = name;
     }
 

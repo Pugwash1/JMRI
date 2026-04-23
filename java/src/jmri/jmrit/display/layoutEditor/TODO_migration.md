@@ -271,11 +271,11 @@ getId but setIdent?
 java/src/jmri/jmrit/display/layoutEditor//LayoutTrackDrawingOptions.java:    public String getName() {
 java/src/jmri/jmrit/display/layoutEditor//LayoutShape.java:    public String getName() {
 java/src/jmri/jmrit/display/layoutEditor//LayoutEditor.java:        public String getName() {
-java/src/jmri/jmrit/display/layoutEditor//LayoutTrack.java:    final public String getName() {
+java/src/jmri/jmrit/display/layoutEditor//LayoutTrack.java:    public final String getName() {
 
 % grep -r 'String getId\(\)' java/src/jmri/jmrit/display/layoutEditor/
 java/src/jmri/jmrit/display/layoutEditor//LayoutBlock.java:    public String getId() {
-java/src/jmri/jmrit/display/layoutEditor//LayoutTrack.java:    final public String getId() {
+java/src/jmri/jmrit/display/layoutEditor//LayoutTrack.java:    public final String getId() {
 ```
 
 ---

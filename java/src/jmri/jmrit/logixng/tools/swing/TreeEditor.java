@@ -121,7 +121,7 @@ public class TreeEditor extends TreeViewer {
     }
 
     @Override
-    final public void initComponents() {
+    public final void initComponents() {
         super.initComponents();
 
         // The menu is created in parent class TreeViewer

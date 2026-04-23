@@ -50,12 +50,12 @@ abstract public class LayoutTrack {
      * @return track ident.
      */
     @Nonnull
-    final public String getId() {
+    public final String getId() {
         return ident;
     }
 
     @Nonnull
-    final public String getName() {
+    public final String getName() {
         return ident;
     }
 
@@ -82,7 +82,7 @@ abstract public class LayoutTrack {
      * @param turnoutState of the turnout
      * @return the turnout state string
      */
-    final public String getTurnoutStateString(int turnoutState) {
+    public final String getTurnoutStateString(int turnoutState) {
         String result = "";
         if (turnoutState == Turnout.CLOSED) {
             result = Bundle.getMessage("TurnoutStateClosed");

@@ -108,7 +108,7 @@ public class DefaultLogixNG extends AbstractNamedBean
 
     /** {@inheritDoc} */
     @Override
-    final public void setup() {
+    public final void setup() {
         for (ConditionalNG_Entry entry : _conditionalNG_Entries) {
             if ( entry._conditionalNG == null
                     || !entry._conditionalNG.getSystemName()
