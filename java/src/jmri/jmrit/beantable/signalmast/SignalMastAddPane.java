@@ -75,7 +75,7 @@ public abstract class SignalMastAddPane extends JPanel implements JmriServicePro
      */
     @Nonnull abstract public String getPaneName();
     
-    final protected static int NOTIONAL_ASPECT_COUNT = 12;  // size of maps, not critical
+    protected static final int NOTIONAL_ASPECT_COUNT = 12;  // size of maps, not critical
 
     public static abstract class SignalMastAddPaneProvider implements JmriServiceProviderInterface {
         /**
