@@ -95,7 +95,7 @@ public class Roster extends XmlFile implements RosterGroupSelector, PropertyChan
     // reflect to it.
     // Note that dispose() doesn't act on these.  It isn't clear whether it should...
     private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
-    static public final String schemaVersion = ""; // NOI18N
+    public static final String schemaVersion = ""; // NOI18N
     private String defaultRosterGroup = null;
     private final HashMap<String, RosterGroup> rosterGroups = new HashMap<>();
 

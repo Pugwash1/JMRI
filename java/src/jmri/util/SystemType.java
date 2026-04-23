@@ -13,12 +13,12 @@ import org.slf4j.LoggerFactory;
  */
 public class SystemType {
 
-    static public final int MACCLASSIC = 1; // no longer supported - latest JVM is 1.1.8
-    static public final int MACOSX = 2;
-    static public final int WINDOWS = 4;
-    static public final int LINUX = 5;
-    static public final int OS2 = 6;
-    static public final int UNIX = 7;
+    public static final int MACCLASSIC = 1; // no longer supported - latest JVM is 1.1.8
+    public static final int MACOSX = 2;
+    public static final int WINDOWS = 4;
+    public static final int LINUX = 5;
+    public static final int OS2 = 6;
+    public static final int UNIX = 7;
 
     static int type = 0;
     static boolean isSet = false;
