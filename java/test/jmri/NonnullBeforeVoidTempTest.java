@@ -43,10 +43,10 @@ public class NonnullBeforeVoidTempTest {
     /**
      * Get all Java files in a directory and validate them.
      *
-     * @param directory the directory containing XML files
-     * @param recurse   if true, will recurse into subdirectories
-     * @param pass      if true, successful validation will pass; if false,
-     *                  successful validation will fail
+     * @param directories the directories containing Java files
+     * @param recurse     if true, will recurse into subdirectories
+     * @param pass        if true, successful validation will pass; if false,
+     *                    successful validation will fail
      * @return a stream of {@link Arguments}, where each Argument contains the
      *         {@link java.io.File} with a filename ending in {@literal .java} to
      *         validate and a boolean matching the pass parameter
@@ -82,12 +82,12 @@ public class NonnullBeforeVoidTempTest {
         checkFile(file);
     }
 
-    private static int total = 0;
-    private static int fails = 0;
+//    private static int total = 0;
+//    private static int fails = 0;
 
     private void checkFile(File file) throws IOException {
 
-        total++;
+//        total++;
 
 //        System.out.format("File: %s%n", file);
 //        log.warn("File: {}", file);
@@ -103,7 +103,7 @@ public class NonnullBeforeVoidTempTest {
         }
 /* Ignore for now */
         if (PATTERN_FINAL_BEFORE_PUBLIC_OR_STATIC.matcher(data).matches()) {
-            fails++;
+//            fails++;
 //            System.out.format("File has static before public/protected/private: %s%n", file);
 //            System.out.format("%d, %d: File has final before public/protected/private/static: %s%n", total, fails, file);
             Assertions.fail(String.format("File %s has final before public/protected/private", file));

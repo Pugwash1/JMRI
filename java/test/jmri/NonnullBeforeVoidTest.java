@@ -40,10 +40,10 @@ public class NonnullBeforeVoidTest {
     /**
      * Get all Java files in a directory and validate them.
      *
-     * @param directory the directory containing XML files
-     * @param recurse   if true, will recurse into subdirectories
-     * @param pass      if true, successful validation will pass; if false,
-     *                  successful validation will fail
+     * @param directories the directories containing Java files
+     * @param recurse     if true, will recurse into subdirectories
+     * @param pass        if true, successful validation will pass; if false,
+     *                    successful validation will fail
      * @return a stream of {@link Arguments}, where each Argument contains the
      *         {@link java.io.File} with a filename ending in {@literal .java} to
      *         validate and a boolean matching the pass parameter
