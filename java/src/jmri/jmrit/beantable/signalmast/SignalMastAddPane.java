@@ -101,7 +101,7 @@ public abstract class SignalMastAddPane extends JPanel implements JmriServicePro
          * name order.
          * @return all instance map sorted in name order.
          */
-        final public static Map<String, SignalMastAddPaneProvider> getInstancesMap() {
+        public static final Map<String, SignalMastAddPaneProvider> getInstancesMap() {
             if (instanceMap == null) loadInstances();
             return Collections.unmodifiableMap(instanceMap);
         }
@@ -111,7 +111,7 @@ public abstract class SignalMastAddPane extends JPanel implements JmriServicePro
          * between the (localized) name and the pane. 
          * @return unmodifiable collection.
          */
-        final public static Collection<SignalMastAddPaneProvider> getInstancesCollection() {
+        public static final Collection<SignalMastAddPaneProvider> getInstancesCollection() {
             if (instanceMap == null) loadInstances();
             return Collections.unmodifiableCollection(instanceMap.values());
         }
@@ -120,7 +120,7 @@ public abstract class SignalMastAddPane extends JPanel implements JmriServicePro
          * Load all the available instances. Note this only runs
          * once; there's no reloading once the program is running.
          */
-        final public static void loadInstances() {
+        public static final void loadInstances() {
             if (instanceMap != null) return;
         
             instanceMap = new TreeMap<>();  // sorted map, in string order on key

@@ -487,13 +487,13 @@ layoutEditor/ConnectivityUtil.java:    public static final int DIVERGING = 0x02;
 
 Note the following values repeat. Two Enums? Try and see if compiles.
 ```
-layoutEditor/LayoutConnectivity.java:    final public static int NONE = 0;
-layoutEditor/LayoutConnectivity.java:    final public static int XOVER_BOUNDARY_AB = 1;  // continuing
-layoutEditor/LayoutConnectivity.java:    final public static int XOVER_BOUNDARY_CD = 2;  // continuing
-layoutEditor/LayoutConnectivity.java:    final public static int XOVER_BOUNDARY_AC = 3;  // xed over
-layoutEditor/LayoutConnectivity.java:    final public static int XOVER_BOUNDARY_BD = 4;  // xed over
-layoutEditor/LayoutConnectivity.java:    final public static int XOVER_BOUNDARY_AD = 1;  // continuing (slips)
-layoutEditor/LayoutConnectivity.java:    final public static int XOVER_BOUNDARY_BC = 2;  // continuing (slips)
+layoutEditor/LayoutConnectivity.java:    public static final int NONE = 0;
+layoutEditor/LayoutConnectivity.java:    public static final int XOVER_BOUNDARY_AB = 1;  // continuing
+layoutEditor/LayoutConnectivity.java:    public static final int XOVER_BOUNDARY_CD = 2;  // continuing
+layoutEditor/LayoutConnectivity.java:    public static final int XOVER_BOUNDARY_AC = 3;  // xed over
+layoutEditor/LayoutConnectivity.java:    public static final int XOVER_BOUNDARY_BD = 4;  // xed over
+layoutEditor/LayoutConnectivity.java:    public static final int XOVER_BOUNDARY_AD = 1;  // continuing (slips)
+layoutEditor/LayoutConnectivity.java:    public static final int XOVER_BOUNDARY_BC = 2;  // continuing (slips)
 ```
 
 The following are bits, but there's no indication they are ever or'd:
