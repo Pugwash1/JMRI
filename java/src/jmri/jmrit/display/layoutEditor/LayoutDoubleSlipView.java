@@ -28,5 +28,5 @@ public class LayoutDoubleSlipView extends LayoutSlipView {
         
     // private final LayoutDoubleSlip slip;
 
-    // private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(LayoutDoubleSlipView.class);
+    // private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(LayoutDoubleSlipView.class);
 }

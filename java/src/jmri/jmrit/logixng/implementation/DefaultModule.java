@@ -402,6 +402,6 @@ public class DefaultModule extends AbstractBase
         return true;
     }
 
-    private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(DefaultModule.class);
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(DefaultModule.class);
 
 }

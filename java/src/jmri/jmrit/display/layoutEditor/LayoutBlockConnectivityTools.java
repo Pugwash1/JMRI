@@ -1396,6 +1396,6 @@ public final class LayoutBlockConnectivityTools {
         }
     }
 
-    private final static Logger log
+    private static final Logger log
             = LoggerFactory.getLogger(LayoutBlockConnectivityTools.class);
 }

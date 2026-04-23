@@ -33,5 +33,5 @@ public class LayoutDoubleXOverView extends LayoutXOverView {
         
     // private final LayoutDoubleXOver xover;
 
-    // private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(LayoutDoubleXOverView.class);
+    // private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(LayoutDoubleXOverView.class);
 }

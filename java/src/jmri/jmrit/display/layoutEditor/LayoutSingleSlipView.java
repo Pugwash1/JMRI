@@ -27,5 +27,5 @@ public class LayoutSingleSlipView extends LayoutSlipView {
         
     // private final LayoutSingleSlip slip;
 
-    // private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(LayoutSingleSlipView.class);
+    // private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(LayoutSingleSlipView.class);
 }

@@ -490,5 +490,5 @@ public class ThrottlesPreferencesControlsSettingsPane extends JPanel {
         }
     }
 
-    private final static Logger log = LoggerFactory.getLogger(ThrottlesPreferencesControlsSettingsPane.class);
+    private static final Logger log = LoggerFactory.getLogger(ThrottlesPreferencesControlsSettingsPane.class);
 }

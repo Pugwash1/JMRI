@@ -1649,5 +1649,5 @@ public class Roster extends XmlFile implements RosterGroupSelector, PropertyChan
         }
     }
 
-    private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(Roster.class);
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(Roster.class);
 }

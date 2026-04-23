@@ -33,5 +33,5 @@ public class LayoutWyeView extends LayoutTurnoutView {
         
     // private final LayoutWye wye;
 
-    // private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(LayoutWyeView.class);
+    // private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(LayoutWyeView.class);
 }

@@ -33,5 +33,5 @@ public class LayoutRHXOverView extends LayoutXOverView {
        
     // private final LayoutRHXOver xover;
 
-    // private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(LayoutRHXOverView.class);
+    // private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(LayoutRHXOverView.class);
 }

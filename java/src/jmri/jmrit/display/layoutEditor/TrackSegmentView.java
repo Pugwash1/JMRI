@@ -3811,5 +3811,5 @@ public class TrackSegmentView extends LayoutTrackView {
         setLayoutBlock(layoutBlock);
     }
 
-    private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(TrackSegmentView.class);
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(TrackSegmentView.class);
 }

@@ -813,5 +813,5 @@ public class LayoutTraverserView extends LayoutTrackView {
         return true;
     }
 
-    private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(LayoutTraverserView.class);
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(LayoutTraverserView.class);
 }

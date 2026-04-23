@@ -468,17 +468,17 @@ layoutEditor/blockRoutingTable/LayoutBlockRouteTableModel.java:    static final 
 Note bits:
 ```
 layoutEditor/LayoutBlock.java:    public static final int RESERVED = 0x08;
-layoutEditor/LayoutBlock.java:    final static int ADDITION = 0x00;
-layoutEditor/LayoutBlock.java:    final static int UPDATE = 0x02;
-layoutEditor/LayoutBlock.java:    final static int REMOVAL = 0x04;
+layoutEditor/LayoutBlock.java:    static final int ADDITION = 0x00;
+layoutEditor/LayoutBlock.java:    static final int UPDATE = 0x02;
+layoutEditor/LayoutBlock.java:    static final int REMOVAL = 0x04;
 ```
 
 Note bits, with an odd choice of NONE - confined to Layout Block, make private? 
 ```
-layoutEditor/LayoutBlock.java:    final static int RXTX = 0x00;
-layoutEditor/LayoutBlock.java:    final static int RXONLY = 0x02;
-layoutEditor/LayoutBlock.java:    final static int TXONLY = 0x04;
-layoutEditor/LayoutBlock.java:    final static int NONE = 0x08;
+layoutEditor/LayoutBlock.java:    static final int RXTX = 0x00;
+layoutEditor/LayoutBlock.java:    static final int RXONLY = 0x02;
+layoutEditor/LayoutBlock.java:    static final int TXONLY = 0x04;
+layoutEditor/LayoutBlock.java:    static final int NONE = 0x08;
 
 layoutEditor/ConnectivityUtil.java:    public static final int OVERALL = 0x00;  (Connected to Section.java)
 layoutEditor/ConnectivityUtil.java:    public static final int CONTINUING = 0x01;

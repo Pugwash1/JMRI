@@ -225,5 +225,5 @@ abstract public class LayoutTrack {
      */
     abstract public void setAllLayoutBlocks(LayoutBlock layoutBlock);
 
-    private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(LayoutTrack.class);
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(LayoutTrack.class);
 }

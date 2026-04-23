@@ -235,5 +235,5 @@ public class LayoutEditorFloatingToolBarPanel extends LayoutEditorToolBarPanel {
     }
 
     // initialize logging
-    // private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(LayoutEditorFloatingToolBarPanel.class);
+    // private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(LayoutEditorFloatingToolBarPanel.class);
 }

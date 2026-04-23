@@ -33,5 +33,5 @@ public class LayoutXOverView extends LayoutTurnoutView {
         
     // private final LayoutXOver xover;
 
-    // private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(LayoutXOverView.class);
+    // private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(LayoutXOverView.class);
 }

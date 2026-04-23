@@ -22,7 +22,7 @@ import org.slf4j.LoggerFactory;
  */
 public class FacelessServer implements DeviceListener, DeviceManager, ZeroConfServiceListener {
 
-    private final static Logger log = LoggerFactory.getLogger(FacelessServer.class);
+    private static final Logger log = LoggerFactory.getLogger(FacelessServer.class);
 
     UserPreferencesManager userPreferences = InstanceManager.getNullableDefault(UserPreferencesManager.class);
 
