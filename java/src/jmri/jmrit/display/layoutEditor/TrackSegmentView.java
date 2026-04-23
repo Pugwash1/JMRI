@@ -66,7 +66,7 @@ public class TrackSegmentView extends LayoutTrackView {
     // temporary reference to the Editor that will eventually be part of View
     private final jmri.jmrit.display.layoutEditor.LayoutEditorDialogs.TrackSegmentEditor editor;
 
-    final private TrackSegment trackSegment;
+    private final TrackSegment trackSegment;
 
     // temporary?
     @Nonnull

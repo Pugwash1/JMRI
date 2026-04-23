@@ -27,9 +27,9 @@ public class LZ100InternalFrame extends javax.swing.JInternalFrame implements XN
     private boolean autoMode = false; // holds Auto/Manual Startup Mode.
 
     private int resetMode = 0; // holds the reset mode;
-    static final private int IDLE = 0;
-    static final private int ONSENT = 1;
-    static final private int OFFSENT = 2;
+    static private final int IDLE = 0;
+    static private final int ONSENT = 1;
+    static private final int OFFSENT = 2;
 
     private int sendCount = 0; // count the number of times the on/off 
     // sequence for F4 has been sent during a reset

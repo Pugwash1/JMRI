@@ -60,7 +60,7 @@ import java.util.ResourceBundle;
  */
 public class Version {
 
-    static final private ResourceBundle VERSION_BUNDLE = ResourceBundle.getBundle("jmri.Version"); // NOI18N
+    static private final ResourceBundle VERSION_BUNDLE = ResourceBundle.getBundle("jmri.Version"); // NOI18N
 
     /**
      * Major number changes with large incompatible changes in requirements or

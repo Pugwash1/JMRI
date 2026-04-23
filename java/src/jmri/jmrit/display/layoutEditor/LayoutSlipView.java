@@ -51,7 +51,7 @@ public class LayoutSlipView extends LayoutTurnoutView {
         editor = new jmri.jmrit.display.layoutEditor.LayoutEditorDialogs.LayoutSlipEditor(layoutEditor);
     }
 
-    final private LayoutSlip slip;
+    private final LayoutSlip slip;
 
     public int currentState = UNKNOWN;
 

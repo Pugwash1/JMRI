@@ -55,7 +55,7 @@ public class PositionablePointView extends LayoutTrackView {
         this.positionablePoint = point;
     }
 
-    final private PositionablePoint positionablePoint;
+    private final PositionablePoint positionablePoint;
 
     public PositionablePoint getPoint() {
         return positionablePoint;

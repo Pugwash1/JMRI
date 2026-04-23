@@ -56,7 +56,7 @@ public class LevelXingView extends LayoutTrackView {
     // temporary reference to the Editor that will eventually be part of View
     private final jmri.jmrit.display.layoutEditor.LayoutEditorDialogs.LevelXingEditor editor;
 
-    final private LevelXing xing;
+    private final LevelXing xing;
 
     // temporary?
     @Nonnull

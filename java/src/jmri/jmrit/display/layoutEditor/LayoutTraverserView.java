@@ -44,7 +44,7 @@ public class LayoutTraverserView extends LayoutTrackView {
         editor = new jmri.jmrit.display.layoutEditor.LayoutEditorDialogs.LayoutTraverserEditor(layoutEditor);
     }
 
-    final private LayoutTraverser traverser;
+    private final LayoutTraverser traverser;
 
     public final LayoutTraverser getTraverser() { return traverser; }
 

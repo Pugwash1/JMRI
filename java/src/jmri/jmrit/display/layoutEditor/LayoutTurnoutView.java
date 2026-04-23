@@ -269,7 +269,7 @@ public class LayoutTurnoutView extends LayoutTrackView {
     // temporary reference to the Editor that will eventually be part of View
     protected jmri.jmrit.display.layoutEditor.LayoutEditorDialogs.LayoutTurnoutEditor editor;
 
-    final private LayoutTurnout turnout;
+    private final LayoutTurnout turnout;
 
     public final LayoutTurnout getLayoutTurnout() {
         return turnout;

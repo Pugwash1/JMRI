@@ -31,8 +31,8 @@ public class FacelessServer implements DeviceListener, DeviceManager, ZeroConfSe
     ZeroConfService service;
     boolean isListen = true;
     ServerSocket socket = null;
-    final private ArrayList<DeviceServer> deviceList = new ArrayList<>();
-    final private ArrayList<DeviceListener> deviceListenerList = new ArrayList<>();
+    private final ArrayList<DeviceServer> deviceList = new ArrayList<>();
+    private final ArrayList<DeviceListener> deviceListenerList = new ArrayList<>();
     private int threadNumber = 1;
 
     FacelessServer() {

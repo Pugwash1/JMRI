@@ -48,9 +48,9 @@ public final class ConnectivityUtil {
 
     // constants
     // operational instance variables
-    final private LayoutEditor layoutEditor;
-    final private LayoutEditorAuxTools auxTools;
-    final private LayoutBlockManager layoutBlockManager;
+    private final LayoutEditor layoutEditor;
+    private final LayoutEditorAuxTools auxTools;
+    private final LayoutBlockManager layoutBlockManager;
 
     private final int TRACKNODE_CONTINUING = 0;
     private final int TRACKNODE_DIVERGING = 1;

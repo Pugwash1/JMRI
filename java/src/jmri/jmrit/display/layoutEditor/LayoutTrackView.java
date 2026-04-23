@@ -62,7 +62,7 @@ abstract public class LayoutTrackView implements InlineLogixNG {
         this.center = c;
     }
 
-    final private LayoutTrack layoutTrack;
+    private final LayoutTrack layoutTrack;
 
     protected final LayoutEditor layoutEditor;
 
