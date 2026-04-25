@@ -273,7 +273,7 @@ public class AutoTrainsFrame extends jmri.util.JmriJFrame {
 
     String classicControl = this.getClass().getName() + ".UseClassicControl"; // NOI18N
 
-    private final static Logger log = LoggerFactory.getLogger(AutoTrainsFrame.class);
+    private static final Logger log = LoggerFactory.getLogger(AutoTrainsFrame.class);
 
 }
 
