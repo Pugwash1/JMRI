@@ -48,9 +48,9 @@ public class TrackCopyFrame extends OperationsFrame implements java.beans.Proper
     Location _destination;  // copy the track to this location
 
     // remember state of checkboxes during a session
-    static boolean sameName = false;
-    static boolean moveRollingStock = false;
-    static boolean deleteTrack = false;
+    protected static boolean sameName = false;
+    protected static boolean moveRollingStock = false;
+    protected static boolean deleteTrack = false;
 
     /*
      * Copies track to destination
