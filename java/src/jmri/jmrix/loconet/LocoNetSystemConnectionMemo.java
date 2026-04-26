@@ -478,6 +478,6 @@ public class LocoNetSystemConnectionMemo extends DefaultSystemConnectionMemo imp
         super.dispose();
     }
 
-    private final static Logger log = LoggerFactory.getLogger(LocoNetSystemConnectionMemo.class);
+    private static final Logger log = LoggerFactory.getLogger(LocoNetSystemConnectionMemo.class);
 
 }
