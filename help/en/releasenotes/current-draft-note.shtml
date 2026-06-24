@@ -126,7 +126,10 @@
 
         <h4><a href="http://openlcb.org">OpenLCB</a> / LCC</h4>
             <ul>
-                <li></li>
+                <li>Suppress the 'Make Turnouts' and 'Make Sensors' buttons in the configuration
+                    window when they aren't going to do any adds.</li>
+                <li>Add option to the popup menu in eventID-entry fields that lets you
+                    name the event ID right there.</li>
             </ul>
 
         <h4>Powerline</h4>
@@ -469,7 +472,9 @@
     <h3>LccPro</h3>
         <a id="LccPro" name="LccPro"></a>
         <ul>
-          <li></li>
+          <li>If you have reordered the columns in the main LccPro window and
+              you export to a CSV file, the columns will now be in that order
+              and properly labeled in the file.</li>
         </ul>
 
     <h3>Logix</h3>
