@@ -489,7 +489,7 @@
           <li>The LogixNG clipboard window now has the menu item
               <strong>Clear clipboard</strong> in the <strong>Tools</strong>
               menu. It allows you to clear the entire clipboard.</li>
-          <li></li>
+          <li>The action <strong>For each roster</strong> has been added.</li>
         </ul>
 
     <h3>Meters and MeterFrames</h3>
@@ -665,6 +665,9 @@
     <h3>Miscellaneous</h3>
         <a id="Misc" name="Misc"></a>
         <ul>
+            <li>The standard SortedProperties class has been put in place
+                of the custom jmri.util.OrderedProperties class, which in
+                turn has been deprecated for removal.</li>
             <li>Improve caching of user preferences files when node-specific profile info is present.</li>
             <li>Added a new black sensor icon to the smallschematics/LEDs group.</li>
         </ul>
