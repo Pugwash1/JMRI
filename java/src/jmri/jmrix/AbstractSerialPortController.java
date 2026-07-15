@@ -85,7 +85,7 @@ abstract public class AbstractSerialPortController extends AbstractPortControlle
      */
     @Override
     public void connect() throws java.io.IOException {
-        if (mPort.startsWith("pipe:") || mPort.startsWith("iopipe:")) {
+        if (mPort.startsWith("stream:") || mPort.startsWith("iopipe:")) {
             log.info("AbstractSerialPortController connect() mPort[{}]",mPort);
             // do nothing here its done when getting datastreams
             return;
@@ -405,9 +405,9 @@ abstract public class AbstractSerialPortController extends AbstractPortControlle
     // identical implementations in the subclasses - but note simulators are now overriding
     @Override
     public DataInputStream getInputStream() {
-        if (mPort.startsWith("pipe:")   ) {
+        if (mPort.startsWith("stream:")   ) {
                 try {
-                    return  new DataInputStream(new FileInputStream(mPort.substring(5)));
+                    return  new DataInputStream(new FileInputStream(mPort.substring(7)));
                 } catch (FileNotFoundException fnf) {
                     log.error("getInputStream exception: {}", fnf.getMessage());
                 }
@@ -435,9 +435,9 @@ abstract public class AbstractSerialPortController extends AbstractPortControlle
     // identical implementations in the subclasses - but note simulators are now overriding
     @Override
     public DataOutputStream getOutputStream() {
-        if (mPort.startsWith("pipe:")   ) {
+        if (mPort.startsWith("stream:")   ) {
             try {
-                return  new DataOutputStream(new FileOutputStream(mPort.substring(5)));
+                return  new DataOutputStream(new FileOutputStream(mPort.substring(7)));
             } catch (FileNotFoundException fnf) {
                 log.error("getOutputStream exception: {}", fnf.getMessage());
                 return null;

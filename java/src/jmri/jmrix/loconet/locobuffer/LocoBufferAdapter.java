@@ -66,8 +66,8 @@ public class LocoBufferAdapter extends LnPortController {
     @Override
     public String openPort(String portName, String appName) {
         // get and open the primary port
-        if (mPort.startsWith("pipe:")) {
-            File f = new File(portName.substring(5));
+        if (mPort.startsWith("stream:")) {
+            File f = new File(portName.substring(7));
             if ( ! (f.canWrite() && f.canRead())) {
                 log.error("failed to connect pipe to {}", portName);
                 return Bundle.getMessage("SerialPortNotFound", portName);
@@ -140,7 +140,7 @@ public class LocoBufferAdapter extends LnPortController {
      */
     @Override
     public boolean okToSend() {
-        if (mPort.startsWith("pipe:") || mPort.startsWith("iopipe:")) {
+        if (mPort.startsWith("stream:") || mPort.startsWith("iopipe:")) {
             return true;
         }
         return currentSerialPort.getCTS();
