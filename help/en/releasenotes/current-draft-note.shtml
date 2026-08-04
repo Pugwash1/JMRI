@@ -27,6 +27,7 @@
         <h4>CBUS</h4>
             <ul>
                 <li>Console Connection Logging - Default filename now includes connection name.</li>
+                <li>On opening the Console, Logging to File resumes in an empty file if active when the previous console is closed.</li>
             </ul>
 
         <h4>C/MRI</h4>
@@ -105,6 +106,7 @@
                 <li>Timeouts when programming the Op Switches on Digitrax boards (e.g. DS64, etc) will automatically be retried once.</li>
                 <li>Added interpretation of some BDL716 configuration messages to
                     LocoNet Monitor.</li>
+                <li>Made some LocoNet-specific programming mode constants public so the can be accessed from scripts.
             </ul>
 
         <h4>Maple</h4>
@@ -506,6 +508,7 @@
             <li>You can now program, save and load DS64 output addresses and routes in a roster entry using DecoderPro.</li>
             <li>Fixed a bug which caused importing a decoder on Windows to fail.</li>
             <li>Fixed a bug which would sometimes show empty tabs when it shouldn't.</li>
+            <li>Added the Speed Profiling tool to the Actions menu.<li>
         </ul>
 
    <h3>Dispatcher</h3>
@@ -571,6 +574,8 @@
         <ul>
             <li>New feature, you can now control which road names and load types a track can service.</li>
             <li>Fixed a problem with spurs with schedules in quick service mode.</li>
+            <li>You can now print the contents of the "Show Schedules by Car Type and Load".</li>
+            <li>You can also print the contents of the "Show Staging and Schedules by Car Type and Load".</li>
         </ul>
 
    <h3>Panel Editor</h3>
