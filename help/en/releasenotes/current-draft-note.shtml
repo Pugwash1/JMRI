@@ -103,6 +103,7 @@
                 <li>Added a new programming facade "Digitrax OpSw Word Programming" for
                             programming at the board level for e.g. DS64's.</li>
                 <li>You can now program, save and load DS64 output addresses and routes in a roster entry using DecoderPro.</li>
+                <li>Add in-use count to the Slot Monitor.</li>
                 <li>Timeouts when programming the Op Switches on Digitrax boards (e.g. DS64, etc) will automatically be retried once.</li>
                 <li>Added interpretation of some BDL716 configuration messages to
                     LocoNet Monitor.</li>
@@ -146,7 +147,8 @@
 
         <h4><a href="http://openlcb.org">OpenLCB</a> / LCC</h4>
             <ul>
-                <li></li>
+                <li>LccPro will now prompt you for a backup directory the first time
+                    you do a node backup from the main screen if the location hasn't already been set.</li>
             </ul>
 
         <h4>Powerline</h4>
@@ -605,7 +607,7 @@
     <h3>Roster</h3>
         <a id="Roster" name="Roster"></a>
         <ul>
-            <li></li>
+            <li>Roster speed profile added ability to specify distance in inches or mm. Fix txt visibility.</li>
         </ul>
 
     <h3>Routes</h3>
@@ -723,7 +725,7 @@
    <h3>Virtual Sound Decoder</h3>
         <a id="VSD" name="VSD"></a>
         <ul>
-            <li></li>
+            <li>Added coasting and key-notching features in Diesel3Sound.java.</li>
         </ul>
 
    <h3>Z21 Server</h3>
