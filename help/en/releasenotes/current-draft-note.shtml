@@ -26,7 +26,8 @@
 
         <h4>CBUS</h4>
             <ul>
-                <li></li>
+                <li>Updated CBUS op-code definitions with the new VLCB op-codes so they
+                    show up nicely in the CBUS Console.</li>
             </ul>
 
         <h4>C/MRI</h4>
@@ -89,7 +90,7 @@
 
         <h4>LocoNet</h4>
             <ul>
-                <li>SlotMonitor update: 
+                <li>SlotMonitor update:
                 <ul>
                     <li>Add ability to hide / move columns. N.B. if you open 2 or more SlotMonitors this is only effective on the first one.</li>
                     <li>If Extended purge time is enabled in the Command Station the Slow scan for slots is extended.</li>
@@ -421,7 +422,9 @@
 
         <h4>ZIMO</h4>
             <ul>
-                <li></li>
+                <li>Added replacement-feature for v4.x MS/MN decoder</li>
+                <li>Added some features from CV27 for FS/MS/MN decoders, in particular HLU-Options</li>
+                <li>Minor optical corrections</li>
             </ul>
 
         <h4>Miscellaneous</h4>
@@ -694,6 +697,5 @@
     <h3>Miscellaneous</h3>
         <a id="Misc" name="Misc"></a>
         <ul>
-            <li></li>
+            <li>Fix the <strong>Current Config file</strong> path in <strong>Help &rArr; File Locations</strong>.</li>
         </ul>
-
