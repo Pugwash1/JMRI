@@ -559,7 +559,6 @@ public class TrainBuilder extends TrainBuilderCars {
 
             _completedMoves = 0; // moves completed for this location
             _reqNumOfMoves = rl.getMaxCarMoves() - rl.getCarMoves();
-            getTrain().setCurrentBuildRouteLocation(rl);
 
             if (!normal) {
                 if (rl == getTrain().getTrainDepartsRouteLocation()) {
@@ -612,7 +611,7 @@ public class TrainBuilder extends TrainBuilderCars {
 
                 // we might have freed up space at a spur that has an alternate
                 // track
-                if (redirectCarsFromAlternateTrack()) {
+                if (redirectCarsFromAlternateTrack(rl)) {
                     addLine(SEVEN, BLANK_LINE);
                 }
             }
