@@ -468,9 +468,14 @@ public class SlotMonDataModel extends javax.swing.table.AbstractTableModel imple
             case F28COLUMN:
                 return s.isF28();
             case THROTCOLUMN:
+                int useCount = memo.getThrottleManager().getThrottleUsageCount(s.locoAddr());
                 int upper = (s.id() >> 7) & 0x7F;
                 int lower = s.id() & 0x7F;
-                return StringUtil.twoHexFromInt(upper) + " " + StringUtil.twoHexFromInt(lower);
+                String useCountStr = "";
+                if (useCount>0) {
+                    useCountStr = " (" + Integer.toString(useCount) + ")";
+                }
+                return StringUtil.twoHexFromInt(upper) + " " + StringUtil.twoHexFromInt(lower) + useCountStr;
             case LASTUPDATE:
                 Instant instant = Instant.ofEpochMilli(s.getLastUpdateTime());
                 ZonedDateTime dateTime = instant.atZone(ZoneId.systemDefault());
