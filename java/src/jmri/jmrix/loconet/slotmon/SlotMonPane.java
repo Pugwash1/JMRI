@@ -353,42 +353,6 @@ public class SlotMonPane extends jmri.jmrix.loconet.swing.LnPanel implements Slo
                 .setPreferredWidth(new JButton("  " + slotModel.getValueAt(1, column)).getPreferredSize().width);
     }
 
-    /*
-     * Helper class to format number and optionally make blank when zero
-     */
-    private static class NumberFormatRenderer extends DefaultTableCellRenderer
-    {
-        public NumberFormatRenderer(String pattern, boolean suppressZero) {
-            super();
-            this.pattern = pattern;
-            this.suppressZero = suppressZero;
-            setHorizontalAlignment(JLabel.RIGHT);
-        }
-        @Override
-        public void setValue(Object value)
-        {
-            try
-            {
-                if (value != null && value instanceof Number) {
-                    if (suppressZero && ((Number) value).doubleValue() == 0.0 ) {
-                        value = "";
-                    }
-                    NumberFormat formatter = new DecimalFormat(pattern);
-                    value = formatter.format(value);
-                }
-            }
-            catch(IllegalArgumentException e) {}
-            super.setValue(value);
-        }
-        private String pattern;
-        private boolean suppressZero;
-    }
-
-//    void setColumnForBlankWhenZero(JTable slotTable, int column) {
-//        TableColumnModel tcm = slotTable.getColumnModel();
-//        TableCellRenderer renderer = new NumberFormatRenderer("####",true);
-//        tcm.getColumn(column).setCellRenderer(renderer);
-//    }
 
     class TableRendererToBlankToNA extends DefaultTableCellRenderer {
         @Override
