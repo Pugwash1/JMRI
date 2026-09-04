@@ -3,19 +3,16 @@ package jmri.jmrix.loconet.slotmon;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemListener;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
-
-import javax.annotation.CheckForNull;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellEditor;
-import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableRowSorter;
@@ -33,7 +30,6 @@ import jmri.util.swing.JmriMouseEvent;
 import jmri.util.swing.JmriMouseListener;
 import jmri.util.swing.WrapLayout;
 import jmri.util.swing.XTableColumnModel;
-import jmri.util.swing.JmriJOptionPane;
 import jmri.util.table.*;
 
 /**
@@ -94,11 +90,10 @@ public class SlotMonPane extends jmri.jmrix.loconet.swing.LnPanel implements Slo
     private JMenuItem popUpRefresh = new JMenuItem("Refresh");
     private int selectedRow = -1;
 
-    private final String slotMonHideTopPanel = "SlotMonHideTopPanel"; // NOI18N
-    private final String slotMonDisableSlowScan = "SlotMonDisableSlowScan"; // NOI18N
-    private final String slotMonShowIdle = "SlotMonShowIdle"; // NOI18N
-    private final String slotMonShowUnused = "SlotMonShowUnused"; // NOI18N
-    private final String slotMonShowSystem = "SlotMonShowSystem"; // NOI18N
+    private final String slotMonHideTopPanel = this.getClass().getName() + "SlotMonHideTopPanel"; // NOI18N
+    private final String slotMonShowIdle = this.getClass().getName() + "SlotMonShowIdle"; // NOI18N
+    private final String slotMonShowUnused = this.getClass().getName() + "SlotMonShowUnused"; // NOI18N
+    private final String slotMonShowSystem = this.getClass().getName() + "SlotMonShowSystem"; // NOI18N
 
     private void restorePreferences() {
         UserPreferencesManager pm = InstanceManager.getDefault(UserPreferencesManager.class);
@@ -134,7 +129,6 @@ public class SlotMonPane extends jmri.jmrix.loconet.swing.LnPanel implements Slo
 
     private boolean runningFilterSystem = false;
     private boolean runningFilterUnUsed = false;
-    private boolean runningFilterIdle = false;
 
     @Override
     public void initComponents(jmri.jmrix.loconet.LocoNetSystemConnectionMemo memo) {
@@ -212,7 +206,7 @@ public class SlotMonPane extends jmri.jmrix.loconet.swing.LnPanel implements Slo
         refreshAllButton.addActionListener(refreshListener);
         actionRefreshAll.addActionListener(refreshListener);
 
-        ActionListener filterShowSystemListen = e -> {
+        ItemListener filterShowSystemListen = e -> {
             if (runningFilterSystem) {
                 return;
             }
@@ -228,10 +222,10 @@ public class SlotMonPane extends jmri.jmrix.loconet.swing.LnPanel implements Slo
             runningFilterSystem = false;
             filter();
         } ;
-        showSystemCheckBox.addActionListener(filterShowSystemListen);
-        filterShowSystem.addActionListener(filterShowSystemListen);
+        showSystemCheckBox.addItemListener(filterShowSystemListen);
+        filterShowSystem.addItemListener(filterShowSystemListen);
 
-        ActionListener filterShowUnUsedListen = e -> {
+        ItemListener filterShowUnUsedListen = e -> {
             if (runningFilterUnUsed) {
                 return;
             }
@@ -247,8 +241,8 @@ public class SlotMonPane extends jmri.jmrix.loconet.swing.LnPanel implements Slo
             runningFilterUnUsed = false;
             filter();
         };
-        filterShowUnUsed.addActionListener(filterShowUnUsedListen);
-        showUnusedCheckBox.addActionListener(filterShowUnUsedListen);
+        filterShowUnUsed.addItemListener(filterShowUnUsedListen);
+        showUnusedCheckBox.addItemListener(filterShowUnUsedListen);
 
         // add listener object so stop all button functions
         optionHideTopPanel.addActionListener((ActionEvent e) -> {
@@ -331,6 +325,8 @@ public class SlotMonPane extends jmri.jmrix.loconet.swing.LnPanel implements Slo
 
         add(topPanel);
         add(slotScroll);
+        
+        restorePreferences();
 
         addMouseListenerToHeader(slotTable);
 
@@ -388,11 +384,11 @@ public class SlotMonPane extends jmri.jmrix.loconet.swing.LnPanel implements Slo
         private boolean suppressZero;
     }
 
-    void setColumnForBlankWhenZero(JTable slotTable, int column) {
-        TableColumnModel tcm = slotTable.getColumnModel();
-        TableCellRenderer renderer = new NumberFormatRenderer("####",true);
-        tcm.getColumn(column).setCellRenderer(renderer);
-    }
+//    void setColumnForBlankWhenZero(JTable slotTable, int column) {
+//        TableColumnModel tcm = slotTable.getColumnModel();
+//        TableCellRenderer renderer = new NumberFormatRenderer("####",true);
+//        tcm.getColumn(column).setCellRenderer(renderer);
+//    }
 
     class TableRendererToBlankToNA extends DefaultTableCellRenderer {
         @Override
