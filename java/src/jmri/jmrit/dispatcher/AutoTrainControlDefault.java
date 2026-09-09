@@ -79,7 +79,7 @@ public class AutoTrainControlDefault extends AbstractAutoTrainControl  {
         private void updateThrottleStatus() {
             StringBuilder sb = new StringBuilder();
             if (throttle != null && throttleStatus.isVisible()) {
-                if (rosterEntry != null && rosterEntry.getSpeedProfile() != null) {
+                if (rosterEntry != null && rosterEntry.getSpeedProfile() != null && autoActiveTrain.getUseSpeedProfile()) {
                     sb.append("" +
                             rosterEntry.getSpeedProfile().convertThrottleSettingToScaleSpeedWithUnits(
                                     lastReportedSpeed,
