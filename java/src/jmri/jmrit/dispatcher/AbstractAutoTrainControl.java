@@ -162,7 +162,7 @@ abstract  class AbstractAutoTrainControl extends JPanel {
     void stopToResume() {
         if (autoActiveTrain.getAutoEngineer() != null) {
             ActiveTrain at = autoActiveTrain.getActiveTrain();
-            if (at.getStatus() == ActiveTrain.STOPPED) {
+            if (at.getStatus() == ActiveTrain.STOPPED || at.getStatus() == ActiveTrain.WAITING) {
                 log.trace("Train Is Stopped - Resume");
                 if (autoActiveTrain.getCurrentBlock().getState() != Block.OCCUPIED) {
                     JmriJOptionPane.showMessageDialog(
