@@ -7,7 +7,10 @@ import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 import javax.swing.*;
 
+import org.python.jline.internal.Log;
+
 import jmri.InvokeOnAnyThread;
+import jmri.util.JmriJFrame;
 import jmri.util.ThreadingUtil;
 
 /**
@@ -295,9 +298,10 @@ public class JmriJOptionPane {
         log.info("Display with Parent title [{}]",title);
         pane.setComponentOrientation(JOptionPane.getRootFrame().getComponentOrientation());
         Window w = null;
-        //if (parentComponent == null) {
-        //    w = jmri.util.JmriJFrame.getFrameList().get(0);
-        //}
+        if (parentComponent == null) {
+            parentComponent=getTopFrame();
+        }
+        parentComponent.setVisible(true);
         w = findWindowForComponent(parentComponent);
         JDialog dialog = pane.createDialog(parentComponent, title);
         JDialogListener pcl = new JDialogListener(dialog);
@@ -305,9 +309,9 @@ public class JmriJOptionPane {
             dialog.setModalityType(Dialog.ModalityType.DOCUMENT_MODAL);
             w.addPropertyChangeListener(pcl);
         }
-        //setDialogLocation(parentComponent, dialog);
-        //dialog.setAlwaysOnTop(true);
-        //dialog.toFront();
+        setDialogLocation(parentComponent, dialog);
+        dialog.setAlwaysOnTop(true);
+        dialog.toFront();
         dialog.setVisible(true); // and waits for input
         dialog.dispose();
         if ( w != null ) {
@@ -327,16 +331,20 @@ public class JmriJOptionPane {
         log.debug("set dialog position for comp {} dialog {}", parentComponent, dialog.getTitle());
         int centreWidth;
         int centreHeight;
+        if (parentComponent==null) {
+            parentComponent = getTopFrame();
+        }
         Window w = findWindowForComponent(parentComponent);
-        if ( w == null || !w.isVisible() ) {
-            centreWidth = Toolkit.getDefaultToolkit().getScreenSize().width / 2;
-            centreHeight = Toolkit.getDefaultToolkit().getScreenSize().height / 2;
-        } else {
+        w.setVisible(true);
+        //if ( w == null || !w.isVisible() ) {
+        //    centreWidth = Toolkit.getDefaultToolkit().getScreenSize().width / 2;
+        //    centreHeight = Toolkit.getDefaultToolkit().getScreenSize().height / 2;
+        //} else {
             Point topLeft = w.getLocationOnScreen();
             Dimension size = w.getSize();
             centreWidth = topLeft.x + ( size.width / 2 );
             centreHeight = topLeft.y + ( size.height / 2 );
-        }
+        //}
         int centerX = centreWidth - ( dialog.getWidth() / 2 );
         int centerY = centreHeight - ( dialog.getHeight() / 2 );
         // set top left of Dialog at least 0px into the screen.
@@ -375,6 +383,20 @@ public class JmriJOptionPane {
             return JmriJOptionPane.findWindowForComponent((Component)object);
         }
         return null;
+    }
+
+    public static JmriJFrame getTopFrame() {
+        String fTitle = jmri.Application.getApplicationName();
+        for ( JmriJFrame f: jmri.util.JmriJFrame.getFrameList()) {
+            if (fTitle == f.getTitle()) {
+                Log.info("found [{}] for null parent",f.getTitle());
+                f.setVisible(true);
+                f.toFront();
+                return f;
+            }
+        }
+        Log.info("Not Found [{}] for null parent using [{}]", fTitle,jmri.util.JmriJFrame.getFrameList().get(1));
+        return jmri.util.JmriJFrame.getFrameList().get(1);
     }
 
     private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(JmriJOptionPane.class);
