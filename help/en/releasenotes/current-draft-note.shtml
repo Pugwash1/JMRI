@@ -36,7 +36,7 @@
 
         <h4>DCC++ and DCC-EX</h4>
             <ul>
-                <li></li>
+                <li>Correct E-Stop command sent when throttle is in reverse.</li>
             </ul>
 
         <h4>DCC4pc</h4>
@@ -86,7 +86,8 @@
 
         <h4>LocoNet</h4>
             <ul>
-                <li></li>
+                <li>Fixed a problem where an Intellibox-II would
+                    have power on/off problems after CV programming.</li>
             </ul>
 
         <h4>Maple</h4>
@@ -675,5 +676,6 @@
         <ul>
             <li>The "noverify" option has been removed from the JMRI program
                 launchers so that JMRI can use Java 27 and later.</li>
+            <li>For JMRI developers: CI tests now fails on WARN logging messages.</li>
         </ul>
 
