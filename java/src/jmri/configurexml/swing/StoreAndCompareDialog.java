@@ -31,10 +31,9 @@ public class StoreAndCompareDialog {
     public static JmriJFrame getTopFrame() {
         String fTitle = jmri.Application.getApplicationName();
         for ( JmriJFrame f: jmri.util.JmriJFrame.getFrameList()) {
+            log.info("f.name[{}]",f.getName());
             if (fTitle == f.getTitle()) {
                 log.info("found [{}] for null parent",f.getTitle());
-                f.setVisible(true);
-                f.toFront();
                 return f;
             }
         }
@@ -49,6 +48,7 @@ public class StoreAndCompareDialog {
             JmriJFrame parent = getTopFrame();
             final JDialog dialog = new JDialog(parent);
             parent.setVisible(true);
+            parent.toFront();
             dialog.setTitle(Bundle.getMessage("QuestionTitle"));     // NOI18N
             dialog.setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE);
             JPanel container = new JPanel();
@@ -105,6 +105,7 @@ public class StoreAndCompareDialog {
             JmriJFrame parent = getTopFrame();
             final JDialog dialog = new JDialog(parent);
             parent.setVisible(true);
+            parent.toFront();
             dialog.setTitle(Bundle.getMessage("QuestionTitle"));     // NOI18N
             dialog.setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE);
             JPanel container = new JPanel();
