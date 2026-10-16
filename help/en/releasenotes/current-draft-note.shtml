@@ -62,6 +62,10 @@
                     the next frame is now received instead of both being merged
                     into one corrupt frame; and corrupt frames are dropped
                     instead of being passed on as events.</li>
+                <li>CAN connections: a frame received from the layout is no
+                    longer also delivered to whichever tool sent the last frame,
+                    so a tool window which has been closed stops receiving
+                    traffic.</li>
             </ul>
 
         <h4>C/MRI</h4>
@@ -163,6 +167,8 @@
             <ul>
                 <li>Added a dialog to draw attention to the error
                     if a firmware update fails.</li>
+                <li>Change the default events for the STL Editor IQYZ tables from all zeros to
+                    unique zero based events.</li>
             </ul>
 
         <h4>Powerline</h4>
@@ -575,7 +581,8 @@
     <h3>Roster</h3>
         <a id="Roster" name="Roster"></a>
         <ul>
-            <li></li>
+            <li>Protect against an error that can occur while loading
+                the roster if an entry has an unexpectedly missing sound label.</li>
         </ul>
 
     <h3>Routes</h3>
