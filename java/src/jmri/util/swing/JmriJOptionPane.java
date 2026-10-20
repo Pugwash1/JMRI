@@ -395,8 +395,8 @@ public class JmriJOptionPane {
                 return f;
             }
         }
-        Log.info("Not Found [{}] for null parent using [{}]", fTitle,jmri.util.JmriJFrame.getFrameList().get(1));
-        return jmri.util.JmriJFrame.getFrameList().get(1);
+        Log.info("Not Found [{}] for null parent using [{}]", fTitle,jmri.util.JmriJFrame.getFrameList().get(0));
+        return jmri.util.JmriJFrame.getFrameList().get(0);
     }
 
     private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(JmriJOptionPane.class);
