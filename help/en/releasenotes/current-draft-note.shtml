@@ -564,6 +564,7 @@
                  scale speed shown for the minimum throttle now follow the
                  "Run in reverse" setting, and the scale km/h entry is no
                  longer labelled as scale mph.</li>
+             <li>Fix TSA Go to Manual and Resume from Manual.</li>
         </ul>
 
     <h3>Dispatcher System</h3>
@@ -581,7 +582,21 @@
     <h3>Layout Editor</h3>
         <a id="LE" name="LE"></a>
         <ul>
-            <li></li>
+            <li>Layout Editor block routing: the path search now finds
+                routes that exist when the preferred branch has two or more
+                dead-end or occupied sub-branches. Before, NX, Dispatcher ad-hoc
+                routes and Signal Mast Logic could report "no route" in these
+                cases.</li>
+            <li>An allocated block, that is one set to use its extra color,
+                for example by the LogixNG Block action "Alternate Color On"
+                or by a script, now keeps its extra color until it is turned
+                off, for example by the LogixNG Block action "Alternate Color
+                Off". The LogixNG Block expression "Is Allocated" tests this.
+                Before, with advanced block routing on, the block was switched
+                back to its normal color without notice as soon as it became
+                occupied. LogixNG and scripts that set it must now also clear
+                it, for example when the train has left. Dispatcher and
+                Entry/Exit are not affected: they clear their own blocks.</li>
         </ul>
 
         <h4>NX - Entry/Exit Tool</h4>
@@ -826,6 +841,7 @@
     <h3>Miscellaneous</h3>
         <a id="Misc" name="Misc"></a>
         <ul>
-            <li></li>
+            <li>Looking up and renaming items is faster on large layouts,
+                and the memory used by deleted items is now released.</li>
         </ul>
 
