@@ -443,6 +443,39 @@ public class ActiveTrain implements PropertyChangeProvider {
         return trainDetection;
     }
 
+    private long maxTrainLengthMM = 0;
+    private boolean noLengthWarningGiven = false;
+
+    /**
+     * Set the train length, used for any train whose tail is not always
+     * detected.
+     *
+     * @param lengthMM length in layout mm, 0 if not known
+     */
+    public void setMaxTrainLengthMM(long lengthMM) {
+        maxTrainLengthMM = Math.max(0, lengthMM);
+    }
+
+    /**
+     * Get the train length.
+     *
+     * @return length in layout mm, 0 if not known
+     */
+    public long getMaxTrainLengthMM() {
+        return maxTrainLengthMM;
+    }
+
+    /**
+     * Report, once only, that this train has no length.
+     *
+     * @return true the first time it is called
+     */
+    boolean firstNoLengthWarning() {
+        boolean first = !noLengthWarningGiven;
+        noLengthWarningGiven = true;
+        return first;
+    }
+
     public boolean isTransitReversed() {
         return mTransitReversed;
     }
@@ -902,19 +935,11 @@ public class ActiveTrain implements PropertyChangeProvider {
             return;
         }
         mAllocatedSections.remove(index);
-        if (mDispatcher.getNameInAllocatedBlock()) {
-            as.getSection().clearNameInUnoccupiedBlocks();
-            as.getSection().suppressNameUpdate(false);
-        }
         for (Block b: as.getSection().getBlockList()) {
+            // A Block that is also in another allocated Section keeps its
+            // name and colour until that Section is released too.
             if (!mDispatcher.checkForBlockInAllocatedSection(b, as.getSection())) {
-                String userName = b.getUserName();
-                if (userName != null) {
-                    LayoutBlock lb = InstanceManager.getDefault(LayoutBlockManager.class).getByUserName(userName);
-                    if (lb != null) {
-                        lb.setUseExtraColor(false);
-                    }
-                }
+                releaseBlockDisplay(b);
             }
         }
         // notify anyone interested
@@ -927,6 +952,30 @@ public class ActiveTrain implements PropertyChangeProvider {
                 mLastAllocatedSection = mAllocatedSections.get(
                         mAllocatedSections.size() - 1).getSection();
                 mLastAllocatedSectionSeqNumber = mAllocatedSections.size() - 1;
+            }
+        }
+    }
+
+    /**
+     * Remove what was shown for this train on a Block that is no longer
+     * allocated: the train name in an unoccupied Block, and the extra colour.
+     * The memory of the Layout Block follows the Block again.
+     *
+     * @param b the Block that is no longer allocated
+     */
+    private void releaseBlockDisplay(Block b) {
+        boolean nameInBlock = mDispatcher.getNameInAllocatedBlock();
+        if (nameInBlock && b.getState() == Block.UNOCCUPIED) {
+            b.setValue(null);
+        }
+        String userName = b.getUserName();
+        if (userName != null) {
+            LayoutBlock lb = InstanceManager.getDefault(LayoutBlockManager.class).getByUserName(userName);
+            if (lb != null) {
+                if (nameInBlock) {
+                    lb.setSuppressNameUpdate(false);
+                }
+                lb.setUseExtraColor(false);
             }
         }
     }
