@@ -68,6 +68,12 @@
                     when closed and shows when a log file could not be opened,
                     and the SPROG 3 Plus CAN disable setting is shown instead of
                     being greyed out.</li>
+                <li>CBUS Event Table: once the Event Table or the CBUS Console
+                    has been opened, adding, removing or renaming a sensor,
+                    turnout or light updates only the events it uses, instead of
+                    rebuilding the whole table each time. Loading a panel or
+                    adding beans with either window open no longer slows down
+                    as the layout grows.</li>
                 <li>CBUS throttles: a released throttle is removed from the
                     session list, so an emergency stop reaches every remaining
                     throttle instead of failing partway through; after a command
@@ -100,6 +106,11 @@
                     the next frame is now received instead of both being merged
                     into one corrupt frame; and corrupt frames are dropped
                     instead of being passed on as events.</li>
+                <li>On a CAN Simulation connection, frames from the CBUS
+                    simulated command station, event responder and nodes now
+                    carry the time they were received, as frames from a real
+                    connection do, so raw state listeners are given when a
+                    simulated sensor event arrived.</li>
                 <li>CAN connections: a frame received from the layout is no
                     longer also delivered to whichever tool sent the last frame,
                     so a tool window which has been closed stops receiving
@@ -246,15 +257,15 @@
             <ul>
                 <li>Added a dialog to draw attention to the error
                     if a firmware update fails.</li>
-                <li>OpenLCB/LCC Signal Masts can no longer 
+                <li>OpenLCB/LCC Signal Masts can no longer
                     be defined to use the event ID's that start with 00
                     as these values are reserved and not to be used.
-                    The value 00.00.00.00.00.00.00.00 was previously the default 
+                    The value 00.00.00.00.00.00.00.00 was previously the default
                     for "this event ID hasn't been configured".
                     The default is now a blank entry field that doesn't
-                    produce or consume an event.  If you have 
+                    produce or consume an event.  If you have
                     defined any of the signal mast entries to start with 00,
-                    they will be migrated to be empty fields that no longer 
+                    they will be migrated to be empty fields that no longer
                     produce or consume an event.</li>
                 <li>Change the default events for the STL Editor IQYZ tables from all zeros to
                     unique zero based events.</li>
@@ -572,7 +583,7 @@
     <h3>DecoderPro</h3>
         <a id="DecoderPro" name="DecoderPro"></a>
         <ul>
-            <li>Fixed an intermittent exception that occurred when 
+            <li>Fixed an intermittent exception that occurred when
                 detaching one of the programming panes.</li>
         </ul>
 
@@ -594,6 +605,17 @@
                  a speed profile, or when the profile does not cover the
                  direction of travel; a warning is written to the system
                  console in that case.</li>
+             <li>Dispatcher: the Release button in the Allocated Sections
+                 table now releases only a train's oldest Section once the
+                 train has left it, or its furthest allocated Section before
+                 the train reaches it, so that a train's route is never left
+                 with a gap. The Section directly ahead of a train can only be
+                 released while the train is stopped, and you are then asked
+                 whether to terminate the train. With Auto Allocate on, the
+                 train's allocation is held after such a release. After the
+                 furthest allocated Section is released, the train is
+                 allocated that Section again when it carries on, instead of
+                 silently getting no further allocations.</li>
              <li>The scale speed conversions for the maximum speed and the
                  scale speed shown for the minimum throttle now follow the
                  "Run in reverse" setting, and the scale km/h entry is no
@@ -621,6 +643,11 @@
              <li>An automatic train's speed ramp no longer carries on after
                  the train is halted, and a new ramp no longer runs alongside
                  an old one when the speed is changed quickly.</li>
+             <li>Trains waiting for a fast clock departure or restart time
+                 now start when the clock passes that time, even if the clock
+                 jumps over the exact minute. Before, they waited a whole fast
+                 clock day. If the clock is set back, only the exact minute
+                 counts.</li>
              <li>An automatic train now always finds the correct next Block
                  in its Section. Before, block or signal changes at the same
                  moment could give it the wrong Block or none. Reversing or
@@ -761,10 +788,11 @@
                     the first pair unless that pair used full interlocking, and
                     the remaining pairs were then set by the next, unrelated
                     request.</li>
-                <li>NX routes now set their turnouts one at a time without
-                    freezing the panel, including with "Revert to the old GUI
-                    behavior", where a double click on a destination still
-                    starts the next route.</li>
+                <li>In the NX Options dialog, the scope of <strong>Revert to the old GUI behavior</strong>
+                has been reduced.  <strong>Enable double click sensor selection</strong> describes
+                the remaining capability.  A previous selection is migrated.  New selections
+                are not backward compatible.</li>
+                <li>NX routes now set their turnouts one at a time without freezing the panel.</li>
             </ul>
 
     <h3>LccPro</h3>
@@ -905,6 +933,10 @@
     <h3>Roster</h3>
         <a id="Roster" name="Roster"></a>
         <ul>
+            <li>Speed Profiling can measure the lowest speed steps again at the end of a
+                profile, when the loco is warm, as many times as asked. The profile is given
+                the mean of the repeats, and a new Repeats table shows each step's first run,
+                its repeats, their spread and the change from the first run.</li>
             <li>Protect against an error that can occur while loading
                 the roster if an entry has an unexpectedly missing sound label.</li>
         </ul>
@@ -1060,6 +1092,9 @@
                 taken as soon as the message is read, before it waits for the
                 layout thread, so time between sensor events is measured more
                 accurately.</li>
+            <li>DCC++ (other than DCC++ over TCP), XpressNet, ECoS, Marklin and
+                JMRIClient sensors now also give that time to raw state
+                listeners.</li>
             <li>Turnouts with DELAYED feedback no longer flip back to an
                 earlier position when two commands are given within the feedback
                 delay, including CBUS turnouts changed by events on the bus, and
@@ -1101,6 +1136,11 @@
                 turned on after the panel file is reloaded. Previously it came back
                 with automation off, and saving again replaced the custom settings
                 with "Off".</li>
+            <li>Sensor, Turnout, Light, Memory, Block and other tables show a new
+                or deleted item by adding or removing its row, instead of
+                rebuilding the whole table. Loading a panel file while one of
+                these tables is open no longer slows down with the square of the
+                number of items.</li>
         </ul>
 
    <h3>Warrants</h3>
@@ -1133,6 +1173,9 @@
                 listener to that block every few seconds.</li>
             <li>A speed measured during a warrant run is now merged once into the speed profile. The
                 first measurement for a direction is no longer halved.</li>
+            <li>Warrants now plan a decoder's momentum from CV3 and CV4 only. CV23 and CV24, the consist
+                momentum adjustments, are not used, since a warrant can't tell what adjustment the
+                decoders in a consist apply; leave them at 0. They were also being added wrongly.</li>
         </ul>
 
    <h3>Web Access</h3>
@@ -1145,7 +1188,7 @@
         <a id="server" name="server"></a>
         <ul>
             <ii>Previously, you had to reload a panel window to pick up
-                any changes to icon graphics settings: background color, font, 
+                any changes to icon graphics settings: background color, font,
                 border color, etc.  The server and panel code has been updated to automatically
                 do that update when any of those parameters change.
             <li>Previously, some colors would display differently on web clients
@@ -1153,7 +1196,7 @@
                 noticeable with green, light and dark grey, and orange.  JMRI
                 now sends the exact RGB codes to the web client to ensure colors match.</li>
             <li>If two icons of different type, e.g. a block and a memory, displayed
-                objects with the same user name, the web display could show the 
+                objects with the same user name, the web display could show the
                 wrong object in one of the icons.  This is now fixed.<li>
         </ul>
 
