@@ -139,7 +139,7 @@ public class LnPacketizerStrict extends LnPacketizer {
                     }
                     // message is complete, dispatch it !!
                     // Ignore sensor msgs if track power off.
-                    if (memo.getPowerManager().getPower() != PowerManager.ON && msg.getOpCode() == 0xB2) {
+                    if (memo.getPowerManager().getPower() != PowerManager.ON && msg.getOpCode() == LnConstants.OPC_INPUT_REP) {
                         continue;
                     }
                     {
