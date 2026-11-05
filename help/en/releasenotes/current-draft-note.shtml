@@ -444,7 +444,21 @@
    <h3>Dispatcher</h3>
         <a id="Dispatcher" name="Dispatcher"></a>
         <ul>
+             <li>An automatic train waiting for a stop sensor that never goes
+                 active no longer runs on out of its Section at its stopping
+                 speed. It is stopped as soon as it enters a free Block beyond
+                 the Section, and a train stopping by distance into its
+                 destination Section is also stopped when, by reckoning from
+                 its speed profile, it reaches the end of the Section. A
+                 warning naming the stop sensor is written to the System
+                 Console.</li>
              <li></li>
+             <li>A Block change that an automatic train handles just after
+                 one of its Sections is released, or as the train is
+                 terminated, no longer gives warnings such as "No next Block"
+                 or that the train has disappeared. The train now uses the
+                 direction the Section was allocated in, and ignores Block
+                 changes once it is being terminated.</li>
         </ul>
 
     <h3>Dispatcher System</h3>
@@ -463,6 +477,9 @@
         <a id="LE" name="LE"></a>
         <ul>
             <li></li>
+            <li>Layout Editor panels now repaint only the track of a Block
+                whose occupancy or other state changed, rather than the whole
+                panel.</li>
         </ul>
 
         <h4>NX - Entry/Exit Tool</h4>
@@ -560,11 +577,17 @@
 
         <h4>Signal Heads</h4>
             <ul>
-                <li></li>
+                <li>Deleting a Signal Head now clears the Comments JMRI wrote on
+                    its output Turnouts when it was set up. The Turnouts stay;
+                    Comments entered by the user are left alone.</li>
             </ul>
 
         <h4>Signal Masts</h4>
             <ul>
+                <li>Deleting a Signal Mast now clears the "<i>mast</i>:output<i>N</i>"
+                    Comments JMRI wrote on its output Turnouts. Editing an Output
+                    Matrix Mast clears them from outputs it no longer uses. The
+                    Turnouts stay; Comments entered by the user are left alone.</li>
                 <li></li>
             </ul>
 
@@ -598,6 +621,15 @@
         <a id="throttle" name="throttle"></a>
         <ul>
             <li></li>
+            <li>Code and scripts can now be told when each speed or direction
+                command from a throttle has actually been sent to the layout,
+                and when (<code>Throttle.addSpeedSentListener</code>). The time
+                is taken as soon as the command is written to the connection,
+                after any wait for other work or for messages queued ahead of
+                it. CBUS throttles report it, on real CBUS connections and on
+                CAN Simulation; <code>Throttle.reportsSpeedSent()</code> says
+                whether a throttle does. Nothing that listens to a throttle's
+                properties sees anything new.</li>
         </ul>
 
     <h3>Timetable</h3>
@@ -615,6 +647,9 @@
     <h3>Turnouts, Lights, Sensors and other elements</h3>
         <a id="TLae" name="TLae"></a>
         <ul>
+            <li>The Turnout and Sensor tables can now add a sequential range of
+                up to 1000 items at once (was 100), e.g. a whole C/MRI node. The
+                confirmation for a large range is unchanged.</li>
             <li>When the user name of a sensor, turnout or other item is changed
                 from one name to another in any way, for example by a script,
                 the places that use it by that name now follow the change.
