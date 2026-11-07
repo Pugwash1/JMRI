@@ -31,6 +31,10 @@
                     lights that use its event, instead of to every one on the
                     connection, so the time taken for each frame no longer grows
                     with the size of the layout.</li>
+                <li>The CBUS simulator delivers its frames in the order a bus
+                    would: frames due at the same moment now arrive in the
+                    order they were sent, where before they could arrive in
+                    either order.</li>
             </ul>
 
         <h4>C/MRI</h4>
@@ -538,6 +542,13 @@
           <li>Execute action, Last result of digital expression and the
               Entry/Exit action and expression no longer lose their item when
               another file is loaded after the item was renamed.</li>
+          <li>A Sequence that doesn't run continuously runs once each time its
+              <strong>Start</strong> expression becomes true. Before, it started again at once,
+              and on every later event, for as long as <strong>Start</strong> stayed true,
+              repeating its steps. <strong>Start sequence immediately on load</strong> now
+              starts it once, too, instead of on every event. In the same way, a
+              Sequence's <strong>Reset</strong> expression now resets it once each
+              time it becomes true, instead of on every event while it stays true.</li>
         </ul>
 
     <h3>Meters and MeterFrames</h3>
@@ -749,5 +760,13 @@
                 split into or joined from, how it is detected, and its length
                 from each source. Nothing uses it yet, so nothing
                 changes for users.</li>
+            <li>In a profile whose connections are all simulators (the
+                Internal connection, CAN Simulation and the other simulator
+                connections), scripts and tests can now place simulated
+                trains. Driven by the Internal connection's throttles, as
+                Dispatcher, Warrants and throttle windows on that connection
+                do, they move on the layout's own track and set internal
+                sensors as they pass, with the time they passed. The sample
+                script SimulatedTrains.py shows two trains running.</li>
         </ul>
 
