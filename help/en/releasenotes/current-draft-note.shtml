@@ -420,7 +420,8 @@
     <h3>Control Panel Editor</h3>
         <a id="CPE" name="CPE"></a>
         <ul>
-            <li></li>
+            <li>Added cmd/ctrl-E as shortcut key to open and end editor mode.</li>
+            <li>Added cmd/ctrl-S to start save process.</li>
         </ul>
         <h4>Circuit Builder</h4>
             <a id="CPE-CB" name="CPE-CB"></a>
@@ -448,6 +449,13 @@
    <h3>Dispatcher</h3>
         <a id="Dispatcher" name="Dispatcher"></a>
         <ul>
+             <li>With "Place train name in allocated Blocks" on, a Block
+                 Contents icon now shows the train a Block is allocated to in
+                 italics after an arrow, for example <em>&rarr; 47012</em>,
+                 until Block tracking places the train in the Block, so a
+                 dispatcher can see which trains are really in their Blocks.
+                 Web panels show it the same way. Icons that use an icon for
+                 each value, and Layout Block memories, are unchanged.</li>
              <li>An automatic train waiting for a stop sensor that never goes
                  active no longer runs on out of its Section at its stopping
                  speed. It is stopped as soon as it enters a free Block beyond
@@ -456,6 +464,19 @@
                  its speed profile, it reaches the end of the Section. A
                  warning naming the stop sensor is written to the System
                  Console.</li>
+             <li>For developers: each Active Train now refers to the record of
+                 its train (<code>ActiveTrain.getTrainRecord()</code>), found by
+                 its roster entry or name, which keeps its Train Detection and
+                 Max Train Length and is kept when the Active Train is
+                 terminated, so the next Active Train for the same train refers
+                 to it again. Nothing users see changes.</li>
+             <li>For developers: a placed train record now follows its train
+                 from Block to Block as detection sees it: the Blocks it is in,
+                 a trail of the Blocks it entered and when (from the sensor's
+                 first report), which end leads, and how sure JMRI is of where
+                 it is. Dispatcher places an Active Train's record in its start
+                 Block, and a record is placed where a Block's value names it.
+                 It only watches: nothing on the layout changes.</li>
              <li></li>
              <li>A Block change that an automatic train handles just after
                  one of its Sections is released, or as the train is
@@ -566,7 +587,8 @@
    <h3>Panel Editor</h3>
         <a id="PE" name="PE"></a>
         <ul>
-            <li></li>
+            <li>Added cmd/ctrl-E as shortcut key to open and close editor window.</li>
+            <li>Added cmd/ctrl-S to start save process.</li>
         </ul>
 
     <h3>Permissions</h3>
@@ -687,6 +709,11 @@
     <h3>Turnouts, Lights, Sensors and other elements</h3>
         <a id="TLae" name="TLae"></a>
         <ul>
+            <li>Sensors have a new setting, Detects: what the sensor's detector
+                sees of a train, its wheels (the default), the vehicle body, or
+                a tag or magnet. It is in the sensor's Edit dialog and in a
+                Sensor Table column, hidden until chosen. It describes the
+                detector only, and nothing changes for users who leave it.</li>
             <li>The Turnout and Sensor tables can now add a sequential range of
                 up to 1000 items at once (was 100), e.g. a whole C/MRI node. The
                 confirmation for a large range is unchanged.</li>
@@ -753,6 +780,15 @@
                 JMRI withdraws its ZeroConf (mDNS) announcements, such as the
                 Hub's, WiThrottle's and the Web Server's. The wait is now about
                 2 seconds in all.</li>
+            <li>A new window, Tools &gt; Train Tracking &gt; Set-up Checks,
+                lists what in a layout's set-up makes following trains less
+                sure: trains with no length, or no speed profile for their lead
+                loco; Blocks with no length; a detected Block with no paths; a
+                path with no path back; a sensor used by two Blocks; a Block
+                with no detector whose routes depend on a turnout with no
+                feedback; and Blocks joined through Blocks with no detector by
+                more than one way. Each says what is wrong. The checks only
+                read, and change nothing.</li>
             <li>For developers: a new train record (<code>jmri.TrainRecord</code>,
                 from the <code>jmri.TrainRecordManager</code>) holds what is
                 known about a train from one run to the next: its name, the
