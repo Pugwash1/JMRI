@@ -142,6 +142,7 @@ public class LnPacketizerStrict extends LnPacketizer {
                     if (memo.getPowerManager().getPower() != PowerManager.ON && msg.getOpCode() == LnConstants.OPC_INPUT_REP) {
                         continue;
                     }
+                    msg.setReceivedTime(System.nanoTime());
                     {
                         log.trace("message complete: {}", msg);
 
