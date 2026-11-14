@@ -9,8 +9,10 @@ import java.util.List;
 import jmri.Block;
 import jmri.BlockManager;
 import jmri.InstanceManager;
+import jmri.TrainMakeupSource;
 import jmri.TrainRecord;
 import jmri.TrainRecordManager;
+import jmri.beans.PropertyChangeSupport;
 import jmri.util.JUnitUtil;
 import jmri.util.ThreadingUtil;
 import jmri.util.junit.annotations.DisabledIfHeadless;
@@ -55,6 +57,37 @@ public class BlockDialogTest {
 
         new JButtonOperator(f, Bundle.getMessage("BlockDialogClose")).doClick();
         JUnitUtil.waitFor(() -> !f.isVisible(), "closed");
+    }
+
+    /** Knows train STF only: one stop ahead, North Industries. */
+    private static final class StfSource extends PropertyChangeSupport implements TrainMakeupSource {
+
+        @Override
+        public TrainMakeupSource.TrainMakeup getMakeup(String trainName) {
+            return "STF".equals(trainName)
+                    ? new TrainMakeupSource.TrainMakeup(List.of(new TrainRecord.TrainComponent("Southport", 300.0)),
+                            List.of(new TrainMakeupSource.Work("North Industries", 1, 2)))
+                    : null;
+        }
+    }
+
+    @Test
+    public void testShowsWorkAtNextStop() {
+        Block a = InstanceManager.getDefault(BlockManager.class).provideBlock("IB1");
+        InstanceManager.store(new StfSource(), TrainMakeupSource.class);
+        TrainRecordManager manager = InstanceManager.getDefault(TrainRecordManager.class);
+        TrainRecord stf = ThreadingUtil.runOnGUIwithReturn(() -> manager.newRecord("STF"));
+        TrainRecord other = ThreadingUtil.runOnGUIwithReturn(() -> manager.newRecord("Other"));
+        ThreadingUtil.runOnGUI(() -> {
+            stf.place(List.of(a), false);
+            other.place(List.of(a), false);
+        });
+
+        ThreadingUtil.runOnGUI(() -> BlockDialog.open(a, true));
+        JFrameOperator f = new JFrameOperator(Bundle.getMessage("BlockDialogTitle", a.getDisplayName()));
+        new JLabelOperator(f, Bundle.getMessage("BlockDialogNextStopWork", "North Industries", 1, 2));
+        assertEquals("", BlockDialog.work(other), "no line for a train no source knows");
+        JUnitUtil.dispose(f.getWindow());
     }
 
     @Test
@@ -185,6 +218,41 @@ public class BlockDialogTest {
         assertTrue(!new JButtonOperator(f, Bundle.getMessage("BlockDialogEditValue")).isEnabled(),
                 "as for a Block Contents icon whose value edit is disabled");
         new JLabelOperator(f, Bundle.getMessage("BlockDialogNoTrain"));
+        JUnitUtil.dispose(f.getWindow());
+    }
+
+    @Test
+    public void testConfirmAndClear() {
+        Block a = InstanceManager.getDefault(BlockManager.class).provideBlock("IB3");
+        a.setUserName("LB4");
+        Block b = InstanceManager.getDefault(BlockManager.class).provideBlock("IB4");
+        b.setUserName("LB3");
+        a.addPath(new jmri.Path(b, 0, 0));
+        b.addPath(new jmri.Path(a, 0, 0));
+        TrainRecord r = InstanceManager.getDefault(TrainRecordManager.class).newRecord("47012 Coal empties");
+        ThreadingUtil.runOnGUI(() -> r.place(List.of(b), false));
+
+        ThreadingUtil.runOnGUI(() -> BlockDialog.open(a, true, true));
+        JFrameOperator f = new JFrameOperator(Bundle.getMessage("BlockDialogTitle", "LB4 (IB3)"));
+        org.netbeans.jemmy.operators.JComboBoxOperator trainHere = new org.netbeans.jemmy.operators.JComboBoxOperator(f);
+        JUnitUtil.waitFor(() -> trainHere.getItemCount() == 1, "the train next door offered");
+        assertEquals(Bundle.getMessage("BlockDialogChoiceNextDoor", "47012 Coal empties"),
+                trainHere.getItemAt(0).toString());
+        new JButtonOperator(f, Bundle.getMessage("BlockDialogConfirm")).doClick();
+        JUnitUtil.waitFor(() -> r.getBlocks().equals(List.of(a)), "the train is here");
+
+        new JButtonOperator(f, Bundle.getMessage("BlockDialogClear")).doClick();
+        JUnitUtil.waitFor(() -> !r.isPlaced(), "the Block is empty");
+        JUnitUtil.dispose(f.getWindow());
+    }
+
+    @Test
+    public void testNoCorrectionsFromAPanelThatDoesNotControlTheLayout() {
+        Block a = InstanceManager.getDefault(BlockManager.class).provideBlock("IB5");
+        ThreadingUtil.runOnGUI(() -> BlockDialog.open(a, true, false));
+        JFrameOperator f = new JFrameOperator(Bundle.getMessage("BlockDialogTitle", "IB5"));
+        assertTrue(!new JButtonOperator(f, Bundle.getMessage("BlockDialogConfirm")).isEnabled());
+        assertTrue(!new JButtonOperator(f, Bundle.getMessage("BlockDialogClear")).isEnabled());
         JUnitUtil.dispose(f.getWindow());
     }
 
