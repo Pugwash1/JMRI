@@ -8,6 +8,7 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
+import java.nio.charset.StandardCharsets;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -401,7 +402,7 @@ public abstract class AbstractMonPane extends JmriPanel {
     public String getHelpTarget() {
         return "package.jmri.jmrix.AbstractMonFrame"; // NOI18N
     }
-        
+
     /**
      * Log an Message derived message.
      *
@@ -429,7 +430,7 @@ public abstract class AbstractMonPane extends JmriPanel {
      * @param message       message object to log.
      */
     public void logMessage(String messagePrefix, String rawPrefix, Message message){
-        // display the raw data if requested  
+        // display the raw data if requested
         StringBuilder raw = new StringBuilder(rawPrefix);
         if (rawCheckBox.isSelected()) {
             raw.append(message.toString());
@@ -629,7 +630,8 @@ public abstract class AbstractMonPane extends JmriPanel {
                     filePathAndName);
             File logFile = new File(filePathAndName);
             try {
-                logStream = new PrintStream(new FileOutputStream(logFile));
+                logStream = new PrintStream(new FileOutputStream(logFile),
+                        false, StandardCharsets.UTF_8);
             } catch (java.io.FileNotFoundException ex) {
                 stopLogButtonActionPerformed(null);
                 log.error("startLogButtonActionPerformed: FileOutputStream cannot open the file '{}'.  Exception: {}", logFileChooser.getSelectedFile().getName(), ex.getMessage());
