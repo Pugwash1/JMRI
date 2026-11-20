@@ -301,7 +301,8 @@
 
         <h4>MD Electronics</h4>
              <ul>
-                <li></li>
+                <li>New decoder definition for the mXion LLM light bar with
+                    integrated function decoder.</li>
              </ul>
 
         <h4>MGP</h4>
@@ -695,7 +696,10 @@
    <h3>WiThrottle Server</h3>
         <a id="WS" name="WS"></a>
         <ul>
-            <li></li>
+            <li>The WiThrottle server no longer stops responding to a client
+                that sends an unrecognized speed step mode or a malformed
+                number. The bad message is logged and ignored, and an
+                unrecognized speed step mode is answered with the current mode.</li>
         </ul>
 
    <h3>Virtual Sound Decoder</h3>
