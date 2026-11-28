@@ -194,6 +194,9 @@ public class LnPacketizerStrict extends LnPacketizer {
                 } catch (java.io.InterruptedIOException e) {
                     // being requested to stop
                     // will be process in while clause
+                } catch (java.io.EOFException e) {
+                    log.info("EOF");
+                    continue;
                 } catch (java.io.IOException e) {
                     if (controller.getAllowConnectionRecovery()) {
                         log.info("run: server closed connection, attempting recovery");

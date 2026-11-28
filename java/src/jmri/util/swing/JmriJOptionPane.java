@@ -298,9 +298,9 @@ public class JmriJOptionPane {
         log.info("Display with Parent title [{}]",title);
         pane.setComponentOrientation(JOptionPane.getRootFrame().getComponentOrientation());
         Window w = null;
-        if (parentComponent == null) {
+        //if (parentComponent == null) {
             parentComponent=getTopFrame();
-        }
+        //}
         parentComponent.setVisible(true);
         w = findWindowForComponent(parentComponent);
         JDialog dialog = pane.createDialog(parentComponent, title);
@@ -331,9 +331,9 @@ public class JmriJOptionPane {
         log.debug("set dialog position for comp {} dialog {}", parentComponent, dialog.getTitle());
         int centreWidth;
         int centreHeight;
-        if (parentComponent==null) {
+        //if (parentComponent==null) {
             parentComponent = getTopFrame();
-        }
+        //}
         Window w = findWindowForComponent(parentComponent);
         w.setVisible(true);
         //if ( w == null || !w.isVisible() ) {
@@ -386,17 +386,30 @@ public class JmriJOptionPane {
     }
 
     public static JmriJFrame getTopFrame() {
-        String fTitle = jmri.Application.getApplicationName();
         for ( JmriJFrame f: jmri.util.JmriJFrame.getFrameList()) {
-            if (fTitle == f.getTitle()) {
-                Log.info("found [{}] for null parent",f.getTitle());
-                f.setVisible(true);
-                f.toFront();
+            if (f.isActive()) {
                 return f;
             }
         }
-        Log.info("Not Found [{}] for null parent using [{}]", fTitle,jmri.util.JmriJFrame.getFrameList().get(0));
-        return jmri.util.JmriJFrame.getFrameList().get(0);
+        // Fallback: return the first visible frame if none has OS focus
+        for ( JmriJFrame f: jmri.util.JmriJFrame.getFrameList()) {
+            if (f.isVisible()) {
+                return f;
+            }
+        }
+        return null;
+//
+//        String fTitle = jmri.Application.getApplicationName();
+//        for ( JmriJFrame f: jmri.util.JmriJFrame.getFrameList()) {
+//            if (fTitle == f.getTitle()) {
+//                Log.info("found [{}] for null parent",f.getTitle());
+//                f.setVisible(true);
+//                f.toFront();
+//                return f;
+//            }
+//        }
+//        Log.info("Not Found [{}] for null parent using [{}]", fTitle,jmri.util.JmriJFrame.getFrameList().get(0));
+//        return jmri.util.JmriJFrame.getFrameList().get(0);
     }
 
     private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(JmriJOptionPane.class);

@@ -29,16 +29,29 @@ public class StoreAndCompareDialog {
     private static ShutdownPreferences _preferences = jmri.InstanceManager.getDefault(ShutdownPreferences.class);
 
     public static JmriJFrame getTopFrame() {
-        String fTitle = jmri.Application.getApplicationName();
         for ( JmriJFrame f: jmri.util.JmriJFrame.getFrameList()) {
-            log.info("f.name[{}]",f.getName());
-            if (fTitle == f.getTitle()) {
-                log.info("found [{}] for null parent",f.getTitle());
+            if (f.isActive()) {
                 return f;
             }
         }
-        log.info("Not FOund [{}] for null parent using [{}]", fTitle,jmri.util.JmriJFrame.getFrameList().get(1));
-        return jmri.util.JmriJFrame.getFrameList().get(1);
+        // Fallback: return the first visible frame if none has OS focus
+        for ( JmriJFrame f: jmri.util.JmriJFrame.getFrameList()) {
+            if (f.isVisible()) {
+                return f;
+            }
+        }
+        return null;
+       
+//        String fTitle = jmri.Application.getApplicationName();
+//        for ( JmriJFrame f: jmri.util.JmriJFrame.getFrameList()) {
+//            log.info("f.name[{}]",f.getName());
+//            if (fTitle == f.getTitle()) {
+//                log.info("found [{}] for null parent",f.getTitle());
+//                return f;
+//            }
+//        }
+//        log.info("Not FOund [{}] for null parent using [{}]", fTitle,jmri.util.JmriJFrame.getFrameList().get(1));
+//        return jmri.util.JmriJFrame.getFrameList().get(1);
     }
 
     public static boolean showAbortShutdownDialogPermissionDenied() {
