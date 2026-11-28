@@ -1159,6 +1159,30 @@ public final class LayoutEditor extends PanelEditor implements MouseWheelListene
         });
         highlightCursorCheckBoxMenuItem.setSelected(highlightCursor);
 
+        // add "Show Trains from Train Tracking"
+        JCheckBoxMenuItem showTrainsCheckBoxMenuItem = new JCheckBoxMenuItem(Bundle.getMessage("ShowTrainFootprints"));
+        showTrainsCheckBoxMenuItem.setToolTipText(Bundle.getMessage("ShowTrainFootprintsToolTip"));
+        optionMenu.add(showTrainsCheckBoxMenuItem);
+        showTrainsCheckBoxMenuItem.addActionListener((ActionEvent event) ->
+                getTrainFootprints().setShown(showTrainsCheckBoxMenuItem.isSelected()));
+        // the choice is kept under the panel's title, known only once the panel is loaded
+        optionMenu.addMenuListener(new javax.swing.event.MenuListener() {
+            @Override
+            public void menuSelected(javax.swing.event.MenuEvent e) {
+                showTrainsCheckBoxMenuItem.setSelected(getTrainFootprints().isShown());
+            }
+
+            @Override
+            public void menuDeselected(javax.swing.event.MenuEvent e) {
+                // nothing to do
+            }
+
+            @Override
+            public void menuCanceled(javax.swing.event.MenuEvent e) {
+                // nothing to do
+            }
+        });
+
         //
         // edit title
         //
@@ -3076,6 +3100,19 @@ public final class LayoutEditor extends PanelEditor implements MouseWheelListene
         setDirty();
     }
 
+    private TrainFootprints trainFootprints = null;
+
+    /**
+     * @return what draws the trains train tracking knows on this panel
+     */
+    @Nonnull
+    TrainFootprints getTrainFootprints() {
+        if (trainFootprints == null) {
+            trainFootprints = new TrainFootprints(this);
+        }
+        return trainFootprints;
+    }
+
     /**
      * Allow external trigger of re-drawHidden
      */
@@ -3726,8 +3763,55 @@ public final class LayoutEditor extends PanelEditor implements MouseWheelListene
                     handler.addBlockMenuItems(popup, block);
                 }
             }
+            JMenu markerMenu = blockMarkerMenu(loc);
+            if (markerMenu != null) {
+                popup.addSeparator();
+                popup.add(markerMenu);
+            }
         }
         popup.show(event.getComponent(), event.getX(), event.getY());
+    }
+
+    /**
+     * The Marker menu for a Block's pop-up menu, unless loco marker pop-up
+     * menus are disabled: Add Loco and Add Loco from Roster, which put the
+     * new marker where the track was clicked, as if dragged there.
+     *
+     * @param loc where the Block's track was clicked, in panel coordinates
+     * @return the menu, or null if loco marker pop-up menus are disabled
+     */
+    @CheckForNull
+    JMenu blockMarkerMenu(@Nonnull Point2D loc) {
+        if (isLocoMarkerPopupDisabled()) {
+            return null;
+        }
+        JMenu markerMenu = new JMenu(Bundle.getMessage("MenuMarker"));
+        markerMenu.add(new AbstractAction(Bundle.getMessage("AddLoco") + "...") {
+            @Override
+            public void actionPerformed(ActionEvent event) {
+                locoMarkerFromInput(marker -> placeMarker(marker, loc));
+            }
+        });
+        markerMenu.add(new AbstractAction(Bundle.getMessage("AddLocoRoster") + "...") {
+            @Override
+            public void actionPerformed(ActionEvent event) {
+                locoMarkerFromRoster(marker -> placeMarker(marker, loc));
+            }
+        });
+        return markerMenu;
+    }
+
+    /**
+     * Put a new loco marker where a Block's track was clicked, centred
+     * there, as if dragged there.
+     *
+     * @param marker the marker
+     * @param loc    where the track was clicked, in panel coordinates
+     */
+    void placeMarker(@Nonnull LocoIcon marker, @Nonnull Point2D loc) {
+        marker.setLocation((int) loc.getX() - marker.getWidth() / 2, (int) loc.getY() - marker.getHeight() / 2);
+        unionToPanelBounds(marker.getBounds());
+        markerDropped(marker, loc);
     }
 
     /**
@@ -10180,6 +10264,9 @@ public final class LayoutEditor extends PanelEditor implements MouseWheelListene
     public void dispose() {
         if (leToolBarPanel != null) {
             leToolBarPanel.dispose();
+        }
+        if (trainFootprints != null) {
+            trainFootprints.dispose();
         }
         super.dispose();
 

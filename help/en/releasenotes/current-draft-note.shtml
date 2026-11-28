@@ -130,7 +130,10 @@
 
         <h4>MQTT</h4>
             <ul>
-                <li></li>
+                <li>An MQTT connection no longer drops at startup when the
+                    broker holds retained messages for the turnouts and
+                    sensors being loaded. A lost connection now logs its
+                    cause.</li>
             </ul>
 
         <h4>MRC</h4>
@@ -644,7 +647,9 @@
                 loco couldn't be acquired (for example a LocoNet slot refused
                 or timed out) while another throttle request is answered or a
                 throttle window is opened or closed.</li>
-            <li></li>
+            <li>
+                Default throttle function labels for NEM declined to Steam, Diesel and Electric (as default throttle layouts, and init button in Media pane)
+            </li>
         </ul>
 
     <h3>Timetable</h3>
@@ -761,5 +766,11 @@
                 dropped marker does what it did before. See the <a href=
                 "https://www.jmri.org/help/en/html/tools/simulatedtrains/index.shtml#placing">Simulated
                 Trains</a> page.</li>
+            <li>A simulated train no longer stops with "The track ends"
+                in a Block drawn on more than one panel, where a panel
+                showing part of the layout draws the Block as far as an
+                end bumper. It follows the panel where the track goes on.
+                Placing a train where two panels draw the same way into a
+                Block no longer says it could be in more than one place.</li>
         </ul>
 
